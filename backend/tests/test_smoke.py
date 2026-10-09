@@ -20,12 +20,14 @@ class SmokeTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(response.json()["status"], "ok")
                 self.assertEqual((await client.post("/api/ai/generate", json={"prompt": "   "})).status_code, 422)
                 self.assertEqual((await client.post("/api/ai/generate", json={"prompt": "a" * 8001})).status_code, 422)
-                response = await client.options("/api/ai/generate", headers={
-                    "Origin": "http://127.0.0.1:5173", "Access-Control-Request-Method": "POST",
-                    "Access-Control-Request-Headers": "content-type",
-                })
-                self.assertEqual(response.status_code, 200)
-                self.assertEqual(response.headers["access-control-allow-origin"], "http://127.0.0.1:5173")
+                for origin in ["http://localhost:5173", "http://localhost:4173", "http://127.0.0.1:5173", "http://127.0.0.1:4173"]:
+                    with self.subTest(origin=origin):
+                        response = await client.options("/api/ai/generate", headers={
+                            "Origin": origin, "Access-Control-Request-Method": "POST",
+                            "Access-Control-Request-Headers": "content-type",
+                        })
+                        self.assertEqual(response.status_code, 200)
+                        self.assertEqual(response.headers["access-control-allow-origin"], origin)
                 response = await client.get("/api/health", headers={"Origin": "https://untrusted.example"})
                 self.assertNotIn("access-control-allow-origin", response.headers)
 

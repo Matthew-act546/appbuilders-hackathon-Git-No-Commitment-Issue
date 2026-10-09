@@ -1,17 +1,48 @@
-# AppBuildersPH Hackathon 2026
+# Local AI Quest Companion
 
-Two independent local applications: `frontend/` (React, TypeScript, Vite, Tailwind,
-React Router and PWA) and `backend/` (FastAPI, SQLAlchemy/SQLite and local Ollama).
-No cloud services or runtime CDN assets are required. SQLite has an engine and
-session dependency ready for future use; no application tables are created.
+AppBuildersPH Hackathon 2026 P0: a privacy-first desktop web companion that turns
+deliverables and reported time/energy into manageable quests, one current quest
+per questline, with deterministic XP and local persistence. The finalized
+[PRD v2.0](docs/Local_AI_Quest_Companion_Final_PRD.docx) is the product source of truth.
 
-Prerequisites: Node.js 20.19+ or 22.12+ (Node 24 LTS recommended), Python 3.11+,
-and Ollama installed separately. Dependency installation needs internet access;
-the installed applications and already installed models run locally afterward.
+**Current status: Phase 1A desktop foundation.** Working code remains
+the generic landing/status/prompt scaffold; quest APIs, state engine and persistence
+are planned, not implemented. Target platform is desktop web, **not PWA**. The PWA
+plugin, registration, manifest and cache/update UI have been removed. Previously
+used browsers need the scoped cleanup procedure below.
 
-## Linux
+## Stack and structure
 
-From the repository root:
+| Layer | Technologies and current scope |
+| --- | --- |
+| `frontend/` | React, TypeScript, Vite, Tailwind CSS and React Router; local bundled assets, no service-worker registration or generated manifest. |
+| `backend/` | Python 3.11+, FastAPI, Pydantic Settings, SQLAlchemy, SQLite, HTTPX and Uvicorn; local REST API and Ollama integration. |
+| Local AI | Ollama; primary `qwen3:1.7b`, manually selected fallback `qwen2.5:1.5b`; default endpoint `http://127.0.0.1:11434`. |
+| `docs/` and `AGENTS.md` | Architecture, conventions, responsibilities, manual verification and AI disclosure. |
+
+Intended flow: React desktop frontend → local FastAPI REST API → Ollama + SQLite,
+all on one laptop. Current SQLAlchemy engine/session is ready for future persistence.
+No application tables or database-backed endpoints are
+created. Prompts/responses are currently in browser memory and disappear on reload.
+No cloud database, remote AI API or runtime CDN asset is required by the frontend
+or core API/inference flow. FastAPI's optional interactive API documentation uses
+its default external assets; see the offline limitations below.
+
+## Requirements
+
+- Node.js matching `^20.19.0 || >=22.12.0` in `frontend/package.json`, and npm.
+- Python 3.11+ with virtual-environment support; Windows commands use the `py`
+  launcher and the virtual-environment executable directly.
+- Ollama installed separately and sufficient local resources for the chosen model.
+- A modern desktop browser. Dependencies, installers and model
+  weights need initial downloads or prepared local copies; runtime services stay
+  local afterward. Exact frontend versions are in `package-lock.json`; backend
+  direct dependencies are pinned in `requirements.txt`.
+
+## Linux setup and start
+
+From the repository root, in the frontend terminal (copy the example only on first
+setup; preserve existing `.env` configuration):
 
 ```bash
 cd frontend
@@ -31,9 +62,9 @@ cp .env.example .env
 python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-## Windows (PowerShell)
+## Windows setup and start (PowerShell)
 
-From the repository root:
+From the repository root (preserve any existing `.env` instead of overwriting it):
 
 ```powershell
 cd frontend
@@ -52,33 +83,76 @@ Copy-Item .env.example .env
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Open <http://127.0.0.1:5173>. API docs: <http://127.0.0.1:8000/docs>.
-Both development servers bind to loopback by default.
-
-## Ollama and configuration
+## Start Ollama and select the model
 
 Start Ollama separately with `ollama serve` if it is not already running.
-Check installed models with `ollama list`. This scaffold never installs or pulls
-models. If needed, explicitly run `ollama pull qwen3:1.7b` yourself.
-The backup is `qwen2.5:1.5b`; install it yourself if needed, set
-`OLLAMA_MODEL=qwen2.5:1.5b` in `backend/.env`, and restart FastAPI.
-There is no automatic model fallback.
+In its own terminal, on Linux or Windows:
 
-`backend/.env` configures `OLLAMA_BASE_URL` (default
-`http://127.0.0.1:11434`), `OLLAMA_MODEL`, `DATABASE_URL`, and `CORS_ORIGINS`
-(a JSON array of exact origins). Run the backend from `backend/` so the example
-SQLite path resolves there. `frontend/.env` sets `VITE_API_BASE_URL`; restart
-Vite after changing it and rebuild for production.
+```text
+ollama serve
+```
 
-`GET /api/health` reports FastAPI health. `GET /api/ai/status` separately reports
-Ollama reachability and model installation. `POST /api/ai/generate` accepts
+In another terminal:
+
+```text
+ollama list
+```
+
+This scaffold never installs or pulls models. If the primary is absent, deliberately
+run `ollama pull qwen3:1.7b` while connected. The fallback is `qwen2.5:1.5b`;
+install it yourself if needed (`ollama pull qwen2.5:1.5b`), set
+`OLLAMA_MODEL=qwen2.5:1.5b` in `backend/.env`, and restart FastAPI. There is no
+automatic fallback. Do not run `ollama serve` twice if the OS application/service
+is already serving the endpoint.
+
+## Configuration
+
+| Variable | File | Default |
+| --- | --- | --- |
+| `VITE_API_BASE_URL` | `frontend/.env` | `http://127.0.0.1:8000` (no `/api` suffix) |
+| `OLLAMA_BASE_URL` | `backend/.env` | `http://127.0.0.1:11434` |
+| `OLLAMA_MODEL` | `backend/.env` | `qwen3:1.7b` |
+| `DATABASE_URL` | `backend/.env` | `sqlite:///./app.db` |
+| `CORS_ORIGINS` | `backend/.env` | JSON array of `http://127.0.0.1:5173`, `http://localhost:5173`, `http://127.0.0.1:4173`, `http://localhost:4173` |
+
+See [frontend/.env.example](frontend/.env.example) and
+[backend/.env.example](backend/.env.example). Pydantic Settings loads backend
+configuration; process environment values override `.env`. Restart FastAPI after
+changes. Run it from `backend/` so the relative SQLite path stays consistent.
+Restart Vite after frontend changes and rebuild production assets. `VITE_*`
+variables are public browser configuration, not a place for secrets. Do not commit
+`.env`, databases, model weights, dependencies, virtual environments or private data.
+
+## URLs and API
+
+| Service | Local URL |
+| --- | --- |
+| React development | <http://localhost:5173> |
+| Built frontend preview | <http://localhost:4173> |
+| FastAPI | <http://127.0.0.1:8000> |
+| Interactive API docs | <http://127.0.0.1:8000/docs> |
+| JSON API schema | <http://127.0.0.1:8000/openapi.json> |
+| Ollama | <http://127.0.0.1:11434> |
+
+Vite dev/preview and the documented Uvicorn commands bind to loopback. Vite ports
+are strict. The frontend and backend run separately; starting one does not start
+the other or Ollama.
+Vite dev and preview bind `localhost` by default. The backend still permits the
+previous 127.0.0.1 frontend CORS origins for compatibility; use localhost for the
+documented frontend commands.
+
+`GET /api/health` reports FastAPI health, not database/AI health.
+`GET /api/ai/status` separately reports Ollama reachability and model installation
+with availability flags, including when unavailable. `POST /api/ai/generate` accepts
 `{"prompt":"Hello"}` and returns `{"model":"qwen3:1.7b","response":"..."}`.
 Generation errors use HTTP 503 for connection/missing-model failures, 504 for
 timeouts, and 502 for upstream failures. Status checks take at most five seconds;
 generation has a two-minute limit. Browser connectivity is only a browser signal
 and is not proof that the backend, AI, or internet is available.
 
-## Build and verify offline mode
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full current route semantics.
+
+## Build and backend checks
 
 From `frontend/`:
 
@@ -88,23 +162,78 @@ npm run build
 npm run preview
 ```
 
-Open <http://127.0.0.1:4173>, wait for “App cached and ready to open offline,”
-then switch the browser offline and reload. The manifest, local icons, built
-assets and service worker are in `frontend/dist/`. Service workers are enabled
-in production/preview, not the development server. Updates require the displayed
-reload action. API responses and AI prompts are never cached or queued.
+The build also runs type checking. `preview` stays running until Ctrl+C. Backend
+smoke tests use standard-library unittest and mocked Ollama responses; they do not
+verify real inference or disk persistence.
 
-The cached frontend works offline; AI inference requires FastAPI and Ollama
-on the device hosting the backend. AI does not run inside a mobile browser.
-For another device, configure a reachable backend URL and matching CORS origin;
-`127.0.0.1` always means that device itself. PWA features require HTTPS except
-on localhost/loopback, so plain HTTP LAN access is insufficient for mobile PWA
-offline installation.
-
-Backend smoke tests (from `backend/`, using the virtual environment Python):
+From `backend/` on Linux (the earlier setup activates the virtual environment;
+the explicit path also works without activation):
 
 ```bash
-python -m unittest discover -s tests -v
+.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python -m pip check
 ```
 
-On Windows use `.\.venv\Scripts\python.exe` in place of `python`.
+From `backend/` on Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -m pip check
+```
+
+With a virtual environment activated, the existing
+`python -m unittest discover -s tests -v` command remains valid. There is no
+frontend automated test runner or lint command configured.
+
+## Desktop offline operation and old PWA cleanup
+
+The desktop scaffold serves local built assets from a running local frontend
+server; FastAPI, SQLite and installed Ollama/model run on the same laptop. Disconnect
+internet while retaining loopback. Service-worker caching/installation is not a
+product requirement. A stopped frontend server may prevent reload. Production
+builds contain ordinary HTML/JS/CSS and local icons; no manifest, Workbox bundle or
+service worker is generated. API responses and pending requests are not cached or
+queued. Unused legacy PNG icons remain inert assets; the ordinary favicon is retained.
+
+A browser that previously opened the PWA can still serve an old cached build.
+For each previously used app origin (localhost or 127.0.0.1, port 5173 or 4173),
+use DevTools **Application → Service Workers** to identify and unregister only
+this app's old `sw.js`, then remove only its identified Workbox cache under
+**Cache Storage**. Close the app's tabs and reopen/hard-reload the new build.
+Confirm `navigator.serviceWorker.controller === null` and that this app's
+registration/cache are absent. Do not clear unrelated workers or browser data.
+The full origin-scoped procedure and verification commands are in
+[Offline testing: old service-worker cleanup](docs/OFFLINE_TESTING.md#old-service-worker-cleanup-phase-1a).
+No permanent blanket cleanup logic has been added to the application.
+
+To test offline AI, disconnect internet while keeping loopback communication and
+all local servers available. Browser DevTools Offline can block localhost and is
+not the correct test. Actual internet-disconnection and Windows demo testing
+remain unexecuted in Phase 1A; follow [docs/OFFLINE_TESTING.md](docs/OFFLINE_TESTING.md)
+and record actual results. Local AI Quest Companion uses one laptop with local
+servers. Cross-device serving, PWA/mobile packaging and HTTPS deployment are
+outside this P0 scope.
+
+FastAPI's default `/docs` and `/redoc` pages reference external UI assets and may
+not render fully without internet. They are optional; use local API requests or
+`/openapi.json` for offline verification. The React UI and core API/inference flow
+do not require those pages or their assets.
+
+## Governance and documentation
+
+- [AGENTS.md](AGENTS.md) — coding-agent rules, instruction hierarchy and done criteria.
+- [Architecture](docs/ARCHITECTURE.md) — components, API, configuration and limits.
+- [Conventions](docs/CONVENTIONS.md) — code, branches, review and testing practices.
+- [Team](docs/TEAM.md) — ownership and independent documentation/QA deliverables.
+- [Offline testing](docs/OFFLINE_TESTING.md) — executable Linux/Windows manual checklist.
+- [AI disclosure](docs/AI_DISCLOSURE.md) — AI use, downloads and license verification placeholders.
+- [P0 roadmap](docs/P0_IMPLEMENTATION_PLAN.md) — ordered phases, owners and acceptance gates.
+- [API contract](docs/API_CONTRACT.md) — proposed typed P0 endpoints and hidden-data boundaries.
+- [Database design](docs/DATABASE_DESIGN.md) — schema, constraints and transactions.
+- [Quest rules](docs/QUEST_RULES.md) — lifecycle, deterministic XP and replan safety.
+- [AI design](docs/AI_DESIGN.md) — operation schemas, validation and benchmark plan.
+- [Frontend plan](docs/FRONTEND_PLAN.md) — desktop screens/components and integration.
+- [Decisions](docs/DECISIONS.md) — locked choices, conflicts and unresolved evidence.
+
+Check results and licenses must be recorded from actual evidence. The manual
+checklist is a blank QA record, not a declaration of demo-machine readiness.

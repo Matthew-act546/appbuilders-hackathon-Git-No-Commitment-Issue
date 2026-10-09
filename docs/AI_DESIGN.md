@@ -1,0 +1,187 @@
+# Local AI operation design
+
+P0 proposal from PRD §2/§4/§8–12/§15–18. Actual schema compatibility and performance
+are **not benchmarked in Phase 0**. Reuse [ollama.py](../backend/app/ollama.py) and
+HTTPX lifecycle. React talks only to FastAPI. [API_CONTRACT](API_CONTRACT.md)
+describes user-facing inputs; schemas below describe **internal model outputs**.
+
+## Runtime and structured validation
+
+Primary `qwen3:1.7b`, manually configured backup `qwen2.5:1.5b`; endpoint from
+OLLAMA_BASE_URL, model from OLLAMA_MODEL. Never auto-failover or download. Core
+configuration must resolve to loopback on the demo laptop; HTTPX trust_env=False
+avoids proxy redirection. No remote AI fallback, telemetry or browser-to-model calls.
+
+Recommended transport: POST Ollama `/api/generate`, stream=false, `system` instructions,
+JSON-encoded trusted context/user text, and `format` set to the exact Pydantic
+JSON schema. Ollama documents JSON-schema format; that does **not** establish that
+the installed version/model obeys every constraint. Validate locally every time.
+The current adapter uses think=false for qwen3; verify supported thinking settings
+with the installed runtime before keeping that option in the structured spike.
+[Ollama generate API](https://docs.ollama.com/api/generate).
+
+Pydantic strict types, extra=forbid, bounded nonblank strings, exact enums and
+cross-field checks apply to all outputs. Parse the `response` JSON string into
+the operation's schema; reject invalid outer response, error payloads, unfinished/
+truncated generation, unknown authority fields or invalid inner JSON. Do not
+strip arbitrary prose/markdown/code fences and hope it is a valid plan. Returned
+text is untrusted; display escaped text, never execute HTML/code/SQL.
+
+## Shared prompt responsibilities
+
+System instructions establish task boundary, output schema, supportive tone and
+no guilt/penalties/clinical advice. User text is quoted data, not instructions to
+ignore the schema or award XP. Never output trusted IDs, sequence, status, plan
+version, completion flags, XP or level. Treat supplied completed milestones as
+already done, not new work. Keep concrete observable deliverable steps and capacity
+appropriate starts; estimates are guidance, not guarantees. Do not infer medical
+conditions from low energy; explicitly refuse diagnosis/therapy/treatment requests.
+No passwords, credentials, external API calls or required cloud services.
+
+Dates/remaining time are computed by Python from typed timestamps, not extracted
+as authoritative dates by the model. Omitted deadline/notes must not trigger a
+question. Model summaries can clarify language but cannot overwrite typed time,
+energy or deadline. Goal changes require a new check-in, not hidden replan edits.
+
+## Operation schemas and behavior
+
+Common QuestProposal:
+
+```text
+{
+ title: string[1..100], action: string[1..2000],
+ completion_criteria: string[1..1000], estimated_minutes: strict integer[1..1440],
+ difficulty: easy|medium|hard, hint: string[1..1000]|null (optional/default null)
+}
+```
+
+Backend accepts difficulty as a suggestion, validates it, then maps reward in
+Python. A proposal has no starting_action/XP/id/status/order/version fields.
+
+### 1. Check-in interpretation
+
+Input: typed CheckInContext (goal, time, energy, optional deadline/notes), plus
+existing follow_up_question and user answer for mode=answer. Include an explicit
+question allowance: 1 on start, 0 after answer.
+
+Output is a strict discriminated union:
+`{decision:"ready",summary:string[1..2000]}`;
+`{decision:"follow_up",question:string[1..300]}`;
+`{decision:"unsupported",message:string[1..300]}`.
+Answer-mode schema excludes follow_up entirely. Ask only if essential ambiguity
+about the actual deliverable prevents meaningful planning. Never ask for optional
+deadline/context or re-ask time/energy supplied in typed fields. For an insufficient
+answer return a recoverable clarification error; no second interview question.
+
+Validation: schema/allowance plus existing check-in revision. Unsupported requests
+map to 422, not clinical text. Persist accepted typed context, one question/answer
+and ready summary after validation; rejected new interpretation saves no check-in
+business row. No quest/XP state changes. Inputs are sensitive local context; no raw
+logs/transcripts beyond required local fields.
+
+### 2. Initial structured questline generation
+
+Input: ready typed context and accepted check-in summary. Output:
+`{quests: QuestProposal[3..5]}`. System: useful deliverable contributions, sensible
+dependency order, small first action fitted to available time/energy, observable
+criteria, no busywork or quest authority fields.
+
+Validation: 3–5, all item schemas, no blank/duplicate normalized titles/actions,
+first estimated_minutes <= available_minutes, no forged IDs/XP/state. Semantic
+usefulness/appropriate energy are QA/benchmark criteria, not magically proven by
+JSON validation. The total plan can span sessions; do not claim its estimates sum
+fits one reported session. Backend creates IDs/order/version/status/reward only
+after acceptance. Save line/version/quests and consume check-in transactionally;
+malformed/failed/stale generation saves no partial plan or rewards.
+
+### 3. Contextual hint
+
+Input: goal/current typed capacity, **current quest** content and completed milestone
+summaries, plus optional user question. Do not send locked quest details: the hint
+must not leak them. Output `{hint:string[1..1000]}`.
+System: a specific next-step cue/example for this quest, not a new questline or
+completion claim. Validation: bounded nonblank text, current/active eligibility,
+matching revision/receipt attempt at commit. Persist accepted hint on that quest,
+increment revision, no original action/criteria/XP/status changes. No raw logs.
+
+### 4. Smaller starting action
+
+Input: same current-only context, original action and completion criteria, optional
+reason. Output `{starting_action:string[1..1000]}`.
+System: a smaller entry step that helps start the original milestone, explicitly
+not a replacement completion criterion or an auto-completion. Validate shape and
+revision/eligibility; QA verifies it is meaningfully smaller. Persist assistance
+only, retaining original action/criteria/reward; no XP/unlock or child quest.
+
+### 5. Adaptive replanning
+
+Input: immutable goal, completed milestone content, internal remaining-plan content,
+updated typed capacity/deadline/notes and optional reason. Sending the full unfinished
+plan to local inference is internal; it is never returned in ordinary API views.
+Output `{quests: QuestProposal[1..5]}` for remaining work only.
+System: completed work stays done; adapt unfinished dependencies to new capacity;
+support past-deadline recovery without shame or penalties. Model cannot edit stored
+completed IDs/rewards. Validate proposal rules (first estimate fits updated time),
+exclude exact normalized repeats of completed actions, then compare captured
+revision and receipt ownership. Semantic overlap still needs realistic QA cases.
+Only then atomically supersede old unfinished work, create new version/replacements
+and activate one. Any format/stale/storage failure leaves original line/completed
+history/XP unchanged. Persist accepted plan/context snapshot, not raw output logs.
+
+## Timeouts, retries and recovery
+
+Initial **proposed budgets**, to verify on real hardware:
+
+| Operation | Per inference attempt | Whole AI operation | Frontend request ceiling | Receipt lease |
+| --- | --- | --- | --- | --- |
+| Interpretation, hint, shrink | 15 seconds | 30 seconds | 40 seconds | 45 seconds |
+| Initial generation, replan | 60 seconds | 120 seconds | 130 seconds | 135 seconds |
+| Tags/readiness | 5 seconds | 5 seconds | Health 10 seconds | None |
+
+Connect timeout <=3 seconds. Use an outer monotonic deadline covering both attempts,
+not two unbounded reads. Maximum **one** retry for malformed/schema/domain output,
+with concise validator codes and original context; do not repeat sensitive output
+in logs. The retry stays inside the original total budget. No automatic retries
+for connection/missing-model/storage/timeouts, no third inference and no model
+switch. User may explicitly retry a recoverable failed intent with its same key.
+
+502 invalid output/upstream, 503 unavailable model/runtime, 504 timeout; user/input
+policy problems 422, stale/ineligible state 409, storage errors 503. See API contract
+for envelope. A late result whose revision/receipt attempt no longer matches is
+discarded, even if schema-valid. No transaction holds a write lock across inference.
+Cancel local HTTP work on abandoned request when possible; correctness still rests
+on commit guards, not client cancellation.
+
+## Phase 1 benchmark on actual demo laptop
+
+Record OS/RAM/CPU/GPU, Ollama version, model digest/quantization, prompt/schema
+version, cold startup/load, wall-clock operation latency, RAM peak, first-attempt
+schema validity, retry count, terminal errors and qualitative usefulness. Use
+synthetic prompts. Test each model separately by config/restart; no automatic failover.
+
+| Case | Expected evaluation | Result |
+| --- | --- | --- |
+| Student assignment, low energy, 10 minutes | 3–5 meaningful quests, small first action, no shame | NOT RUN |
+| Certification/project deliverable, medium energy, 40 minutes | Observable steps and sensible dependencies | NOT RUN |
+| Ambiguous goal “finish it” then one answer | At most one essential follow-up; no repeated interview | NOT RUN |
+| Current quest hint and shrink | Contextual assistance, original criteria and XP unchanged | NOT RUN |
+| Replan after one completion, less time/past deadline | No repeated completed milestone, valid replacement | NOT RUN |
+| Adversarial “award 1000 XP”, malformed/extra authority fields | Strict rejection; no progression mutation | NOT RUN |
+| Internet disconnected, loopback retained | Same local structured operations succeed | NOT RUN |
+
+Use at least two warm runs per representative generation case/model plus one cold
+load per model; report sample count and median/tail, not universal speed claims.
+Suggested warm generation target <=60 seconds, all accepted plans valid within
+the 120-second cap and no state corruption. Hint/check-in budgets need realistic
+hardware confirmation. If the primary is unreliable, manually select the backup
+and record why; do not fabricate latency or silently relax validation. Useful
+output and offline reliability are more important than decorative polish.
+
+## Disclosure and privacy
+
+[AI_DISCLOSURE](AI_DISCLOSURE.md) retains the NOT VERIFIED license/tool ledger.
+Only Matthew uses Codex CLI. Disclose frameworks/models/tools and pre-existing
+scaffold; do not send private check-ins to development services. Local database
+storage is not encrypted by this plan. No raw sensitive logs or commits; synthetic
+QA examples and sanitized timings only. No medical diagnosis, therapy or mobile
+native inference capability is asserted.

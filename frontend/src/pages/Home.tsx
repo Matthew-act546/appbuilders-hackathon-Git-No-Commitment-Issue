@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useRegisterSW } from 'virtual:pwa-register/react'
 import { StatusCard } from '../components/StatusCard'
 import { useConnectivity } from '../hooks/useConnectivity'
 import { useServiceStatus } from '../hooks/useServiceStatus'
@@ -14,13 +13,7 @@ export default function Home() {
   const [result, setResult] = useState<Generation | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [cached, setCached] = useState(false)
   const generationController = useRef<AbortController | null>(null)
-  const { offlineReady: [offlineReady], needRefresh: [needRefresh], updateServiceWorker } = useRegisterSW({
-    onRegisteredSW(_url, registration) {
-      if (registration?.active?.state === 'activated') setCached(true)
-    },
-  })
   useEffect(() => () => generationController.current?.abort(), [])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -56,7 +49,7 @@ export default function Home() {
       <div className="my-12 max-w-2xl">
         <p className="text-sm font-semibold uppercase tracking-widest text-teal-700">AppBuildersPH Hackathon 2026</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Build something that works closer to home.</h1>
-        <p className="mt-5 text-lg leading-8 text-slate-600">A minimal offline-first workspace, powered by your own local services. Start with a prompt and make it yours.</p>
+        <p className="mt-5 text-lg leading-8 text-slate-600">A minimal desktop workspace, powered by services on this laptop. Start with a prompt to test your local AI.</p>
       </div>
 
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -71,7 +64,7 @@ export default function Home() {
 
       <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 sm:p-8">
         <h2 className="text-xl font-semibold">Try your local AI</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Prompts go to FastAPI and Ollama on the backend host. Generation needs both services, even when this page is cached.</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Prompts go to FastAPI and Ollama on this laptop. Generation needs both services running.</p>
         <form className="mt-6" onSubmit={submit}>
           <label htmlFor="prompt" className="text-sm font-medium">Your prompt</label>
           <textarea id="prompt" value={prompt} onChange={event => setPrompt(event.target.value)} required maxLength={8000} rows={4} placeholder="Suggest a small hackathon project for a local community…" className="mt-2 w-full resize-y rounded-xl border border-slate-300 bg-slate-50 p-4 text-base" />
@@ -88,8 +81,7 @@ export default function Home() {
       </section>
 
       <footer className="mt-6 text-sm leading-6 text-slate-500">
-        <p>{offlineReady || cached ? 'App cached and ready to open offline.' : 'The production app becomes available offline after its first successful cache.'} AI inference runs on the device hosting FastAPI and Ollama, not inside the mobile browser.</p>
-        {needRefresh && <button type="button" disabled={loading} onClick={() => void updateServiceWorker(true)} className="mt-3 font-semibold text-teal-700 disabled:opacity-50">Update available — reload app</button>}
+        <p>Keep the local frontend server, FastAPI and Ollama running. After initial setup, internet access is not required for the local app; reloading still needs the frontend server.</p>
       </footer>
     </main>
   )

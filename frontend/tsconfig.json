@@ -12,7 +12,7 @@
     "verbatimModuleSyntax": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["vite/client", "vite-plugin-pwa/react"]
+    "types": ["vite/client"]
   },
   "include": ["src"]
 }
