@@ -39,7 +39,7 @@ used browsers need the scoped cleanup procedure below.
 | --- | --- |
 | `frontend/` | React, TypeScript, Vite, Tailwind CSS and React Router; local bundled assets, no service-worker registration or generated manifest. |
 | `backend/` | Python 3.11+, FastAPI, Pydantic Settings, SQLAlchemy, SQLite, HTTPX and Uvicorn; local REST API and Ollama integration. |
-| Local AI | Ollama; primary `qwen3:1.7b`, manually selected fallback `qwen2.5:1.5b`; default endpoint `http://127.0.0.1:11434`. |
+| Local AI | Ollama; primary `qwen3:4b`, manually selected fallback `qwen3:1.7b`; default endpoint `http://127.0.0.1:11434`. |
 | `docs/` and `AGENTS.md` | Architecture, conventions, responsibilities, manual verification and AI disclosure. |
 
 Intended flow: React desktop frontend → local FastAPI REST API → Ollama + SQLite,
