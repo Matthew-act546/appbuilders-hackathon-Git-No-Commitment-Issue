@@ -1,6 +1,85 @@
 # Proposed P0 API contract
 
-## Phase 2 implemented subset
+## Phase 3 rollout (current)
+
+Approved post-PRD adaptive sizing widens internal initial proposals to 2–6 without
+new routes/request fields. The model selects count from the whole goal, not a
+session-duration total. Detail/progress DTOs and privacy rules are unchanged.
+Replans permit 1..(6−completed) replacements; native schema and trusted commit both
+enforce six total stages including history. Existing histories are retained.
+No-history replans require at least two replacements; one is allowed once a stage
+is completed, preserving the 2–6 total range without filler.
+If a legacy active line already has six completed stages, replan returns 409
+INVALID_STATE without inference/mutation; its saved remaining stages still work.
+
+In addition to the preserved Phase 2 routes, implemented:
+
+| Route | Request | Success |
+| --- | --- | --- |
+| POST /api/check-in | `{mode:"start",goal,available_minutes,energy,deadline?,contextual_notes?}` or `{mode:"answer",check_in_id,expected_revision,answer}` | 201 new start; 200 answer/replay; CheckInView |
+| GET /api/check-in/{id} | UUIDv4 path, no body | 200 CheckInView; 404 CHECK_IN_NOT_FOUND |
+| POST /api/questlines | `{check_in_id,expected_check_in_revision}` | 201 new saved line; 200 key replay; QuestlineView |
+| POST /api/questlines/{id}/replan | Existing ReplanRequest below | 200 QuestlineView |
+
+All POSTs above require UUIDv4 Idempotency-Key; all responses are no-store. The
+retrieval route is the smallest addition needed to restore persisted check-in
+state by ID. CheckInView additionally returns `clarification_answer`, `created_at`
+and `updated_at`; original question/answer remain stored, question is returned
+only while waiting for an answer. A client can retain the selected check-in ID,
+then GET it after refresh; consumed check-ins return the saved questline ID.
+
+**Documented integration change:** check-in clarification/summary is deterministic,
+not an Ollama classifier. It works while Ollama is unavailable. Common missing
+assignment requirements, exam subject, presentation topic, practice focus or CRUD
+entity, or generic cooking without a dish/available ingredients trigger one focused question. Specific goals proceed directly. An
+insufficient answer returns 422 CLARIFICATION_INSUFFICIENT and retains the same
+question/revision; it never fabricates an answer or adds another question. Accepted
+answers preserve the original goal. Explicit clinical requests return 422
+UNSUPPORTED_REQUEST. This policy is conservative and not a universal ambiguity
+classifier. A request to present a complex unnamed topic asks the topic question;
+a named artificial-intelligence introduction proceeds. Explicit requested slides
+and rehearsal must survive generation. Typed dates require offsets, normalize
+to UTC and allow past deadlines.
+
+Generation/replan use the existing local adapter, strict proposal schemas and
+deterministic essential constraints. **Phase 3D removes model self-review from
+acceptance.** Subjective wording, optional suggestions, minor sequencing and effort
+opinions are internal diagnostic warnings, not rejection or repair triggers.
+Format/essential failures share at most one complete corrected proposal within
+120 seconds; no transport retry. An essential-constraint rejection retains
+**502 AI_SEMANTIC_REJECTED** with safe issue codes and no saved plan.
+AI_REVIEW_UNCERTAIN is retained as a legacy error code for client compatibility;
+normal production generation no longer emits it. Rejection does not necessarily
+mean context was insufficient. Check-in/original replan state remain available.
+Other AI/validation/state/storage codes below apply.
+Hints/shrink remain unimplemented. Health remains DB readiness plus separate AI
+status, as documented in Phase 2. No full plan/debug endpoint exists.
+
+Historical Phase 3C repair is internal: strict quest-index/action/criteria patches cannot
+change other content or authoritative state, and the resulting complete plan is
+validated before persistence. Public request/response/error shapes are unchanged.
+Printed loop outcomes and genuinely optional tool examples no longer cause the
+confirmed false rejections. Phase 3D production no longer invokes those repair or
+review helpers for subjective findings. Missing food availability or presentation topic still
+uses the existing single clarification question. Rejection does not imply that
+the user's goal is inadequate. See [current measured limitations](AI_BENCHMARK.md#15-phase-3d-essential-only-acceptance).
+
+Compact durable generation_intents protect check-in start/answer and AI mutations.
+Canonical operation/target/body hashes detect key conflicts; replan hashing
+preserves omitted-versus-null fields. Pending duplicates (same or another key for
+the same target/operation) return 409 REQUEST_IN_PROGRESS and Retry-After, now
+exposed by CORS. Lease=135 seconds. Failed attempts can retry explicitly with the
+same unchanged body/key; expired attempts can be reacquired with an incremented
+attempt number. A late/expired/replaced worker cannot commit. Succeeded replay
+returns the latest public state without calling AI. A different key for a consumed
+check-in returns CHECK_IN_ALREADY_USED. Paused/completed lines cannot replan.
+
+Omitted replan deadline/notes preserve stored values; explicit null clears them.
+Check-in context and the old questline survive every generation/replan failure.
+After correcting body/revision, use a new key. No automatic transport retry,
+automatic model fallback or permanent inference lock exists.
+
+## Phase 2 implementation record
 
 Implemented: list/detail/profile, completion, pause and resume with the request,
 response, visibility and error rules below. Product errors and input-validation
@@ -26,7 +105,7 @@ Internal QuestService interfaces: create_questline(context, validated initial
 QuestPlan, summary/model metadata), list_questlines, get_questline, get_profile,
 complete_quest, set_paused and replace_unfinished(line_id, expected_revision,
 validated ReplacementPlan/context, summary/reason/model metadata). Replacement
-is 1–5 proposals; caller supplies effective optional context (future HTTP
+is 1–6 proposals, additionally bounded by six minus completed; caller supplies effective optional context (future HTTP
 orchestration must resolve omitted fields versus explicit null first). No Ollama
 call occurs in these methods. Internal creation is not yet check-in-consumption/
 creation-idempotency orchestration; replacement is revision-safe but has no public
@@ -66,7 +145,7 @@ QuestView = {
   completion_criteria: string[1..1000], estimated_minutes: integer[1..1440],
   difficulty: Difficulty, xp_reward: 10|20|30,
   hint: string[1..1000]|null, starting_action: string[1..1000]|null,
-  completed_at: timestamp|null
+  completed_at: timestamp|null, completion_encouragement: string[1..500]|null
 }
 QuestlineView = {
   id: UUID, goal: string, status: QuestlineStatus, available_minutes: integer,
@@ -92,6 +171,13 @@ sorted by completion time/order, with `completed_at` populated. No locked array,
 IDs, metadata or contents exist in public DTOs. Progress counts include completed
 history plus current-version unfinished work; superseded work is excluded. A
 replan may change total_count. Database `position` maps to public `order`.
+
+`completion_encouragement` is an additive optional-copy field: null for active or
+paused quests, populated only in completed history. Locked/superseded quests are
+still omitted entirely. Completed legacy rows receive a deterministic message
+from their own title/action. The frontend also accepts pre-enhancement DTOs with
+this field absent. Invalid optional copy cannot invalidate an otherwise successful
+completion. Messages are plain text, never HTML.
 
 ## Errors, headers and retry safety
 
@@ -183,7 +269,7 @@ retries safe; invalid answers can be edited explicitly without another question.
 Body `{check_in_id:UUID, expected_check_in_revision:integer>=1}`.
 201 QuestlineView; succeeded retry 200 latest QuestlineView. Check-in must be ready,
 unconsumed and same revision. Unknown check-in 404; otherwise conflict 409.
-Ollama required. Validate 3–5 meaningful quests before creating line/version/quests
+Ollama required. Validate 2–6 meaningful stages before creating line/version/quests
 and consuming check-in in one transaction. Backend assigns rewards/trusted fields.
 One line per check-in (unique FK); another key for already-consumed context returns
 409 CHECK_IN_ALREADY_USED. No plan or XP changes on AI/storage failure. AI errors
@@ -232,6 +318,11 @@ already_completed/0 and current views even with old expected_revision: check led
 before revision. No Idempotency-Key needed; unique quest completion is authoritative.
 404 unknown/locked/superseded; 409 paused/noncurrent/stale on first attempt. All
 completion/reward/pointer/profile/ledger writes commit or roll back together.
+The response envelope is unchanged. Find the requested quest ID in
+`questline.completed_quests` to read its encouragement; do not use the newly active
+quest's content as the completed quest. No Ollama call occurs here. New completions
+save final copy in the same transaction; replay returns zero additional XP and the
+same quest's message. Final campaign status comes from the backend, not message text.
 
 ### POST /api/questlines/{id}/replan
 
@@ -241,7 +332,7 @@ reason?:string[0..1000]|null}`. Omitted optional fields preserve current values;
 explicit null clears deadline/notes; goal cannot be changed. Past deadline allowed.
 200 QuestlineView. Only active, unfinished lines; 404 unknown, 409 paused/completed/
 stale. Ollama required. Read completed milestones and unfinished context locally;
-generate/validate 1–5 replacements before changing anything. Commit new version,
+generate/validate 1..(6−completed) replacements before changing anything. Commit new version,
 superseded unfinished statuses, exactly one new active quest, latest capacity,
 revision and receipt together. Completed IDs/content/XP stay unchanged. AI/stale/
 storage failure keeps the old line/plan/XP unchanged. Succeeded replay must not

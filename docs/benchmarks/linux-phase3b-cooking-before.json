@@ -1,0 +1,60 @@
+{
+  "model": "qwen3:1.7b",
+  "quality_version": "grounded-quests-v2.1",
+  "fictional_reproduction": true,
+  "clarification": null,
+  "persisted": false,
+  "error": "AI_SEMANTIC_REJECTED",
+  "codes": [
+    "unobservable_criteria"
+  ],
+  "latency_seconds": 8.951769857994805,
+  "structured_valid": true,
+  "attempts": [
+    {
+      "number": 1,
+      "validation_success": true,
+      "latency_seconds": 8.868289750003896,
+      "error_code": null,
+      "validation_codes": [],
+      "ollama_metrics": {
+        "load_duration": 6683068,
+        "total_duration": 8839990234,
+        "eval_count": 282,
+        "eval_duration": 7678961000,
+        "prompt_eval_count": 1102,
+        "prompt_eval_duration": 806269000,
+        "thinking_present": false
+      }
+    }
+  ],
+  "plan": {
+    "quests": [
+      {
+        "title": "Start with a Simple Ingredient",
+        "action": "Choose 1 simple ingredient you have on hand, such as flour, sugar, or an essential spice.",
+        "completion_criteria": "You have selected an ingredient and it is ready for use in your dish.",
+        "estimated_minutes": 5,
+        "difficulty": "easy",
+        "hint": "Focus on a single component to build your foundation."
+      },
+      {
+        "title": "Prepare a Basic Base",
+        "action": "Mix the selected ingredient with a small amount of water or liquid to create a base.",
+        "completion_criteria": "You have created a basic base using the selected ingredient and it is ready for further steps.",
+        "estimated_minutes": 5,
+        "difficulty": "easy",
+        "hint": "Start with a small quantity to avoid overloading your workspace."
+      },
+      {
+        "title": "Create a Simple Taste Test",
+        "action": "Taste the base to observe its flavor and texture.",
+        "completion_criteria": "You have tasted the base and observed its flavor and texture, confirming it is ready for further development.",
+        "estimated_minutes": 5,
+        "difficulty": "easy",
+        "hint": "Focus on a single taste to identify any adjustments needed."
+      }
+    ]
+  },
+  "review": null
+}

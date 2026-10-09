@@ -1,11 +1,112 @@
 # Local AI operation design
 
+## Optional completion encouragement
+
+The existing structured plan request now includes optional
+`completion_encouragement: string|null` per quest. Prompt version is
+`adaptive-stages-encouragement-v1`; model, generation settings, essential gates
+and two-attempt budget are unchanged. No inference is added to completion.
+
+To avoid invented achievements and future-stage spoilers, optional model copy
+may assert only completion of its exact quest title plus one of four supportive
+forest-themed endings in [encouragement.py](../backend/app/encouragement.py).
+The model may vary the ending; this is constrained copy, not unrestricted praise.
+Wrong types, missing/blank/oversized copy, other quest titles, unsupported claims
+or other wording become null without failing generation or consuming a retry.
+All required quest content and state restrictions retain strict validation.
+
+After explicit completion the backend grounds the final message in a bounded,
+exact excerpt of the quest title and action. Safe model endings are retained;
+otherwise deterministic quest-specific copy is used. This does not infer skills,
+real-world outcomes or success of the whole goal. Public active/paused messages
+are null, locked/superseded content is absent, and completed history contains the
+message. Schema v4 stores optional copy; completion persists the final message in
+the existing XP transaction. Legacy completed quests receive read-only fallback.
+No private check-in or message is logged or sent off the laptop.
+
 P0 proposal from PRD §2/§4/§8–12/§15–18. Actual schema compatibility and performance
 are **not benchmarked in Phase 0**. Reuse [ollama.py](../backend/app/ollama.py) and
 HTTPX lifecycle. React talks only to FastAPI. [API_CONTRACT](API_CONTRACT.md)
 describes user-facing inputs; schemas below describe **internal model outputs**.
 
 ## Phase 1B implemented boundary and evidence
+
+Phase 3 now implements grounded initial generation/replanning and persistent
+deterministic clarification in [services/check_in.py](../backend/app/services/check_in.py).
+The historical Phase 1B description below remains a checkpoint record. Current
+semantic evidence and limitations are in [AI_BENCHMARK](AI_BENCHMARK.md#12-phase-3-production-pipeline-recovery).
+
+Production requests pass the complete original goal, accepted clarification,
+effective notes/capacity/deadline, replan change reason and completed milestones. The original adapter
+is reused with an additive grounding/replacement option; legacy benchmark calls
+use the current schema/prompt. Initial schema is 2–6; replacement is 1–6, further
+bounded by remaining slots after completed history. Python computes
+dates and all application state. Generic diagnostics and structured inference
+now reject non-loopback Ollama URLs before network access; no model downloads or
+automatic switching were added.
+
+Clarification uses known deterministic ambiguity checks, not an expensive AI
+classification loop. At most one question per chain; an insufficient answer can
+be corrected against that same question. Summary is deterministic convenience
+text; full original goal and accepted answer are retained independently.
+
+**Phase 3D current policy:** strict schema → deterministic essential constraints
+→ persistence, with **no model-based semantic approval call**. The old reviewer
+and scoped-patch helpers remain available for explicit developer experiments;
+production generation/replanning do not invoke them. The model is not required
+to approve its own plan.
+
+[quality.py](../backend/app/quality.py) separates essential failures from internal
+diagnostic warnings. Schema/authority fields, counts, duration bounds, explicit
+outcome coverage, material contradictions, mandatory invented tools/external
+dependencies, unsafe food instructions and repeats of completed work still block.
+User session capacity remains a hard first-quest limit; low-energy ten-minute
+guidance, difficulty opinions, subjective/vague wording, copied criteria and minor
+sequencing are warnings. Explicitly optional tools/resources are warnings unless
+they contradict a user prohibition or include a mandatory prerequisite.
+These necessary checks still have false-positive/false-negative risk, **not a
+keyword relevance proof**. No general semantic-relevance guarantee is claimed.
+
+One shared correction budget for malformed/schema or essential-constraint failure:
+maximum two generation calls, zero reviews, <=120 seconds before business commit,
+<=60 per attempt, connect <=3. Only blocking codes prompt one complete corrected
+candidate; warnings do not trigger repair, rejection or extra inference. No
+transport retry, fallback questline or automatic model switching. Persistence
+revalidates the accepted proposal; inference never holds a write transaction.
+Failure preserves check-in/old plan for explicit retry of the existing intent.
+Warning codes appear only in local developer diagnostics, not public DTOs, normal
+logs or browser state. CLI candidate capture is limited to fictional QA inputs.
+
+Current prompt is adaptive-stages-v2; gate is essential-constraints-v3d.1.
+This approved post-PRD enhancement changes count guidance, not quality policy:
+the same call chooses the smallest meaningful stage count for the complete goal.
+Simple single outcomes normally combine small actions into two stages; complex
+multiple deliverables may need four to six. No classifier call or padding.
+Available time/energy guide immediate effort; the full campaign can span sessions.
+Replanning's native maxItems is 6 minus completed history, including a one-stage
+remaining plan. The trusted replacement service independently enforces the cap.
+Its minimum is two with no completed history, otherwise one, so the total is 2–6.
+Generic cooking requests ask which dish/available ingredients to use; named dishes
+or supplied ingredients do not trigger that question. Presentation wording with an
+unknown/complex unnamed topic asks the existing topic question; a specific AI
+introduction does not. Explicit slide counts and requested rehearsal must appear
+in the plan or completed coverage. Research stays local. Observable physical outcomes
+and short concrete actions are supported. Explicit no-heat, ingredient-only,
+vegetarian, no-auth/deployment and existing-runner constraints remain hard checks.
+FastAPI grounds Python; low energy alone does not make a bounded medium quest
+invalid. These targeted rules are necessary screens, not general relevance proof.
+Historical Phase 3C repair/review native schema compatibility fixes remain tested,
+but neither mechanism is required for Phase 3D acceptance. Printed loop outputs
+and timed runs count as observable; mental understanding/aesthetic grading still
+receive warnings rather than preventing a conforming plan from being saved.
+Explicit slide/rehearsal counts, required tools versus optional examples, available
+foods and unmentioned special cleaning supplies have focused regression coverage.
+The historical [Phase 3C evidence](AI_BENCHMARK.md#14-phase-3c-bounded-semantic-recovery)
+saved 4/6, with only 2/6 saved candidates rated fully acceptable by Codex inspection.
+See [Phase 3D evidence](AI_BENCHMARK.md#15-phase-3d-essential-only-acceptance) for the
+new measurements. Independent human QA remains pending.
+
+### Historical Phase 1B spike (current orchestration described above)
 
 The existing [schemas.py](../backend/app/schemas.py) now provides strict
 CheckInInput, QuestProposal and initial QuestPlan models. The existing adapter's
@@ -127,11 +228,11 @@ logs/transcripts beyond required local fields.
 ### 2. Initial structured questline generation
 
 Input: ready typed context and accepted check-in summary. Output:
-`{quests: QuestProposal[3..5]}`. System: useful deliverable contributions, sensible
+`{quests: QuestProposal[2..6]}`. System: useful deliverable contributions, sensible
 dependency order, small first action fitted to available time/energy, observable
 criteria, no busywork or quest authority fields.
 
-Validation: 3–5, all item schemas, no blank/duplicate normalized titles/actions,
+Validation: 2–6, all item schemas, no blank/duplicate normalized titles/actions,
 first estimated_minutes <= available_minutes, no forged IDs/XP/state. Semantic
 usefulness/appropriate energy are QA/benchmark criteria, not magically proven by
 JSON validation. The total plan can span sessions; do not claim its estimates sum
@@ -163,7 +264,8 @@ only, retaining original action/criteria/reward; no XP/unlock or child quest.
 Input: immutable goal, completed milestone content, internal remaining-plan content,
 updated typed capacity/deadline/notes and optional reason. Sending the full unfinished
 plan to local inference is internal; it is never returned in ordinary API views.
-Output `{quests: QuestProposal[1..5]}` for remaining work only.
+Output `{quests: QuestProposal[1..6]}` for remaining work only, with native/local
+maxItems narrowed to 6−completed. No replan if completed history already uses six.
 System: completed work stays done; adapt unfinished dependencies to new capacity;
 support past-deadline recovery without shame or penalties. Model cannot edit stored
 completed IDs/rewards. Validate proposal rules (first estimate fits updated time),
@@ -184,7 +286,7 @@ Initial **proposed budgets**, to verify on real hardware:
 | Tags/readiness | 5 seconds | 5 seconds | Health 10 seconds | None |
 
 Connect timeout <=3 seconds. Use an outer monotonic deadline covering both attempts,
-not two unbounded reads. Maximum **one** retry for malformed/schema/domain output,
+not two unbounded reads. Maximum **one shared** correction for malformed/schema/domain or essential-constraint output,
 with concise validator codes and original context; do not repeat sensitive output
 in logs. The retry stays inside the original total budget. No automatic retries
 for connection/missing-model/storage/timeouts, no third inference and no model
@@ -206,7 +308,7 @@ synthetic prompts. Test each model separately by config/restart; no automatic fa
 
 | Case | Expected evaluation | Result |
 | --- | --- | --- |
-| Student assignment, low energy, 10 minutes | 3–5 meaningful quests, small first action, no shame | NOT RUN |
+| Student assignment, low energy, 10 minutes | 2–6 meaningful stages for the full goal, small first action, no shame | NOT RUN |
 | Certification/project deliverable, medium energy, 40 minutes | Observable steps and sensible dependencies | NOT RUN |
 | Ambiguous goal “finish it” then one answer | At most one essential follow-up; no repeated interview | NOT RUN |
 | Current quest hint and shrink | Contextual assistance, original criteria and XP unchanged | NOT RUN |

@@ -17,7 +17,7 @@ current behavior from future product orchestration.
 | D06 | Implicit local profile id=1, no accounts | XP across saved lines; level derived rather than independently stored. |
 | D07 | Easy=10, medium=20, hard=30; level=floor(total_xp/100)+1 | Backend arithmetic only; no penalties/streaks/multipliers. |
 | D08 | One current quest per active questline; many saved lines | Detailed rule resolves broad one-at-a-time wording; UI selects one line. |
-| D09 | Initial 3–5; replacement unfinished plan 1–5 | Open replan bound allows one remaining action; completed history outside replacement count. |
+| D09 | Approved post-PRD: initial 2–6; replans cap completed + remaining at six | AI chooses the smallest useful count for the whole goal. One remaining stage is allowed; preserve completed records, never add filler. |
 | D10 | Optional deadline is timezone-aware RFC3339 instant; past dates allowed | Convert to UTC; missed deadline never fails line or deducts XP. |
 | D11 | Available minutes 1–1440; energy low/medium/high; bounded text | One session capacity, not total deliverable time; first quest estimate fits available minutes. |
 | D12 | At most one follow-up in a check-in chain | Optional fields never trigger questions; answered interaction cannot ask another. |
@@ -99,6 +99,76 @@ AI quality and actual demo-hardware/offline evidence still block declaring the P
 AI gate passed. No Phase 2 implementation, commit or push occurred in Phase 1B.
 
 ## Chosen assumptions
+
+### Approved post-PRD adaptive campaign sizing
+
+The user's finalized enhancement supersedes PRD v2.0's initial 3–5 target without
+editing the PRD. Initial proposals are 2–6; the configured local model selects
+count in the same generation call from complete-goal scope. Time/energy guide the
+first action, not the total campaign duration or an arbitrary number of stages.
+
+Matthew explicitly confirmed the six-stage cap includes completed history after
+replanning. Replacements are max(1,2−completed)..(6−completed), with one allowed
+when completed history supplies the other stage. No-history replans still need two.
+Completed IDs/XP remain immutable. Legacy histories larger than six remain readable
+and completable; they may be replanned down to six only while fewer than six stages
+are completed. If six are already completed, replan returns existing INVALID_STATE
+without inference or mutation; saved remaining work can still be completed.
+
+SQLite schema v3 changes only plan_versions count checks (initial 2–6, stored
+remaining 1–6). The explicit v2→v3 rebuild preserves every row; v1 upgrades chain
+atomically through v2. No permanent tables, fields, XP rules, inference budgets,
+models or UI design change. [DATABASE_DESIGN](DATABASE_DESIGN.md) details safeguards.
+
+### Phase 3D acceptance policy (supersedes Phase 3 review requirement)
+
+- The user's targeted reliability instruction replaces mandatory local-model
+  self-review with strict schema and deterministic essential checks.
+- Subjective/vague wording, optional suggestions, minor sequencing and borderline
+  effort/difficulty findings are internal diagnostic warnings. No review call or
+  warning-triggered repair runs in production generation or replanning.
+- Mandatory external dependencies, explicit contradictions/omissions, count/time
+  bounds, unsafe instructions and repeats of completed tasks remain blocking.
+  One shared bounded correction remains; no fabricated fallback or model change.
+- Database schema, transactions, idempotency, XP, public DTOs, clarification and
+  frontend Campaign Map are unchanged. Save rate is measured separately from
+  content usefulness in [AI_BENCHMARK](AI_BENCHMARK.md#15-phase-3d-essential-only-acceptance).
+
+### Phase 3 integration and evidence
+
+- Phase 2 was committed at aa9552e; the Phase 3 working tree began clean.
+- Schema v2 adds CheckIn and GenerationIntent without rebuilding any of the six
+  existing tables. The explicit startup v1 → v2 migration validates the old
+  catalog/state and commits DDL/version atomically; tests preserve earned XP,
+  completion history and all old rows, including failed-migration recovery.
+- The unique check-in→questline link lives on CheckIn, preserving legacy lines
+  without a new inverse FK. Production consume/create and successful intent
+  commit together by joining the existing quest engine's transaction.
+- Clarification/summary is deterministic rather than another small-model
+  classification call. It is bounded to one focused question per chain and works
+  without Ollama. Full original goal/answer is preserved, not replaced by summary.
+- Historical Phase 3 policy: one existing local Ollama client handles grounded generation and one compact
+  structured quality review. Proposal schema remains content-only; no AI state/XP.
+  All Ollama requests, including generic diagnostics, now reject remote URLs.
+  Normal diagnostic response contracts are preserved; non-loopback test hosts
+  were replaced with loopback mock hosts to test the same behavior.
+- Historical Phase 3 policy: literal/material/count/capacity checks reject known violations; a high-confidence
+  local review is also required. Neither mechanism proves semantic relevance.
+  Known omissions/repeated actions were rejected; the model still falsely approves
+  some plausible-looking plans. AI_SEMANTIC_REJECTED is a documented new 502 code.
+- Durable local intents use 135-second leases and attempt fencing, no job framework.
+  No database transaction spans inference. Same-key successes replay without AI;
+  conflicts/pending duplicates/failures/expired attempts have tested recovery.
+- Added GET /api/check-in/{id} for restart/refresh restoration. Other new routes
+  follow the existing contract; hint/shrink and frontend remain future work.
+- Real primary-model v1/v2 sweeps each produced 8/8 structural successes, but
+  saved 7/8 then 2/8. Codex content inspection accepted 2/8 then 1/8. Final v2.1
+  adds a tested explanation check and rechecks saved proposals without another
+  live sweep. See AI_BENCHMARK for latency, failures and preserved raw evidence.
+- **Phase 3 PARTIAL:** backend workflow/migration/recovery is implemented and
+  90 tests pass; semantic usefulness remains unreliable. Backup Phase 3 inference,
+  actual internet disconnection, Windows and independent team QA remain untested.
+  No frontend work, dependencies/models downloaded, PRD changes, commit or push.
 
 ### Phase 2 implementation decisions
 

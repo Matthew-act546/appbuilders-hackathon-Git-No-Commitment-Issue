@@ -1,0 +1,2298 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "grounded-quests-v3b",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-10T00:39:28.269250+08:00",
+  "reference_time": "2026-10-10T00:30:00+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 4583690240,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 120,
+    "attempt_seconds": 60,
+    "review_seconds": 30,
+    "review_num_predict": 300,
+    "max_proposal_attempts": 2,
+    "shared_format_quality_retry": true
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Finish a programming assignment",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": "2026-10-11T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What does the assignment require you to produce? Describe the relevant task and any required tools.",
+      "fictional_clarification_answer": "Implement binary search on a sorted integer list in C++ using the supplied local assignment brief; record two test cases.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.828241574999993,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 10476950,
+            "total_duration": 9811156863,
+            "eval_count": 283,
+            "eval_duration": 7509327000,
+            "prompt_eval_count": 1322,
+            "prompt_eval_duration": 1957943000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 6.090255256000091,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4004751,
+            "total_duration": 6078551992,
+            "eval_count": 225,
+            "eval_duration": 5822008000,
+            "prompt_eval_count": 1415,
+            "prompt_eval_duration": 203307000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with the Assignment Brief",
+            "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+            "completion_criteria": "Understand the requirements and have a clear plan for implementing binary search.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Implement Binary Search Function",
+            "action": "Write the binary search function for a sorted integer list in C++.",
+            "completion_criteria": "The binary search function is implemented and works correctly for a sample input.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Test the Binary Search Function",
+            "action": "Run two test cases to verify the correctness of the binary search implementation.",
+            "completion_criteria": "Two test cases pass, confirming the binary search function works as expected.",
+            "estimated_minutes": 8,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with the Assignment Brief",
+                "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+                "completion_criteria": "Understand the task and have a clear plan for implementing binary search.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Focus on the core logic of binary search and how it applies to a sorted list."
+              },
+              {
+                "title": "Implement the Binary Search Function",
+                "action": "Write the C++ code for the binary search function, ensuring it correctly handles the sorted integer list.",
+                "completion_criteria": "The binary search function is implemented and works correctly for a sample input.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Test the function with sample inputs to ensure correctness."
+              },
+              {
+                "title": "Test the Implementation",
+                "action": "Run the binary search function with two test cases provided in the assignment brief.",
+                "completion_criteria": "The function passes both test cases, confirming its correctness.",
+                "estimated_minutes": 8,
+                "difficulty": "medium",
+                "hint": "Focus on verifying the output for each test case to ensure accuracy."
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with the Assignment Brief",
+                "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+                "completion_criteria": "Understand the requirements and have a clear plan for implementing binary search.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Implement Binary Search Function",
+                "action": "Write the binary search function for a sorted integer list in C++.",
+                "completion_criteria": "The binary search function is implemented and works correctly for a sample input.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test the Binary Search Function",
+                "action": "Run two test cases to verify the correctness of the binary search implementation.",
+                "completion_criteria": "Two test cases pass, confirming the binary search function works as expected.",
+                "estimated_minutes": 8,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 15.965550364999217
+    },
+    {
+      "case": "B",
+      "input": {
+        "goal": "Prepare for an Algorithms and Complexity exam",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": "2026-10-13T15:59:00Z",
+        "contextual_notes": "Use local lecture notes on sorting and asymptotic analysis.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.487888816998748,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4964543,
+            "total_duration": 8475566775,
+            "eval_count": 285,
+            "eval_duration": 7355382000,
+            "prompt_eval_count": 1288,
+            "prompt_eval_duration": 848549000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.9289294319969486,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3845385,
+            "total_duration": 7911384042,
+            "eval_count": 282,
+            "eval_duration": 7667531000,
+            "prompt_eval_count": 1375,
+            "prompt_eval_duration": 203160000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Review Core Concepts",
+            "action": "Review local lecture notes on sorting algorithms, asymptotic analysis, and Big O notation. Focus on understanding the differences between various sorting methods and their time complexities.",
+            "completion_criteria": "Successfully review and summarize key concepts from the lecture notes, including sorting algorithms and asymptotic analysis.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Practice Sorting Algorithms",
+            "action": "Implement a simple sorting algorithm (e.g., Bubble Sort) in a text editor and test it with a sample dataset. Record the time it takes to sort a small list.",
+            "completion_criteria": "The algorithm runs successfully and sorts a small list within the session time.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Analyze Complexity",
+            "action": "Create a table comparing the time complexity of different sorting algorithms (e.g., Bubble Sort, Quick Sort, Merge Sort) for small and large input sizes.",
+            "completion_criteria": "A table is created showing the time complexity of each algorithm for different input sizes, and the results are recorded.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Review Sorting Algorithms",
+                "action": "Revisit the lecture notes on sorting algorithms, focusing on quicksort, mergesort, and heapsort. Identify key concepts such as time complexity, average case, and worst-case scenarios.",
+                "completion_criteria": "Understood the core concepts of sorting algorithms, including time complexity and average/worst-case performance.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Analyze Asymptotic Notation",
+                "action": "Review the lecture notes on asymptotic analysis, focusing on Big O, Big Theta, and Big Omega notations. Practice identifying the dominant term in a function.",
+                "completion_criteria": "Can correctly identify the dominant term in a given function using Big O notation.",
+                "estimated_minutes": 12,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Create a Sample Complexity Table",
+                "action": "Create a table comparing the time complexity of at least three sorting algorithms (e.g., quicksort, mergesort, heapsort) and their space complexity.",
+                "completion_criteria": "Created a table showing the time and space complexity of three sorting algorithms.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Review Core Concepts",
+                "action": "Review local lecture notes on sorting algorithms, asymptotic analysis, and Big O notation. Focus on understanding the differences between various sorting methods and their time complexities.",
+                "completion_criteria": "Successfully review and summarize key concepts from the lecture notes, including sorting algorithms and asymptotic analysis.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Practice Sorting Algorithms",
+                "action": "Implement a simple sorting algorithm (e.g., Bubble Sort) in a text editor and test it with a sample dataset. Record the time it takes to sort a small list.",
+                "completion_criteria": "The algorithm runs successfully and sorts a small list within the session time.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Analyze Complexity",
+                "action": "Create a table comparing the time complexity of different sorting algorithms (e.g., Bubble Sort, Quick Sort, Merge Sort) for small and large input sizes.",
+                "completion_criteria": "A table is created showing the time complexity of each algorithm for different input sizes, and the results are recorded.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "5dc10f4f-7541-47d7-8a94-dcc731f0bb05",
+        "goal": "Prepare for an Algorithms and Complexity exam",
+        "status": "active",
+        "deadline": "2026-10-13T15:59:00Z",
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:40:02.932432Z",
+        "updated_at": "2026-10-09T16:40:02.932432Z",
+        "available_minutes": 60,
+        "energy": "medium",
+        "current_quest": {
+          "id": "0ed4f66c-0a13-4ae5-9574-f5239190411e",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Review Core Concepts",
+          "action": "Review local lecture notes on sorting algorithms, asymptotic analysis, and Big O notation. Focus on understanding the differences between various sorting methods and their time complexities.",
+          "completion_criteria": "Successfully review and summarize key concepts from the lecture notes, including sorting algorithms and asymptotic analysis.",
+          "estimated_minutes": 10,
+          "difficulty": "medium",
+          "xp_reward": 20,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 18.422071228000277,
+      "end_to_end_seconds": 18.42763092500536
+    },
+    {
+      "case": "C",
+      "input": {
+        "goal": "Improve my programming skills",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which programming topic do you want to practice using tools you already have locally?",
+      "fictional_clarification_answer": "Practice Python list comprehensions by transforming three existing local example lists.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.497828588006087,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 5426635,
+            "total_duration": 9478177015,
+            "eval_count": 309,
+            "eval_duration": 8332923000,
+            "prompt_eval_count": 1274,
+            "prompt_eval_duration": 848307000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unsupported_assumption"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 6.226077580002311,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6479329,
+            "total_duration": 6210095891,
+            "eval_count": 220,
+            "eval_duration": 5923107000,
+            "prompt_eval_count": 1361,
+            "prompt_eval_duration": 212685000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Master Python List Comprehensions",
+            "action": "Practice Python list comprehensions by transforming three existing local example lists.",
+            "completion_criteria": "Three transformed lists are created and verified through a simple print statement.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Implement a Simple Function",
+            "action": "Create a function that filters even numbers from a list using list comprehensions.",
+            "completion_criteria": "The function is implemented and runs successfully with a sample input list.",
+            "estimated_minutes": 8,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Explore List Comprehension Patterns",
+            "action": "Identify and apply at least two different list comprehension patterns to a given list.",
+            "completion_criteria": "Two distinct list comprehension patterns are applied and the resulting output is observable.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple List Comprehension",
+                "action": "Practice a basic list comprehension to transform a local list of numbers into their squares.",
+                "completion_criteria": "The list has been transformed into a new list where each element is the square of the original.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Use the list comprehension syntax and ensure the transformation is applied to the local list."
+              },
+              {
+                "title": "Explore a Local List of Strings",
+                "action": "Apply a list comprehension to transform a local list of strings into a new list where each element is the string in uppercase.",
+                "completion_criteria": "The list has been transformed into a new list where each element is in uppercase.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Verify that the transformation is applied consistently across all elements."
+              },
+              {
+                "title": "Create a New List from an Existing One",
+                "action": "Use a list comprehension to create a new list from an existing list by filtering out even numbers.",
+                "completion_criteria": "The new list has been created and contains only the odd numbers from the original list.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Ensure that the filtering condition is correctly applied and that the resulting list is observable."
+              }
+            ]
+          },
+          "codes": [
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Master Python List Comprehensions",
+                "action": "Practice Python list comprehensions by transforming three existing local example lists.",
+                "completion_criteria": "Three transformed lists are created and verified through a simple print statement.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Implement a Simple Function",
+                "action": "Create a function that filters even numbers from a list using list comprehensions.",
+                "completion_criteria": "The function is implemented and runs successfully with a sample input list.",
+                "estimated_minutes": 8,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Explore List Comprehension Patterns",
+                "action": "Identify and apply at least two different list comprehension patterns to a given list.",
+                "completion_criteria": "Two distinct list comprehension patterns are applied and the resulting output is observable.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 15.74636886499502
+    },
+    {
+      "case": "D",
+      "input": {
+        "goal": "Prepare a project presentation",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": "2026-10-10T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What is the presentation topic and the main result you need to communicate?",
+      "fictional_clarification_answer": "Explain how SQLite transactions prevent duplicate XP using the existing local project notes.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.605086003997712,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6798213,
+            "total_duration": 8586205924,
+            "eval_count": 275,
+            "eval_duration": 7344780000,
+            "prompt_eval_count": 1305,
+            "prompt_eval_duration": 908879000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unrelated"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.660271455002658,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 5717868,
+            "total_duration": 7643753263,
+            "eval_count": 276,
+            "eval_duration": 7382077000,
+            "prompt_eval_count": 1390,
+            "prompt_eval_duration": 206121000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unrelated"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Organize Project Notes",
+            "action": "Sort and categorize existing project notes by topic, date, and priority. Group related information and identify key insights or recurring patterns.",
+            "completion_criteria": "Project notes are organized by topic, date, and priority. Key insights or recurring patterns are clearly identified.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create a Visual Outline",
+            "action": "Use the organized project notes to create a visual outline of the presentation. Include main topics, key points, and supporting details.",
+            "completion_criteria": "A visual outline of the presentation is created. The outline includes main topics, key points, and supporting details.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Prepare Key Points",
+            "action": "Extract and summarize the most important information from the visual outline. Focus on the main arguments, data, and conclusions of the project.",
+            "completion_criteria": "Key points of the presentation are extracted and summarized. The summary includes the main arguments, data, and conclusions of the project.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Organize Project Notes",
+                "action": "Review and categorize existing project notes to identify relevant information for the presentation.",
+                "completion_criteria": "Project notes are organized into logical sections and grouped by topic.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Focus on key components like objectives, timeline, and deliverables."
+              },
+              {
+                "title": "Create a Visual Outline",
+                "action": "Sketch a rough visual outline of the presentation using the organized project notes.",
+                "completion_criteria": "A clear visual outline of the presentation is created with key points and flow.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Start with the main sections and add supporting details as needed."
+              },
+              {
+                "title": "Prepare Key Points",
+                "action": "Extract and summarize the most important points from the project notes for each section of the presentation.",
+                "completion_criteria": "Key points for each section of the presentation are clearly identified and ready for delivery.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": "Focus on the most critical information and ensure clarity and conciseness."
+              }
+            ]
+          },
+          "codes": [
+            "unrelated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Organize Project Notes",
+                "action": "Sort and categorize existing project notes by topic, date, and priority. Group related information and identify key insights or recurring patterns.",
+                "completion_criteria": "Project notes are organized by topic, date, and priority. Key insights or recurring patterns are clearly identified.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create a Visual Outline",
+                "action": "Use the organized project notes to create a visual outline of the presentation. Include main topics, key points, and supporting details.",
+                "completion_criteria": "A visual outline of the presentation is created. The outline includes main topics, key points, and supporting details.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Prepare Key Points",
+                "action": "Extract and summarize the most important information from the visual outline. Focus on the main arguments, data, and conclusions of the project.",
+                "completion_criteria": "Key points of the presentation are extracted and summarized. The summary includes the main arguments, data, and conclusions of the project.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unrelated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unrelated"
+        ]
+      },
+      "end_to_end_seconds": 16.286890420000418
+    },
+    {
+      "case": "E",
+      "input": {
+        "goal": "Build a basic CRUD web application",
+        "available_minutes": 90,
+        "energy": "high",
+        "deadline": "2026-10-17T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which records should the CRUD app manage, and which existing local stack will you use?",
+      "fictional_clarification_answer": "Manage book records with title and author using an existing FastAPI and SQLite project. Local CRUD only, no login or deployment.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.786761563002074,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4604026,
+            "total_duration": 10768668360,
+            "eval_count": 362,
+            "eval_duration": 9541940000,
+            "prompt_eval_count": 1331,
+            "prompt_eval_duration": 942560000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria",
+            "unsupported_assumption"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 8.828902321001806,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3750194,
+            "total_duration": 8804143972,
+            "eval_count": 315,
+            "eval_duration": 8556920000,
+            "prompt_eval_count": 1428,
+            "prompt_eval_duration": 206609000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Setup Project Structure",
+            "action": "Initialize a FastAPI project with SQLite using existing tools, creating a `books` table with `id`, `title`, and `author` columns.",
+            "completion_criteria": "The `books` table is created in the SQLite database, and the FastAPI project has a `main.py` file with the necessary imports and routes.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create Book Model",
+            "action": "Define a Python class `Book` with attributes `id`, `title`, and `author`, and implement methods to add, retrieve, and update book records.",
+            "completion_criteria": "The `Book` class is defined with the required attributes, and a method `create_book` is implemented to add a new book to the database.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Implement CRUD Operations",
+            "action": "Implement the `read`, `create`, and `update` operations for the `Book` model using the SQLite database and FastAPI routes.",
+            "completion_criteria": "The `read` operation returns a list of books, the `create` operation adds a new book to the database, and the `update` operation modifies an existing book.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Setup Project Structure",
+                "action": "Initialize a FastAPI project with SQLite using existing tools, creating a `books` table with `id`, `title`, and `author` columns.",
+                "completion_criteria": "The `books` table exists in the database, and the FastAPI project has been initialized with the required structure.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": "Use the existing project files and ensure the `books` table is created with the correct schema."
+              },
+              {
+                "title": "Create Book Model",
+                "action": "Define a Python class for the `Book` model, including attributes for title and author, and implement basic CRUD operations.",
+                "completion_criteria": "The `Book` class has been defined with `title` and `author` attributes, and basic CRUD methods are implemented.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": "Ensure the class is properly initialized and that methods like `create`, `read`, `update`, and `delete` are implemented."
+              },
+              {
+                "title": "Implement CRUD Operations",
+                "action": "Implement the `create`, `read`, `update`, and `delete` functions in the FastAPI application to interact with the `books` table.",
+                "completion_criteria": "The FastAPI application has been configured to handle CRUD operations on the `books` table, and the `read` endpoint returns the correct data.",
+                "estimated_minutes": 20,
+                "difficulty": "medium",
+                "hint": "Test each operation individually to ensure it works as expected."
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Setup Project Structure",
+                "action": "Initialize a FastAPI project with SQLite using existing tools, creating a `books` table with `id`, `title`, and `author` columns.",
+                "completion_criteria": "The `books` table is created in the SQLite database, and the FastAPI project has a `main.py` file with the necessary imports and routes.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create Book Model",
+                "action": "Define a Python class `Book` with attributes `id`, `title`, and `author`, and implement methods to add, retrieve, and update book records.",
+                "completion_criteria": "The `Book` class is defined with the required attributes, and a method `create_book` is implemented to add a new book to the database.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Implement CRUD Operations",
+                "action": "Implement the `read`, `create`, and `update` operations for the `Book` model using the SQLite database and FastAPI routes.",
+                "completion_criteria": "The `read` operation returns a list of books, the `create` operation adds a new book to the database, and the `update` operation modifies an existing book.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "unsupported_assumption"
+        ]
+      },
+      "end_to_end_seconds": 19.640900204998616
+    },
+    {
+      "case": "F",
+      "input": {
+        "goal": "Write three unit tests for my FastAPI login endpoint",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": "Use the existing local test runner and fixtures. Three total tests, no new app or tools.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.324851345001662,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6693629,
+            "total_duration": 8307491157,
+            "eval_count": 256,
+            "eval_duration": 7097061000,
+            "prompt_eval_count": 1273,
+            "prompt_eval_duration": 854779000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.487424661994737,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6876114,
+            "total_duration": 7458009021,
+            "eval_count": 266,
+            "eval_duration": 7166842000,
+            "prompt_eval_count": 1362,
+            "prompt_eval_duration": 216877000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Set up the test environment",
+            "action": "Install a local test runner (e.g., pytest) and configure the test fixtures for the FastAPI login endpoint.",
+            "completion_criteria": "The test runner is installed and configured, and the test fixtures are set up for the login endpoint.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Write the first unit test",
+            "action": "Write a unit test that verifies the basic functionality of the login endpoint, such as handling correct credentials and returning a 200 status code.",
+            "completion_criteria": "The test passes and verifies that the login endpoint returns a 200 status code for valid credentials.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Write the second unit test",
+            "action": "Write a unit test that handles invalid credentials and verifies the appropriate error response is returned.",
+            "completion_criteria": "The test passes and verifies that the login endpoint returns a 401 status code for invalid credentials.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Set Up Test Environment",
+                "action": "Install and configure the local test runner (e.g., pytest, unittest) and set up a test fixture for the FastAPI login endpoint.",
+                "completion_criteria": "The local test runner is configured, and a basic test fixture is created for the login endpoint.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Write First Test",
+                "action": "Write a unit test that verifies the basic functionality of the login endpoint, such as checking if a user is authenticated.",
+                "completion_criteria": "A unit test has been written that verifies the basic authentication logic of the login endpoint.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Write Second Test",
+                "action": "Write another unit test that checks the response status code and content when a user is not authenticated.",
+                "completion_criteria": "A second unit test has been written that verifies the response status code and content for unauthenticated users.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Set up the test environment",
+                "action": "Install a local test runner (e.g., pytest) and configure the test fixtures for the FastAPI login endpoint.",
+                "completion_criteria": "The test runner is installed and configured, and the test fixtures are set up for the login endpoint.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Write the first unit test",
+                "action": "Write a unit test that verifies the basic functionality of the login endpoint, such as handling correct credentials and returning a 200 status code.",
+                "completion_criteria": "The test passes and verifies that the login endpoint returns a 200 status code for valid credentials.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Write the second unit test",
+                "action": "Write a unit test that handles invalid credentials and verifies the appropriate error response is returned.",
+                "completion_criteria": "The test passes and verifies that the login endpoint returns a 401 status code for invalid credentials.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "unsupported_assumption"
+        ]
+      },
+      "end_to_end_seconds": 15.856921909995435
+    },
+    {
+      "case": "G",
+      "input": {
+        "goal": "Draft a one-page explanation of SQLite transactions using only local notes",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": "Existing local text editor and notes; no internet or new downloads.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 12.148123131002649,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 7062353,
+            "total_duration": 12132460321,
+            "eval_count": 402,
+            "eval_duration": 10933808000,
+            "prompt_eval_count": 1271,
+            "prompt_eval_duration": 844186000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with a Simple Transaction",
+            "action": "Use the local text editor to draft a basic transaction example, such as `BEGIN TRANSACTION; INSERT INTO table VALUES(...); COMMIT;` and note the key terms like `BEGIN`, `COMMIT`, and `ROLLBACK`.",
+            "completion_criteria": "The draft contains a clear example of a simple transaction with the key terms noted, and the text is formatted in a readable manner.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Focus on the basic structure of a transaction and ensure the example is concrete and observable."
+          },
+          {
+            "title": "Create a Transaction Log",
+            "action": "In the local notes, create a simple log of transaction steps, such as `BEGIN`, `INSERT`, `UPDATE`, `COMMIT`, and `ROLLBACK`, and note the order and purpose of each step.",
+            "completion_criteria": "The log contains a clear sequence of transaction steps with explanations of each action and its purpose, and the notes are organized in a logical order.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Ensure the log is structured and each step is clearly labeled for easy reference."
+          },
+          {
+            "title": "Draft a One-Page Explanation",
+            "action": "Use the local notes to compose a one-page explanation of SQLite transactions, including the purpose of transactions, the basic syntax, and an example of a complete transaction.",
+            "completion_criteria": "The explanation is complete, includes the purpose of transactions, basic syntax, and a concrete example, and is formatted in a readable, concise manner.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Focus on clarity and ensure the explanation is structured to guide the reader through the key concepts."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple Transaction",
+                "action": "Use the local text editor to draft a basic transaction example, such as `BEGIN TRANSACTION; INSERT INTO table VALUES(...); COMMIT;` and note the key terms like `BEGIN`, `COMMIT`, and `ROLLBACK`.",
+                "completion_criteria": "The draft contains a clear example of a simple transaction with the key terms noted, and the text is formatted in a readable manner.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Focus on the basic structure of a transaction and ensure the example is concrete and observable."
+              },
+              {
+                "title": "Create a Transaction Log",
+                "action": "In the local notes, create a simple log of transaction steps, such as `BEGIN`, `INSERT`, `UPDATE`, `COMMIT`, and `ROLLBACK`, and note the order and purpose of each step.",
+                "completion_criteria": "The log contains a clear sequence of transaction steps with explanations of each action and its purpose, and the notes are organized in a logical order.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Ensure the log is structured and each step is clearly labeled for easy reference."
+              },
+              {
+                "title": "Draft a One-Page Explanation",
+                "action": "Use the local notes to compose a one-page explanation of SQLite transactions, including the purpose of transactions, the basic syntax, and an example of a complete transaction.",
+                "completion_criteria": "The explanation is complete, includes the purpose of transactions, basic syntax, and a concrete example, and is formatted in a readable, concise manner.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Focus on clarity and ensure the explanation is structured to guide the reader through the key concepts."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "38cbb821-c6e9-46fa-b3a0-674fb28f1d09",
+        "goal": "Draft a one-page explanation of SQLite transactions using only local notes",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:41:24.386789Z",
+        "updated_at": "2026-10-09T16:41:24.386789Z",
+        "available_minutes": 15,
+        "energy": "low",
+        "current_quest": {
+          "id": "d2d6ad9a-16d8-4ced-b5dd-d055490b8b23",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Start with a Simple Transaction",
+          "action": "Use the local text editor to draft a basic transaction example, such as `BEGIN TRANSACTION; INSERT INTO table VALUES(...); COMMIT;` and note the key terms like `BEGIN`, `COMMIT`, and `ROLLBACK`.",
+          "completion_criteria": "The draft contains a clear example of a simple transaction with the key terms noted, and the text is formatted in a readable manner.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Focus on the basic structure of a transaction and ensure the example is concrete and observable.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 13.88078792199667,
+      "end_to_end_seconds": 13.888100569995004
+    },
+    {
+      "case": "I",
+      "input": {
+        "goal": "i want to make a dish but im tired",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which dish or ingredients you already have would you like to use?",
+      "fictional_clarification_answer": "Make a no-cook sandwich using sliced bread, cheese and washed lettuce that I already have.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.879243889998179,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3420096,
+            "total_duration": 8865868449,
+            "eval_count": 298,
+            "eval_duration": 7753847000,
+            "prompt_eval_count": 1295,
+            "prompt_eval_duration": 852430000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 6.199478388996795,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3496518,
+            "total_duration": 6185617731,
+            "eval_count": 230,
+            "eval_duration": 5932730000,
+            "prompt_eval_count": 1382,
+            "prompt_eval_duration": 203528000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Prepare the Base",
+            "action": "Slice the bread into thin pieces, wash the lettuce, and spread the cheese on the bread.",
+            "completion_criteria": "The bread is sliced into thin pieces, the lettuce is washed, and the cheese is evenly spread on the bread.",
+            "estimated_minutes": 3,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Assemble the Sandwich",
+            "action": "Place the sliced bread, lettuce, and cheese on a plate and secure it with a small piece of plastic wrap.",
+            "completion_criteria": "The sandwich is assembled on a plate with the ingredients properly arranged.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Serve the Sandwich",
+            "action": "Place the assembled sandwich on a plate and serve it immediately.",
+            "completion_criteria": "The sandwich is on a plate and ready to be served.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the ingredients",
+                "action": "Wash the lettuce, spread the sliced bread, and place the cheese on top of the bread. Arrange the ingredients in a ready-to-eat configuration.",
+                "completion_criteria": "The sliced bread, cheese, and washed lettuce are arranged in a visible, observable configuration on a plate.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Focus on the observable arrangement of ingredients rather than cooking."
+              },
+              {
+                "title": "Assemble the sandwich",
+                "action": "Place the cheese on one slice of bread, add the lettuce, and stack the slices together to form a sandwich.",
+                "completion_criteria": "The sandwich is formed with the cheese, lettuce, and bread in a visible, observable configuration.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": "Ensure the sandwich is stable and the ingredients are in the correct order."
+              },
+              {
+                "title": "Serve the sandwich",
+                "action": "Place the assembled sandwich on a plate and ensure it is ready for serving.",
+                "completion_criteria": "The sandwich is on a plate and ready for consumption.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Focus on the final arrangement and readiness for consumption."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the Base",
+                "action": "Slice the bread into thin pieces, wash the lettuce, and spread the cheese on the bread.",
+                "completion_criteria": "The bread is sliced into thin pieces, the lettuce is washed, and the cheese is evenly spread on the bread.",
+                "estimated_minutes": 3,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Assemble the Sandwich",
+                "action": "Place the sliced bread, lettuce, and cheese on a plate and secure it with a small piece of plastic wrap.",
+                "completion_criteria": "The sandwich is assembled on a plate with the ingredients properly arranged.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Serve the Sandwich",
+                "action": "Place the assembled sandwich on a plate and serve it immediately.",
+                "completion_criteria": "The sandwich is on a plate and ready to be served.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "a7045f0a-9fab-4cc0-be7f-9b549d673fdc",
+        "goal": "i want to make a dish but im tired",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:41:41.245735Z",
+        "updated_at": "2026-10-09T16:41:41.245735Z",
+        "available_minutes": 10,
+        "energy": "low",
+        "current_quest": {
+          "id": "878e9214-c009-4f3d-81e7-c2554b5d4d26",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Prepare the Base",
+          "action": "Slice the bread into thin pieces, wash the lettuce, and spread the cheese on the bread.",
+          "completion_criteria": "The bread is sliced into thin pieces, the lettuce is washed, and the cheese is evenly spread on the bread.",
+          "estimated_minutes": 3,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 16.852190558995062,
+      "end_to_end_seconds": 16.859373767998477
+    },
+    {
+      "case": "J",
+      "input": {
+        "goal": "Study Python list comprehensions using my three existing example lists",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.43571563000296,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3833488,
+            "total_duration": 9423736327,
+            "eval_count": 325,
+            "eval_duration": 8398593999,
+            "prompt_eval_count": 1258,
+            "prompt_eval_duration": 804378000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.677805343999353,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4597636,
+            "total_duration": 7662858939,
+            "eval_count": 266,
+            "eval_duration": 7404629000,
+            "prompt_eval_count": 1345,
+            "prompt_eval_duration": 203407000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Understand List Comprehensions Basics",
+            "action": "Review the three example lists and identify their structure, elements, and patterns.",
+            "completion_criteria": "Understand the syntax and purpose of list comprehensions in Python, and be able to identify the components: expression, iteration, and comprehension.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create a Simple List Comprehension",
+            "action": "Use the first example list to create a list comprehension that filters out even numbers.",
+            "completion_criteria": "A list comprehension that filters even numbers from the first example list, and the output is a new list with only the odd numbers.",
+            "estimated_minutes": 3,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Apply List Comprehension to Second Example List",
+            "action": "Use the second example list to create a list comprehension that squares each number.",
+            "completion_criteria": "A list comprehension that squares each number from the second example list, and the output is a new list with the squared values.",
+            "estimated_minutes": 3,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Explore List Comprehensions Basics",
+                "action": "Review the three existing example lists and identify their structure. Focus on how each list is created using a simple syntax.",
+                "completion_criteria": "Understood the basic syntax of list comprehensions and can create simple lists using the provided examples.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Look for patterns in the examples and focus on the elements used in the list comprehensions."
+              },
+              {
+                "title": "Create a Simple List Comprehension",
+                "action": "Take one of the example lists and create a list comprehension that transforms the elements. For example, convert all numbers to their squares.",
+                "completion_criteria": "Created a list comprehension that transforms elements of the provided list and produced the expected output.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use the syntax [expression for item in iterable] to create the list comprehension."
+              },
+              {
+                "title": "Apply List Comprehensions to Real-World Data",
+                "action": "Use the third example list to create a list comprehension that filters out even numbers and returns only the odd ones.",
+                "completion_criteria": "Created a list comprehension that filters the provided list and produced the expected output.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a conditional expression within the list comprehension to filter the elements."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Understand List Comprehensions Basics",
+                "action": "Review the three example lists and identify their structure, elements, and patterns.",
+                "completion_criteria": "Understand the syntax and purpose of list comprehensions in Python, and be able to identify the components: expression, iteration, and comprehension.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create a Simple List Comprehension",
+                "action": "Use the first example list to create a list comprehension that filters out even numbers.",
+                "completion_criteria": "A list comprehension that filters even numbers from the first example list, and the output is a new list with only the odd numbers.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Apply List Comprehension to Second Example List",
+                "action": "Use the second example list to create a list comprehension that squares each number.",
+                "completion_criteria": "A list comprehension that squares each number from the second example list, and the output is a new list with the squared values.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 17.129440316006367
+    },
+    {
+      "case": "K",
+      "input": {
+        "goal": "Make a no-cook vegetarian snack using only bread, tomato and cheese; no stove and no shopping",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.940725533997465,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3697402,
+            "total_duration": 8915057286,
+            "eval_count": 295,
+            "eval_duration": 7720859000,
+            "prompt_eval_count": 1276,
+            "prompt_eval_duration": 856283000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 9.094447953000781,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4957061,
+            "total_duration": 9078514223,
+            "eval_count": 316,
+            "eval_duration": 8814414000,
+            "prompt_eval_count": 1363,
+            "prompt_eval_duration": 212201000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Prepare the Base",
+            "action": "Take 1 slice of bread, 1 ripe tomato, and 1 slice of cheese from the existing materials. Arrange them on a clean plate to form the base of the snack.",
+            "completion_criteria": "The bread, tomato, and cheese are arranged on a clean plate, forming a visible base for the snack.",
+            "estimated_minutes": 3,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create the Layer",
+            "action": "Using the bread, tomato, and cheese, create a simple layer by pressing the tomato onto the bread and spreading the cheese over it. Ensure the layers are even and secure.",
+            "completion_criteria": "The tomato is pressed onto the bread, and the cheese is evenly spread over the surface, forming a visible layer.",
+            "estimated_minutes": 2,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Assemble the Snack",
+            "action": "Take the layered base and place it on a clean surface. Use the remaining materials to form a simple shape, such as a rectangle or triangle, and secure it with a small amount of cheese or tomato.",
+            "completion_criteria": "The layered base is placed on a clean surface, and a simple shape is formed using the remaining materials, ensuring the snack is stable and observable.",
+            "estimated_minutes": 3,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare Basic Ingredients",
+                "action": "Gather the necessary ingredients: bread, tomato, and cheese. Ensure they are ready-to-use and in a visible location.",
+                "completion_criteria": "Bread, tomato, and cheese are all present and ready for use.",
+                "estimated_minutes": 3,
+                "difficulty": "easy",
+                "hint": "Focus on the basics to build a foundation for the snack."
+              },
+              {
+                "title": "Create a Simple Sandwich",
+                "action": "Form a sandwich using the bread, tomato, and cheese. Arrange them in a way that ensures the snack is safe and edible.",
+                "completion_criteria": "A sandwich is formed with bread, tomato, and cheese, and it is stable and secure.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Ensure the layers are properly aligned to prevent any structural issues."
+              },
+              {
+                "title": "Serve the Snack",
+                "action": "Place the completed sandwich on a plate and serve it as a no-cook vegetarian snack.",
+                "completion_criteria": "The sandwich is on a plate and ready for serving.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Focus on the observable outcome of the snack being ready and served."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the Base",
+                "action": "Take 1 slice of bread, 1 ripe tomato, and 1 slice of cheese from the existing materials. Arrange them on a clean plate to form the base of the snack.",
+                "completion_criteria": "The bread, tomato, and cheese are arranged on a clean plate, forming a visible base for the snack.",
+                "estimated_minutes": 3,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create the Layer",
+                "action": "Using the bread, tomato, and cheese, create a simple layer by pressing the tomato onto the bread and spreading the cheese over it. Ensure the layers are even and secure.",
+                "completion_criteria": "The tomato is pressed onto the bread, and the cheese is evenly spread over the surface, forming a visible layer.",
+                "estimated_minutes": 2,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Assemble the Snack",
+                "action": "Take the layered base and place it on a clean surface. Use the remaining materials to form a simple shape, such as a rectangle or triangle, and secure it with a small amount of cheese or tomato.",
+                "completion_criteria": "The layered base is placed on a clean surface, and a simple shape is formed using the remaining materials, ensuring the snack is stable and observable.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 18.05497374299739
+    },
+    {
+      "case": "L",
+      "input": {
+        "goal": "Tidy the items on my desk using the storage already beside it",
+        "available_minutes": 5,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 18.76802150200092,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 12401970,
+            "total_duration": 18752476209,
+            "eval_count": 290,
+            "eval_duration": 7858096000,
+            "prompt_eval_count": 1261,
+            "prompt_eval_duration": 868878000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Position the storage container",
+            "action": "Place the storage container beside the desk to ensure it is accessible and properly positioned for tidying.",
+            "completion_criteria": "The storage container is placed beside the desk and is visible and accessible.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": "Ensure the storage container is stable and not obstructing the desk area."
+          },
+          {
+            "title": "Sort items into designated bins",
+            "action": "Take items from the desk and sort them into the storage container's designated bins or compartments.",
+            "completion_criteria": "Items are neatly sorted into the storage container's bins and compartments.",
+            "estimated_minutes": 3,
+            "difficulty": "medium",
+            "hint": "Use labels or markers to identify each bin for easy identification."
+          },
+          {
+            "title": "Check for loose items",
+            "action": "Inspect the desk area for any loose items that can be placed into the storage container.",
+            "completion_criteria": "All loose items on the desk are placed into the storage container and the desk area is clear of loose items.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": "Focus on items that are not securely fastened or stuck to the desk."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Position the storage container",
+                "action": "Place the storage container beside the desk to ensure it is accessible and properly positioned for tidying.",
+                "completion_criteria": "The storage container is placed beside the desk and is visible and accessible.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Ensure the storage container is stable and not obstructing the desk area."
+              },
+              {
+                "title": "Sort items into designated bins",
+                "action": "Take items from the desk and sort them into the storage container's designated bins or compartments.",
+                "completion_criteria": "Items are neatly sorted into the storage container's bins and compartments.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": "Use labels or markers to identify each bin for easy identification."
+              },
+              {
+                "title": "Check for loose items",
+                "action": "Inspect the desk area for any loose items that can be placed into the storage container.",
+                "completion_criteria": "All loose items on the desk are placed into the storage container and the desk area is clear of loose items.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Focus on items that are not securely fastened or stuck to the desk."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "8e5b08c2-0b00-46ef-9cc2-943a785d1c65",
+        "goal": "Tidy the items on my desk using the storage already beside it",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:42:43.657932Z",
+        "updated_at": "2026-10-09T16:42:43.657932Z",
+        "available_minutes": 5,
+        "energy": "low",
+        "current_quest": {
+          "id": "eb9bd91c-356a-49b7-9261-e918f3cafbf6",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Position the storage container",
+          "action": "Place the storage container beside the desk to ensure it is accessible and properly positioned for tidying.",
+          "completion_criteria": "The storage container is placed beside the desk and is visible and accessible.",
+          "estimated_minutes": 2,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Ensure the storage container is stable and not obstructing the desk area.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 27.215835595998215,
+      "end_to_end_seconds": 27.22299965199636
+    },
+    {
+      "case": "H",
+      "source_goal": "Prepare for an Algorithms and Complexity exam",
+      "synthetic_explicit_completion": true,
+      "profile_before": {
+        "id": 1,
+        "total_xp": 20,
+        "level": 1
+      },
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 15.095790694002062,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 12295725,
+            "total_duration": 15069869715,
+            "eval_count": 428,
+            "eval_duration": 11698172000,
+            "prompt_eval_count": 1356,
+            "prompt_eval_duration": 1988596000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 11.735125311999582,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4131330,
+            "total_duration": 11719620164,
+            "eval_count": 421,
+            "eval_duration": 11458491000,
+            "prompt_eval_count": 1448,
+            "prompt_eval_duration": 208230000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Review Core Concepts",
+            "action": "Review local lecture notes on sorting algorithms, asymptotic analysis, and Big O notation. Focus on understanding the differences between various sorting methods and their time complexities.",
+            "completion_criteria": "Successfully review and summarize key concepts from the lecture notes, including sorting algorithms and asymptotic analysis.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Practice Sorting Algorithms",
+            "action": "Implement a simple sorting algorithm (e.g., Bubble Sort) and test its performance using a small dataset.",
+            "completion_criteria": "The implementation of Bubble Sort works correctly and produces a sorted output for a small dataset.",
+            "estimated_minutes": 7,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Analyze Time Complexity",
+            "action": "Identify the time complexity of the implemented sorting algorithm and compare it with known complexities (e.g., O(n log n) for Merge Sort, O(n²) for Bubble Sort).",
+            "completion_criteria": "The time complexity of the implemented algorithm is accurately identified and compared with known complexities.",
+            "estimated_minutes": 6,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Prepare for Exam",
+            "action": "Create a summary of key concepts, including sorting algorithms, asymptotic analysis, and time complexity, in a concise format.",
+            "completion_criteria": "A concise summary of key concepts is created, including sorting algorithms and asymptotic analysis.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Test Understanding",
+            "action": "Attempt a short quiz or practice problem related to sorting algorithms and asymptotic analysis.",
+            "completion_criteria": "Successfully complete a short quiz or practice problem related to sorting algorithms and asymptotic analysis.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Review Core Concepts",
+                "action": "Review local lecture notes on sorting algorithms, asymptotic analysis, and Big O notation. Focus on understanding the differences between various sorting methods and their time complexities.",
+                "completion_criteria": "Successfully review and summarize key concepts from the lecture notes, including sorting algorithms and asymptotic analysis.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Practice Sorting Algorithms",
+                "action": "Implement a simple sorting algorithm (e.g., Bubble Sort) and test its performance on a small dataset.",
+                "completion_criteria": "The implementation of Bubble Sort works correctly on a small dataset and produces the expected sorted output.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Analyze Time Complexity",
+                "action": "Identify the time complexity of the implemented sorting algorithm and compare it with known complexities (e.g., O(n log n) for Merge Sort, O(n²) for Bubble Sort).",
+                "completion_criteria": "The time complexity of the implemented algorithm is accurately identified and compared with known complexities.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Prepare for Exam",
+                "action": "Create a summary of key concepts, including sorting algorithms, asymptotic analysis, and time complexity, in a short document or list.",
+                "completion_criteria": "A concise summary of key concepts is created, including sorting algorithms and their time complexities.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test Understanding",
+                "action": "Attempt a short quiz or self-assessment on the material covered, focusing on sorting algorithms and asymptotic analysis.",
+                "completion_criteria": "Successfully complete the quiz or self-assessment and demonstrate understanding of the material.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Review Core Concepts",
+                "action": "Review local lecture notes on sorting algorithms, asymptotic analysis, and Big O notation. Focus on understanding the differences between various sorting methods and their time complexities.",
+                "completion_criteria": "Successfully review and summarize key concepts from the lecture notes, including sorting algorithms and asymptotic analysis.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Practice Sorting Algorithms",
+                "action": "Implement a simple sorting algorithm (e.g., Bubble Sort) and test its performance using a small dataset.",
+                "completion_criteria": "The implementation of Bubble Sort works correctly and produces a sorted output for a small dataset.",
+                "estimated_minutes": 7,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Analyze Time Complexity",
+                "action": "Identify the time complexity of the implemented sorting algorithm and compare it with known complexities (e.g., O(n log n) for Merge Sort, O(n²) for Bubble Sort).",
+                "completion_criteria": "The time complexity of the implemented algorithm is accurately identified and compared with known complexities.",
+                "estimated_minutes": 6,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Prepare for Exam",
+                "action": "Create a summary of key concepts, including sorting algorithms, asymptotic analysis, and time complexity, in a concise format.",
+                "completion_criteria": "A concise summary of key concepts is created, including sorting algorithms and asymptotic analysis.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test Understanding",
+                "action": "Attempt a short quiz or practice problem related to sorting algorithms and asymptotic analysis.",
+                "completion_criteria": "Successfully complete a short quiz or practice problem related to sorting algorithms and asymptotic analysis.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "unobservable_criteria"
+        ]
+      },
+      "history_preserved": true,
+      "xp_preserved": true,
+      "end_to_end_seconds": 26.882212473006803
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "size": 1702593821,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2026-10-10T00:41:01.155420369+08:00",
+        "size_vram": 1702593821,
+        "context_length": 4096,
+        "runner": "llamacpp"
+      }
+    ]
+  },
+  "summary": {
+    "runs": 12,
+    "structurally_valid_plans": 12,
+    "pipeline_accepted": 4,
+    "first_attempt_structural_successes": 12,
+    "operations_with_retry": 10,
+    "timeouts": 0,
+    "median_end_to_end_seconds": 16.994407042002422,
+    "max_end_to_end_seconds": 27.22299965199636
+  },
+  "status": "measured; independent semantic review pending"
+}

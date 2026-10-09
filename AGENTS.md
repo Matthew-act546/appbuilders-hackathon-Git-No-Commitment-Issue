@@ -16,10 +16,15 @@ audit; implement only the phase explicitly authorized by Matthew.
 
 ## Product and architecture
 
-- P0: capacity-aware check-in → 3–5 meaningful quests → one current quest per
+- P0: capacity-aware check-in → 2–6 meaningful stages → one current quest per
   active questline → explicit completion/XP/unlock → hint/shrink/replan/pause/resume
   → saved history and restart-safe progress. Multiple saved questlines are allowed;
   the UI focuses on one selected line.
+  Approved post-PRD adaptive sizing: AI chooses the smallest useful count for the
+  complete goal, possibly across sessions; no classification call or filler.
+  Replans preserve history and cap completed plus replacement stages at six;
+  one remaining stage is allowed once history supplies another stage. See
+  [DECISIONS](docs/DECISIONS.md).
 - Desktop web app, **not PWA**, on one laptop. React/TypeScript/Vite/Tailwind →
   Python 3.11+/FastAPI/Pydantic/SQLAlchemy/SQLite + HTTPX/Ollama. React Router and
   Pydantic Settings are reusable scaffold infrastructure. Phase 1 removes legacy

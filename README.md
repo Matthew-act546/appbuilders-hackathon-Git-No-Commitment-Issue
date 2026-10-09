@@ -5,12 +5,30 @@ deliverables and reported time/energy into manageable quests, one current quest
 per questline, with deterministic XP and local persistence. The finalized
 [PRD v2.0](docs/Local_AI_Quest_Companion_Final_PRD.docx) is the product source of truth.
 
-**Current status: Phase 2 deterministic backend implemented; Phase 1B AI feasibility partial.**
-The UI remains the generic landing/status/prompt scaffold. An internal structured
+**Current status: working core quest flow with Phase 4C campaign presentation.**
+The Phase 4A forest-themed shell is preserved. Home now submits check-ins, presents
+the server's clarification, and explicitly generates a saved questline. My Quests
+loads saved work as a sequential Campaign Map with 2–3 source-derived checklist
+checkpoints, completes current stages with backend-confirmed XP, and supports
+pause/resume and refresh recovery. XP/level read the local backend profile; service
+status and the existing generic prompt test remain in the header settings dialog.
+Campaign progress distinguishes earned campaign XP from lifetime profile XP. Checklist
+marks are temporary; only whole-stage completion is saved. Initial plans remain
+2–6 stages selected by the local model for the whole goal, without padding.
+Session time guides the first action, not total campaign duration. Replanning
+caps completed plus remaining stages at six and preserves all earned progress.
+This is an approved post-PRD enhancement; PRD v2.0 remains unchanged. SQLite v3
+startup preserves existing campaigns while updating the plan-count constraints;
+stop the old backend and back up important SQLite data before restarting.
+Journey and advanced Progress/history screens remain foundations. An internal structured
 proposal module and developer benchmark exist; semantic quality needs improvement.
 SQLite state, completion/XP, saved reads and pause/resume APIs are implemented.
-Creation and replacement are internal services accepting validated proposals;
-live check-in/generation orchestration and quest UI remain future phases.
+Persistent check-ins, local generation and replanning APIs now join the existing
+state engine. Schema and essential-constraint failures are rejected with saved
+context available for retry; subjective quality findings are now warnings rather
+than mandatory approval gates. Real-model usefulness still varies. Phase 4B's single live primary-model
+integration attempt was semantically rejected, not saved. Adaptive UI and optional
+Journey/progress integration remain Phase 4C work.
 Target platform is desktop web, **not PWA**. The PWA
 plugin, registration, manifest and cache/update UI have been removed. Previously
 used browsers need the scoped cleanup procedure below.
@@ -28,7 +46,9 @@ Intended flow: React desktop frontend → local FastAPI REST API → Ollama + SQ
 all on one laptop. Startup initializes a new empty SQLite database and singleton
 profile; saved quests/history/XP persist through the backend services. Unknown or
 incompatible databases are preserved and reported unavailable, never reset.
-The generic frontend's prompts/responses still disappear on reload.
+Diagnostic prompts/responses and unsaved form text still disappear on reload.
+Saved check-ins restore through the opaque `?check_in=<id>` URL; questline detail
+routes reload backend state. No goals, notes or quest plans are stored in browser storage.
 No cloud database, remote AI API or runtime CDN asset is required by the frontend
 or core API/inference flow. FastAPI's optional interactive API documentation uses
 its default external assets; see the offline limitations below.
@@ -163,8 +183,15 @@ State-only endpoints: `GET /api/profile`, `GET /api/questlines`,
 `POST /api/questlines/{id}/pause` / `resume`. Writes accept
 `{"expected_revision":1}`; pause/resume also require a UUIDv4 `Idempotency-Key`.
 Detail responses reveal only the current quest and completed history. There is
-no public fixture-creation or AI quest-generation endpoint yet; new databases
-have no questlines. See [API contract](docs/API_CONTRACT.md) for the rollout subset.
+no public fixture-creation endpoint; new databases have no questlines.
+Phase 3 adds `POST /api/check-in` (`mode:start` or `mode:answer`),
+`GET /api/check-in/{id}`, `POST /api/questlines` and
+`POST /api/questlines/{id}/replan`. These mutations require Idempotency-Key.
+See [API contract](docs/API_CONTRACT.md) for executable JSON shapes and recovery.
+
+Startup performs the explicit, atomic v1 → v2 migration only on a verified v1
+schema. Existing state/XP is preserved. Before upgrading a database containing
+important data, stop services and keep a backup; never delete a rejected database.
 
 ## Build and backend checks
 
@@ -198,7 +225,41 @@ From `backend/` on Windows PowerShell:
 
 With a virtual environment activated, the existing
 `python -m unittest discover -s tests -v` command remains valid. There is no
-frontend automated test runner or lint command configured.
+frontend lint command configured. Phase 4B adds dependency-free development tests:
+
+```bash
+# From frontend/; verified on Linux with Node 26.7.0
+node --test --test-isolation=none tests/validation.test.mjs tests/campaign.test.mjs
+node tests/core-flow.mjs
+```
+
+The boundary tests use Node's native TypeScript support. Browser tests require
+Chromium (`CHROMIUM_BINARY` may specify its executable), the existing backend
+virtual environment, and a production build. They start isolated test services on
+8004/4184/9229, use temporary SQLite and fictional mocked Ollama, and write evidence
+to a printed temporary directory. They never seed the user's database. No test
+dependency or package script was added; these commands were not verified on Windows
+or other Node versions. `node tests/core-flow.mjs --live-campaign` adds one real
+short-campaign generation and full frontend completion test using temporary SQLite.
+`node tests/core-flow.mjs --live-ai` explicitly adds one real
+primary-model check-in/generation attempt; a recoverable rejection is reported
+separately from passing mocked scenarios and does not establish model quality.
+
+Phase 4B Linux results: frontend typecheck/build and diff checks passed, boundary
+tests passed 5/5, browser scenarios passed 14/14, and backend regressions passed
+90/90. One live `qwen3:1.7b` attempt returned semantic rejection with context retained
+and no questline saved. Windows and actual internet-disconnection tests remain pending.
+
+Development-only production-pipeline benchmark (fictional inputs and temporary
+SQLite storage), from `backend/`:
+
+```bash
+.venv/bin/python -m app.benchmark_pipeline --model qwen3:1.7b --output ../docs/benchmarks/new-phase3-run.json
+```
+
+On Windows use `.\.venv\Scripts\python.exe -m app.benchmark_pipeline` with the
+same arguments. Existing output files are refused. A completed benchmark does
+not imply semantic success; see the Phase 3 section in [AI benchmark](docs/AI_BENCHMARK.md).
 
 ## Desktop offline operation and old PWA cleanup
 
@@ -253,3 +314,69 @@ do not require those pages or their assets.
 
 Check results and licenses must be recorded from actual evidence. The manual
 checklist is a blank QA record, not a declaration of demo-machine readiness.
+
+Phase 3B hotfix: physical-task criteria and one shared quality correction are now
+supported; generic cooking asks which dish/available ingredients to use. Errors
+distinguish rejected model output from uncertain review and retain the check-in.
+The final targeted cooking/snack/desk run saved 3/3, but content remained only
+partially useful; the full 12-case comparison saved 3/12. Semantic reliability
+remains PARTIAL. See [measured hotfix evidence](docs/AI_BENCHMARK.md#13-phase-3b-everyday-goal-hotfix).
+
+Resumed hotfix verification: a real Qwen3 no-cook snack questline was saved, all
+three quests completed through the frontend, and completion/40 XP retained after
+refresh in isolated test storage. Missing presentation topics now clarify; requested
+slide/practice coverage is checked. The specific AI-introduction scenario still
+fails quality checks, so semantic reliability remains PARTIAL.
+
+Phase 4C campaign presentation verified: frontend typecheck/build, 11 frontend
+tests, 111 backend regressions, 16 mocked browser scenarios and one real local
+Qwen3 campaign walkthrough passed. The short snack goal generated three stages;
+explicit UI completion confirmed 40 campaign XP and survived refresh.
+`node tests/core-flow.mjs --live-campaign` reproduces the isolated browser check.
+At that Phase 4C checkpoint six-stage generation was deferred; checklist marks are temporary, while whole-stage
+completion and XP persist in SQLite. Existing AI quality limitations are unchanged.
+
+Phase 3C reliability recovery is **PARTIAL**. Scoped semantic repair and native
+schema compatibility fixes passed 134 backend regressions. The paired final local
+Qwen3 run saved 4/6 actionable scenarios; Codex content inspection rated only 2/6
+saved plans fully acceptable. An additional live presentation was saved and
+completed through the frontend, with backend-confirmed XP retained after refresh,
+but still had weak criteria. This verifies integration, not reliable content.
+Cooking repair and invented endpoint behavior remain failures. See
+[Phase 3C measurements and reproduction](docs/AI_BENCHMARK.md#14-phase-3c-bounded-semantic-recovery).
+
+Phase 3D removes model self-review from production acceptance. Structured schema
+and essential constraints remain enforced, with at most one correction. The same
+six actionable Qwen3 cases saved **5/6**, versus 4/6 in Phase 3C; median full-workflow
+latency was **12.41 s**. Codex inspection rated four saved candidates usable and
+one partial; independent human QA is pending. The three-test goal still fails
+because the model proposes two tests and invented HTTP behavior. Checks passed:
+141 backend tests, 11 frontend tests, typecheck/build, 16 mocked browser regressions
+and a separate real presentation save/completion/refresh. General reliability
+remains **PARTIAL**. See [Phase 3D evidence](docs/AI_BENCHMARK.md#15-phase-3d-essential-only-acceptance).
+
+Adaptive sizing verification: 154 backend tests, 12 frontend tests and 18 browser
+scenarios passed, including two/six-stage unlocking, one-time XP, privacy and refresh.
+The final two-case Qwen3 run saved a four-stage sandwich and a five-stage study
+guide (35 estimated minutes with 20 available). Count support is implemented;
+model sizing/usefulness remains PARTIAL: the sandwich is over-fragmented and the
+study guide omits a requested third example. See
+[adaptive sizing evidence](docs/AI_BENCHMARK.md#16-adaptive-campaign-sizing-26-stages).
+
+Quest completion now shows a forest-themed “Quest Complete!” panel with a
+quest-specific message, backend-confirmed XP and unlocked stage number. Continue
+Journey returns focus to the Campaign Map. Messages also remain in completed
+history after refresh. Optional copy is requested in the existing plan-generation
+call; unsupported or missing copy falls back to the completed title/action.
+Completion makes no Ollama request. Current/locked-stage messages stay private.
+
+Schema v4 adds one nullable quest column through an atomic v3→v4 migration;
+existing campaigns, history and XP are retained. Back up important SQLite data
+before updating the backend. See [database migration details](docs/DATABASE_DESIGN.md).
+Enhancement verification on Linux: 163 backend tests, 14 frontend tests,
+typecheck/build and 20 mocked-Ollama Chromium cases passed. One real qwen3:1.7b
+two-stage campaign generated in 7.52 seconds, completed through the frontend with
+a simulated Ollama outage, awarded 30 XP and restored both messages after refresh in an
+isolated database. UI completion was synthetic; no physical snack-making,
+Windows-machine or disconnected-internet test is claimed. Reproduce with
+`node tests/core-flow.mjs --live-campaign` from `frontend/` after building.

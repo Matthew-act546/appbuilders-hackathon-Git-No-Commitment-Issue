@@ -1,0 +1,548 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "essential-constraints-v3d.1",
+  "prompt_version": "adaptive-stages-v2",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-10T03:38:54.162629+08:00",
+  "reference_time": "2026-10-10T03:38:54.149523+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 7547850752,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 120,
+    "attempt_seconds": 60,
+    "max_proposal_attempts": 2,
+    "max_review_calls": 0,
+    "shared_format_constraint_retry": true,
+    "subjective_findings_blocking": false
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "selected_initial_cases": null,
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Make a no-cook sandwich using only bread, tomato and cheese already available; no stove and no shopping.",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Make a no-cook sandwich using only bread, tomato and cheese already available; no stove and no shopping.",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 11.503344497003127,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 12099205,
+            "total_duration": 11477702854,
+            "eval_count": 339,
+            "eval_duration": 9458521000,
+            "prompt_eval_count": 1192,
+            "prompt_eval_duration": 1663189000,
+            "thinking_present": false
+          },
+          "semantic_codes": [],
+          "kind": "proposal"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Prepare the bread",
+            "action": "Cut the bread into two equal halves using a knife, then arrange them on a plate.",
+            "completion_criteria": "Bread is cut into two halves and placed on a plate.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": "Use a knife to make clean cuts for even distribution."
+          },
+          {
+            "title": "Add the tomato",
+            "action": "Place a slice of tomato on the bread, ensuring it is evenly distributed.",
+            "completion_criteria": "Tomato is placed on the bread as a layer.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": "Use a spoon to spread the tomato evenly."
+          },
+          {
+            "title": "Add the cheese",
+            "action": "Place a slice of cheese on top of the tomato, ensuring it is evenly distributed.",
+            "completion_criteria": "Cheese is placed on top of the tomato as a layer.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": "Use a spoon to spread the cheese evenly."
+          },
+          {
+            "title": "Assemble the sandwich",
+            "action": "Combine the bread layers with the tomato and cheese, then serve immediately.",
+            "completion_criteria": "No-cook sandwich is assembled and ready to serve.",
+            "estimated_minutes": 1,
+            "difficulty": "medium",
+            "hint": "Ensure the layers are properly aligned for a secure sandwich."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the bread",
+                "action": "Cut the bread into two equal halves using a knife, then arrange them on a plate.",
+                "completion_criteria": "Bread is cut into two halves and placed on a plate.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Use a knife to make clean cuts for even distribution."
+              },
+              {
+                "title": "Add the tomato",
+                "action": "Place a slice of tomato on the bread, ensuring it is evenly distributed.",
+                "completion_criteria": "Tomato is placed on the bread as a layer.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Use a spoon to spread the tomato evenly."
+              },
+              {
+                "title": "Add the cheese",
+                "action": "Place a slice of cheese on top of the tomato, ensuring it is evenly distributed.",
+                "completion_criteria": "Cheese is placed on top of the tomato as a layer.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Use a spoon to spread the cheese evenly."
+              },
+              {
+                "title": "Assemble the sandwich",
+                "action": "Combine the bread layers with the tomato and cheese, then serve immediately.",
+                "completion_criteria": "No-cook sandwich is assembled and ready to serve.",
+                "estimated_minutes": 1,
+                "difficulty": "medium",
+                "hint": "Ensure the layers are properly aligned for a secure sandwich."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "essential_constraints",
+          "review": null,
+          "warnings": [],
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "8e7c765c-d546-4a84-b76b-9edcf77915eb",
+        "goal": "Make a no-cook sandwich using only bread, tomato and cheese already available; no stove and no shopping.",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 4,
+          "total_count": 4
+        },
+        "created_at": "2026-10-09T19:39:06.377799Z",
+        "updated_at": "2026-10-09T19:39:06.377799Z",
+        "available_minutes": 10,
+        "energy": "low",
+        "current_quest": {
+          "id": "598fa59a-c4f0-445b-afcb-af11fdd9ffea",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Prepare the bread",
+          "action": "Cut the bread into two equal halves using a knife, then arrange them on a plate.",
+          "completion_criteria": "Bread is cut into two halves and placed on a plate.",
+          "estimated_minutes": 2,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Use a knife to make clean cuts for even distribution.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 11.645388178003486,
+      "end_to_end_seconds": 11.680584986999747,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Prepare the bread\",\n      \"action\": \"Cut the bread into two equal halves using a knife, then arrange them on a plate.\",\n      \"completion_criteria\": \"Bread is cut into two halves and placed on a plate.\",\n      \"estimated_minutes\": 2,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use a knife to make clean cuts for even distribution.\"\n    },\n    {\n      \"title\": \"Add the tomato\",\n      \"action\": \"Place a slice of tomato on the bread, ensuring it is evenly distributed.\",\n      \"completion_criteria\": \"Tomato is placed on the bread as a layer.\",\n      \"estimated_minutes\": 1,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use a spoon to spread the tomato evenly.\"\n    },\n    {\n      \"title\": \"Add the cheese\",\n      \"action\": \"Place a slice of cheese on top of the tomato, ensuring it is evenly distributed.\",\n      \"completion_criteria\": \"Cheese is placed on top of the tomato as a layer.\",\n      \"estimated_minutes\": 1,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use a spoon to spread the cheese evenly.\"\n    },\n    {\n      \"title\": \"Assemble the sandwich\",\n      \"action\": \"Combine the bread layers with the tomato and cheese, then serve immediately.\",\n      \"completion_criteria\": \"No-cook sandwich is assembled and ready to serve.\",\n      \"estimated_minutes\": 1,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Ensure the layers are properly aligned for a secure sandwich.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "quest_count": 4,
+      "native_candidate_counts": [
+        4
+      ],
+      "codex_content_inspection": {
+        "rating": "partial",
+        "notes": "Grounded sandwich but over-fragmented into ingredient stages; unnecessary utensils.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      }
+    },
+    {
+      "case": "B",
+      "input": {
+        "goal": "Create a local study guide for Python loops: explain for and while loops, write and run three examples, draw a flowchart, and finish with a self-check quiz and answer key using my existing notes and Python editor.",
+        "available_minutes": 20,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Create a local study guide for Python loops: explain for and while loops, write and run three examples, draw a flowchart, and finish with a self-check quiz and answer key using my existing notes and Python editor.",
+        "available_minutes": 20,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 15.097358893995988,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 11217187,
+            "total_duration": 15066056307,
+            "eval_count": 500,
+            "eval_duration": 13830218000,
+            "prompt_eval_count": 1197,
+            "prompt_eval_duration": 875835000,
+            "thinking_present": false
+          },
+          "semantic_codes": [],
+          "kind": "proposal"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Outline the Structure of the Study Guide",
+            "action": "Organize the study guide into sections: Introduction, Explanation of For and While Loops, Examples, Flowchart, Self-Check Quiz, and Answer Key.",
+            "completion_criteria": "The guide must include all sections as outlined.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Start with a simple outline to ensure clarity."
+          },
+          {
+            "title": "Write and Run the First Example",
+            "action": "Write a simple `for` loop in Python to iterate over a list of numbers and print each value. Run the code to verify the output.",
+            "completion_criteria": "The code must run without errors and produce the expected output.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use a small list for simplicity."
+          },
+          {
+            "title": "Write and Run the Second Example",
+            "action": "Write a `while` loop that counts from 1 to 5 and prints each number. Run the code to verify the output.",
+            "completion_criteria": "The code must run without errors and produce the expected output.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Ensure the loop condition is correctly set."
+          },
+          {
+            "title": "Draw a Flowchart",
+            "action": "Create a flowchart that visually represents the logic of the `for` and `while` loops, including initialization, condition check, iteration, and termination.",
+            "completion_criteria": "The flowchart must accurately reflect the loop structure.",
+            "estimated_minutes": 10,
+            "difficulty": "hard",
+            "hint": "Use a simple diagram tool like Python's `matplotlib` or a paper sketch."
+          },
+          {
+            "title": "Create a Self-Check Quiz and Answer Key",
+            "action": "Design a quiz with multiple-choice questions about Python loops. Provide an answer key with explanations for each question.",
+            "completion_criteria": "The quiz must include at least three questions and the answer key must be accurate.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": "Use the examples written in the previous stages as reference material."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Outline the Structure of the Study Guide",
+                "action": "Organize the study guide into sections: Introduction, Explanation of For and While Loops, Examples, Flowchart, Self-Check Quiz, and Answer Key.",
+                "completion_criteria": "The guide must include all sections as outlined.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Start with a simple outline to ensure clarity."
+              },
+              {
+                "title": "Write and Run the First Example",
+                "action": "Write a simple `for` loop in Python to iterate over a list of numbers and print each value. Run the code to verify the output.",
+                "completion_criteria": "The code must run without errors and produce the expected output.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a small list for simplicity."
+              },
+              {
+                "title": "Write and Run the Second Example",
+                "action": "Write a `while` loop that counts from 1 to 5 and prints each number. Run the code to verify the output.",
+                "completion_criteria": "The code must run without errors and produce the expected output.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Ensure the loop condition is correctly set."
+              },
+              {
+                "title": "Draw a Flowchart",
+                "action": "Create a flowchart that visually represents the logic of the `for` and `while` loops, including initialization, condition check, iteration, and termination.",
+                "completion_criteria": "The flowchart must accurately reflect the loop structure.",
+                "estimated_minutes": 10,
+                "difficulty": "hard",
+                "hint": "Use a simple diagram tool like Python's `matplotlib` or a paper sketch."
+              },
+              {
+                "title": "Create a Self-Check Quiz and Answer Key",
+                "action": "Design a quiz with multiple-choice questions about Python loops. Provide an answer key with explanations for each question.",
+                "completion_criteria": "The quiz must include at least three questions and the answer key must be accurate.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Use the examples written in the previous stages as reference material."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "essential_constraints",
+          "review": null,
+          "warnings": [
+            "unobservable_criteria"
+          ],
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "eee4c155-3532-430b-83f6-13083029c802",
+        "goal": "Create a local study guide for Python loops: explain for and while loops, write and run three examples, draw a flowchart, and finish with a self-check quiz and answer key using my existing notes and Python editor.",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 5,
+          "total_count": 5
+        },
+        "created_at": "2026-10-09T19:39:21.575192Z",
+        "updated_at": "2026-10-09T19:39:21.575192Z",
+        "available_minutes": 20,
+        "energy": "medium",
+        "current_quest": {
+          "id": "2c01e747-9f59-4da0-bf6d-8810a31bf307",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Outline the Structure of the Study Guide",
+          "action": "Organize the study guide into sections: Introduction, Explanation of For and While Loops, Examples, Flowchart, Self-Check Quiz, and Answer Key.",
+          "completion_criteria": "The guide must include all sections as outlined.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Start with a simple outline to ensure clarity.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 15.156471769994823,
+      "end_to_end_seconds": 15.166728210999281,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Outline the Structure of the Study Guide\",\n      \"action\": \"Organize the study guide into sections: Introduction, Explanation of For and While Loops, Examples, Flowchart, Self-Check Quiz, and Answer Key.\",\n      \"completion_criteria\": \"The guide must include all sections as outlined.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Start with a simple outline to ensure clarity.\"\n    },\n    {\n      \"title\": \"Write and Run the First Example\",\n      \"action\": \"Write a simple `for` loop in Python to iterate over a list of numbers and print each value. Run the code to verify the output.\",\n      \"completion_criteria\": \"The code must run without errors and produce the expected output.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use a small list for simplicity.\"\n    },\n    {\n      \"title\": \"Write and Run the Second Example\",\n      \"action\": \"Write a `while` loop that counts from 1 to 5 and prints each number. Run the code to verify the output.\",\n      \"completion_criteria\": \"The code must run without errors and produce the expected output.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Ensure the loop condition is correctly set.\"\n    },\n    {\n      \"title\": \"Draw a Flowchart\",\n      \"action\": \"Create a flowchart that visually represents the logic of the `for` and `while` loops, including initialization, condition check, iteration, and termination.\",\n      \"completion_criteria\": \"The flowchart must accurately reflect the loop structure.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"hard\",\n      \"hint\": \"Use a simple diagram tool like Python's `matplotlib` or a paper sketch.\"\n    },\n    {\n      \"title\": \"Create a Self-Check Quiz and Answer Key\",\n      \"action\": \"Design a quiz with multiple-choice questions about Python loops. Provide an answer key with explanations for each question.\",\n      \"completion_criteria\": \"The quiz must include at least three questions and the answer key must be accurate.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use the examples written in the previous stages as reference material.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "quest_count": 5,
+      "native_candidate_counts": [
+        5
+      ],
+      "codex_content_inspection": {
+        "rating": "partial",
+        "notes": "Useful local guide components, but missing the third executed example and actual loop explanations; count alone is not full-goal coverage.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      }
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "size": 1702593821,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2026-10-10T03:39:50.23164948+08:00",
+        "size_vram": 1702593821,
+        "context_length": 4096,
+        "runner": "llamacpp"
+      }
+    ]
+  },
+  "replan_status": "not requested: targeted/count cases",
+  "summary": {
+    "runs": 2,
+    "generation_operations": 2,
+    "awaiting_clarification": 0,
+    "structurally_valid_plans": 2,
+    "pipeline_accepted": 2,
+    "first_attempt_structural_successes": 2,
+    "operations_with_retry": 0,
+    "timeouts": 0,
+    "average_end_to_end_seconds": 13.423656598999514,
+    "median_end_to_end_seconds": 13.423656598999514,
+    "max_end_to_end_seconds": 15.166728210999281
+  },
+  "status": "measured; independent semantic review pending"
+}

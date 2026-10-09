@@ -1,0 +1,2335 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "grounded-quests-v3b.1",
+  "prompt_version": "initial-quests-v3b.1",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-10T00:48:39.770705+08:00",
+  "reference_time": "2026-10-10T00:30:00+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 3062321152,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 120,
+    "attempt_seconds": 60,
+    "review_seconds": 30,
+    "review_num_predict": 300,
+    "max_proposal_attempts": 2,
+    "max_review_calls": 2,
+    "shared_format_quality_retry": true
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Finish a programming assignment",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": "2026-10-11T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What does the assignment require you to produce? Describe the relevant task and any required tools.",
+      "fictional_clarification_answer": "Implement binary search on a sorted integer list in C++ using the supplied local assignment brief; record two test cases.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.139826163998805,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 7147017,
+            "total_duration": 8092326733,
+            "eval_count": 241,
+            "eval_duration": 6745876000,
+            "prompt_eval_count": 1333,
+            "prompt_eval_duration": 979054000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.427880577000906,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8946752,
+            "total_duration": 7387148006,
+            "eval_count": 254,
+            "eval_duration": 7096959000,
+            "prompt_eval_count": 1420,
+            "prompt_eval_duration": 213315000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with the Assignment Brief",
+            "action": "Review the provided assignment brief and ensure understanding of the task: implement binary search on a sorted integer list in C++ using the supplied local assignment brief; record two test cases.",
+            "completion_criteria": "Understood the task and have reviewed the assignment brief; two test cases are recorded in the code.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Implement Binary Search Function",
+            "action": "Write the binary search function for a sorted integer list in C++ based on the assignment brief.",
+            "completion_criteria": "Binary search function is implemented in C++ and works correctly for a sorted list.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Test the Binary Search Function",
+            "action": "Run the binary search function with the two test cases provided in the assignment brief and record the results.",
+            "completion_criteria": "Binary search function returns correct results for both test cases.",
+            "estimated_minutes": 8,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with the Assignment Brief",
+                "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+                "completion_criteria": "Understand the requirements for implementing binary search on a sorted integer list in C++ and know the expected output format.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Implement the Binary Search Function",
+                "action": "Write the C++ code for the binary search function, ensuring it correctly handles a sorted integer list.",
+                "completion_criteria": "The binary search function is implemented and works correctly for a sorted integer list.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test the Binary Search Function",
+                "action": "Run two test cases to verify the functionality of the binary search function.",
+                "completion_criteria": "The binary search function passes both test cases, confirming its correctness.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with the Assignment Brief",
+                "action": "Review the provided assignment brief and ensure understanding of the task: implement binary search on a sorted integer list in C++ using the supplied local assignment brief; record two test cases.",
+                "completion_criteria": "Understood the task and have reviewed the assignment brief; two test cases are recorded in the code.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Implement Binary Search Function",
+                "action": "Write the binary search function for a sorted integer list in C++ based on the assignment brief.",
+                "completion_criteria": "Binary search function is implemented in C++ and works correctly for a sorted list.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test the Binary Search Function",
+                "action": "Run the binary search function with the two test cases provided in the assignment brief and record the results.",
+                "completion_criteria": "Binary search function returns correct results for both test cases.",
+                "estimated_minutes": 8,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 15.64557287399657,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "Names goal and two tests but asserts understanding, assumes tests supplied, and records tests before implementing.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "B",
+      "input": {
+        "goal": "Prepare for an Algorithms and Complexity exam",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": "2026-10-13T15:59:00Z",
+        "contextual_notes": "Use local lecture notes on sorting and asymptotic analysis.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.350170953999623,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6782399,
+            "total_duration": 9308763591,
+            "eval_count": 290,
+            "eval_duration": 8034891000,
+            "prompt_eval_count": 1299,
+            "prompt_eval_duration": 861614000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 8.521831168000062,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6695300,
+            "total_duration": 8496122222,
+            "eval_count": 292,
+            "eval_duration": 8164964000,
+            "prompt_eval_count": 1386,
+            "prompt_eval_duration": 213387000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Review Key Concepts",
+            "action": "Revisit local lecture notes on sorting algorithms, asymptotic analysis, and complexity classes. Focus on understanding Big O notation, average vs. worst-case complexity, and common algorithms like quicksort, mergesort, and heapsort.",
+            "completion_criteria": "Have reviewed and understood the core concepts of sorting and asymptotic analysis, including Big O notation and common complexity classes.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Practice Sorting Algorithm Implementation",
+            "action": "Implement a simple sorting algorithm (e.g., bubble sort) in a text editor or a local programming environment. Ensure the implementation is correct and produces the expected output.",
+            "completion_criteria": "Have implemented a correct sorting algorithm and verified its output with a sample input.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Analyze Complexity of Algorithms",
+            "action": "Review the time and space complexity of the implemented sorting algorithm. Identify the worst-case time complexity and explain why it is as such.",
+            "completion_criteria": "Have analyzed the complexity of the implemented sorting algorithm and explained the worst-case time complexity.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Review Sorting Algorithms",
+                "action": "Revisit the lecture notes on sorting algorithms, focusing on quicksort, mergesort, and heapsort. Identify key concepts such as time complexity, average case, and worst-case scenarios.",
+                "completion_criteria": "Understood the core concepts of sorting algorithms, including time complexity and average/worst-case performance.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Analyze Asymptotic Notation",
+                "action": "Review the lecture notes on asymptotic analysis, focusing on Big O, Big Theta, and Big Omega notations. Practice identifying the dominant term in a function.",
+                "completion_criteria": "Identified the dominant term in a given function and correctly applied asymptotic notation.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Create a Sample Complexity Table",
+                "action": "Create a table that maps common algorithms to their time complexity and space complexity. Include at least 5 algorithms and their respective complexities.",
+                "completion_criteria": "Created a table with at least 5 algorithms and their time and space complexity, with correct notation and clear labeling.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Review Key Concepts",
+                "action": "Revisit local lecture notes on sorting algorithms, asymptotic analysis, and complexity classes. Focus on understanding Big O notation, average vs. worst-case complexity, and common algorithms like quicksort, mergesort, and heapsort.",
+                "completion_criteria": "Have reviewed and understood the core concepts of sorting and asymptotic analysis, including Big O notation and common complexity classes.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Practice Sorting Algorithm Implementation",
+                "action": "Implement a simple sorting algorithm (e.g., bubble sort) in a text editor or a local programming environment. Ensure the implementation is correct and produces the expected output.",
+                "completion_criteria": "Have implemented a correct sorting algorithm and verified its output with a sample input.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Analyze Complexity of Algorithms",
+                "action": "Review the time and space complexity of the implemented sorting algorithm. Identify the worst-case time complexity and explain why it is as such.",
+                "completion_criteria": "Have analyzed the complexity of the implemented sorting algorithm and explained the worst-case time complexity.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 17.906323702001828,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "Study is relevant but understanding is not observable and implementation is not requested.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "C",
+      "input": {
+        "goal": "Improve my programming skills",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which programming topic do you want to practice using tools you already have locally?",
+      "fictional_clarification_answer": "Practice Python list comprehensions by transforming three existing local example lists.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.415254755003843,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 9635551,
+            "total_duration": 10381975330,
+            "eval_count": 321,
+            "eval_duration": 9107896000,
+            "prompt_eval_count": 1285,
+            "prompt_eval_duration": 863826000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with a Simple List Comprehension",
+            "action": "Identify three local example lists and apply a basic list comprehension to transform them. For example, convert a list of strings to uppercase.",
+            "completion_criteria": "Three transformed lists are produced, and each list is in uppercase.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": "Focus on one list at a time and ensure the transformation is straightforward."
+          },
+          {
+            "title": "Practice Conditional Filtering",
+            "action": "Use a list comprehension to filter out elements from one of the lists that meet a specific condition, such as removing even numbers from a list of integers.",
+            "completion_criteria": "A filtered list is produced, and it contains only odd numbers from the original list.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": "Test the condition with a sample list to ensure accuracy."
+          },
+          {
+            "title": "Combine Lists with List Comprehensions",
+            "action": "Combine two of the original lists using a list comprehension, such as merging two lists into a single list with alternating elements.",
+            "completion_criteria": "A new list is produced that alternates elements from the two original lists.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": "Ensure the logic for combining the lists is clear and the output is as expected."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple List Comprehension",
+                "action": "Identify three local example lists and apply a basic list comprehension to transform them. For example, convert a list of strings to uppercase.",
+                "completion_criteria": "Three transformed lists are produced, and each list is in uppercase.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": "Focus on one list at a time and ensure the transformation is straightforward."
+              },
+              {
+                "title": "Practice Conditional Filtering",
+                "action": "Use a list comprehension to filter out elements from one of the lists that meet a specific condition, such as removing even numbers from a list of integers.",
+                "completion_criteria": "A filtered list is produced, and it contains only odd numbers from the original list.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Test the condition with a sample list to ensure accuracy."
+              },
+              {
+                "title": "Combine Lists with List Comprehensions",
+                "action": "Combine two of the original lists using a list comprehension, such as merging two lists into a single list with alternating elements.",
+                "completion_criteria": "A new list is produced that alternates elements from the two original lists.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Ensure the logic for combining the lists is clear and the output is as expected."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "a64d696c-0ba6-4c31-9ab0-c08ea0ef350d",
+        "goal": "Improve my programming skills",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:49:26.061924Z",
+        "updated_at": "2026-10-09T16:49:26.061924Z",
+        "available_minutes": 30,
+        "energy": "medium",
+        "current_quest": {
+          "id": "b77661fe-ab7c-428b-8cbf-e7c0b9d3dbc0",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Start with a Simple List Comprehension",
+          "action": "Identify three local example lists and apply a basic list comprehension to transform them. For example, convert a list of strings to uppercase.",
+          "completion_criteria": "Three transformed lists are produced, and each list is in uppercase.",
+          "estimated_minutes": 10,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Focus on one list at a time and ensure the transformation is straightforward.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 12.238127179996809,
+      "end_to_end_seconds": 12.25263093400281,
+      "codex_content_review": {
+        "rating": "unacceptable",
+        "notes": "Assumes existing lists contain strings and integers; reviewer falsely approves.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "D",
+      "input": {
+        "goal": "Prepare a project presentation",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": "2026-10-10T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What is the presentation topic and the main result you need to communicate?",
+      "fictional_clarification_answer": "Explain how SQLite transactions prevent duplicate XP using the existing local project notes.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 7.516414032004832,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8410949,
+            "total_duration": 7490300302,
+            "eval_count": 227,
+            "eval_duration": 6256813000,
+            "prompt_eval_count": 1316,
+            "prompt_eval_duration": 921109000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unrelated"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 6.3868462149985135,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 11744641,
+            "total_duration": 6364372166,
+            "eval_count": 218,
+            "eval_duration": 6087767000,
+            "prompt_eval_count": 1401,
+            "prompt_eval_duration": 210262000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria",
+            "unrelated"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Organize Project Notes",
+            "action": "Review and categorize existing project notes to identify relevant information for the presentation.",
+            "completion_criteria": "Project notes are organized into logical categories and grouped by topic.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create a Visual Outline",
+            "action": "Sketch a rough visual outline of the presentation, including key points and flow.",
+            "completion_criteria": "A visual outline is created with clear sections and key topics identified.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Prepare Key Points",
+            "action": "Compile and organize key points from the project notes into a concise summary.",
+            "completion_criteria": "A concise summary of the project's main points is created and is ready for the presentation.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Organize Project Notes",
+                "action": "Review and categorize existing project notes to identify relevant information for the presentation.",
+                "completion_criteria": "Project notes are organized into logical sections and grouped by topic.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create a Visual Outline",
+                "action": "Use the organized project notes to create a visual outline of the presentation content.",
+                "completion_criteria": "A clear visual outline of the presentation is created, showing the main sections and key points.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Prepare Key Points",
+                "action": "Extract and summarize the main points from the visual outline to create a concise summary for the presentation.",
+                "completion_criteria": "A concise summary of the presentation content is created, highlighting the key points and structure.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unrelated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Organize Project Notes",
+                "action": "Review and categorize existing project notes to identify relevant information for the presentation.",
+                "completion_criteria": "Project notes are organized into logical categories and grouped by topic.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create a Visual Outline",
+                "action": "Sketch a rough visual outline of the presentation, including key points and flow.",
+                "completion_criteria": "A visual outline is created with clear sections and key topics identified.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Prepare Key Points",
+                "action": "Compile and organize key points from the project notes into a concise summary.",
+                "completion_criteria": "A concise summary of the project's main points is created and is ready for the presentation.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria",
+            "unrelated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria",
+          "unrelated"
+        ]
+      },
+      "end_to_end_seconds": 13.944398325002112,
+      "codex_content_review": {
+        "rating": "unacceptable",
+        "notes": "Generic preparation omits SQLite/transactions/duplicate XP.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "E",
+      "input": {
+        "goal": "Build a basic CRUD web application",
+        "available_minutes": 90,
+        "energy": "high",
+        "deadline": "2026-10-17T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which records should the CRUD app manage, and which existing local stack will you use?",
+      "fictional_clarification_answer": "Manage book records with title and author using an existing FastAPI and SQLite project. Local CRUD only, no login or deployment.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.871832343000278,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 5129812,
+            "total_duration": 10841755308,
+            "eval_count": 335,
+            "eval_duration": 9510163000,
+            "prompt_eval_count": 1342,
+            "prompt_eval_duration": 958915000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 8.52245051600039,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8646194,
+            "total_duration": 8495203740,
+            "eval_count": 299,
+            "eval_duration": 8196648999,
+            "prompt_eval_count": 1437,
+            "prompt_eval_duration": 221741000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Setup Project Structure",
+            "action": "Initialize a FastAPI project with SQLite using existing tools, creating a `books` table with `id`, `title`, and `author` columns.",
+            "completion_criteria": "The `books` table exists in the database with at least three entries, and the FastAPI project is initialized with the required dependencies.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create Book Model",
+            "action": "Define a Python class `Book` with attributes `id`, `title`, and `author`, and use it to interact with the `books` table.",
+            "completion_criteria": "The `Book` class is defined, and the `FastAPI` application has a route that retrieves all books from the database.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Implement CRUD Operations",
+            "action": "Create routes for `GET /books`, `POST /books`, `GET /books/{id}`, and `DELETE /books/{id}` to manage book records.",
+            "completion_criteria": "The application has routes for CRUD operations, and the `books` table is populated with at least three entries.",
+            "estimated_minutes": 20,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Set up the FastAPI project with SQLite",
+                "action": "Initialize a FastAPI project with SQLite database, create a `books` table with `id`, `title`, and `author` columns, and ensure the project is ready for CRUD operations.",
+                "completion_criteria": "The FastAPI project has been initialized with an SQLite database, and the `books` table is created with the required columns.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Implement a basic CRUD endpoint",
+                "action": "Create a FastAPI endpoint for creating, reading, updating, and deleting book records. Use the `books` table and ensure the endpoint is functional with basic HTTP methods.",
+                "completion_criteria": "The FastAPI endpoint for CRUD operations is implemented and works with the `books` table, allowing creation, reading, updating, and deletion of book records.",
+                "estimated_minutes": 20,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test the CRUD functionality",
+                "action": "Run a test script to verify that the CRUD endpoints work as expected. Use the `books` table and ensure that the application can create, read, update, and delete book records.",
+                "completion_criteria": "The CRUD endpoints are tested and confirm that they function correctly with the `books` table, allowing the creation, reading, updating, and deletion of book records.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Setup Project Structure",
+                "action": "Initialize a FastAPI project with SQLite using existing tools, creating a `books` table with `id`, `title`, and `author` columns.",
+                "completion_criteria": "The `books` table exists in the database with at least three entries, and the FastAPI project is initialized with the required dependencies.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Create Book Model",
+                "action": "Define a Python class `Book` with attributes `id`, `title`, and `author`, and use it to interact with the `books` table.",
+                "completion_criteria": "The `Book` class is defined, and the `FastAPI` application has a route that retrieves all books from the database.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Implement CRUD Operations",
+                "action": "Create routes for `GET /books`, `POST /books`, `GET /books/{id}`, and `DELETE /books/{id}` to manage book records.",
+                "completion_criteria": "The application has routes for CRUD operations, and the `books` table is populated with at least three entries.",
+                "estimated_minutes": 20,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "explicit_constraint_violated"
+        ]
+      },
+      "end_to_end_seconds": 19.44795550800336,
+      "codex_content_review": {
+        "rating": "unacceptable",
+        "notes": "Reinitializes existing project, lacks update operation and asserts arbitrary record counts.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "F",
+      "input": {
+        "goal": "Write three unit tests for my FastAPI login endpoint",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": "Use the existing local test runner and fixtures. Three total tests, no new app or tools.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.389436425997701,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 10257194,
+            "total_duration": 9346849719,
+            "eval_count": 290,
+            "eval_duration": 8042738000,
+            "prompt_eval_count": 1284,
+            "prompt_eval_duration": 862816000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated",
+            "unsupported_assumption"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 9.674560371997359,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 9601938,
+            "total_duration": 9622865147,
+            "eval_count": 327,
+            "eval_duration": 9299821000,
+            "prompt_eval_count": 1383,
+            "prompt_eval_duration": 212114000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated",
+            "unsupported_assumption"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Set up the test environment",
+            "action": "Install and configure the local test runner, set up a test file for the FastAPI login endpoint, and create a basic test fixture to mock the login endpoint.",
+            "completion_criteria": "The test file is created with a basic fixture, and the local test runner is configured to execute the tests.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Write the first unit test",
+            "action": "Write a unit test that verifies the basic functionality of the login endpoint, such as checking if the endpoint is correctly routed and returns a 401 status code when the user is not authenticated.",
+            "completion_criteria": "The test file contains a unit test that verifies the endpoint's routing and returns a 401 status code when the user is not authenticated.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Write the second unit test",
+            "action": "Write a unit test that verifies the login functionality, such as checking if the endpoint returns a 200 status code when the user is authenticated and the credentials are correct.",
+            "completion_criteria": "The test file contains a unit test that verifies the login functionality, and the endpoint returns a 200 status code when the user is authenticated and the credentials are correct.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Set Up Test Environment",
+                "action": "Install and configure the local test runner, ensure the FastAPI login endpoint is accessible, and set up test fixtures for authentication and authorization.",
+                "completion_criteria": "The local test runner is configured, the FastAPI login endpoint is accessible, and test fixtures are set up for authentication and authorization.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Write First Test",
+                "action": "Write a unit test for the login endpoint, ensuring it covers basic authentication and returns a 401 Unauthorized status for invalid credentials.",
+                "completion_criteria": "A unit test for the login endpoint is written, covering basic authentication and returning a 401 Unauthorized status for invalid credentials.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Write Second Test",
+                "action": "Write another unit test for the login endpoint, focusing on successful authentication and returning a 200 OK status with a successful token.",
+                "completion_criteria": "A unit test for the login endpoint is written, covering successful authentication and returning a 200 OK status with a successful token.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Set up the test environment",
+                "action": "Install and configure the local test runner, set up a test file for the FastAPI login endpoint, and create a basic test fixture to mock the login endpoint.",
+                "completion_criteria": "The test file is created with a basic fixture, and the local test runner is configured to execute the tests.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Write the first unit test",
+                "action": "Write a unit test that verifies the basic functionality of the login endpoint, such as checking if the endpoint is correctly routed and returns a 401 status code when the user is not authenticated.",
+                "completion_criteria": "The test file contains a unit test that verifies the endpoint's routing and returns a 401 status code when the user is not authenticated.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Write the second unit test",
+                "action": "Write a unit test that verifies the login functionality, such as checking if the endpoint returns a 200 status code when the user is authenticated and the credentials are correct.",
+                "completion_criteria": "The test file contains a unit test that verifies the login functionality, and the endpoint returns a 200 status code when the user is authenticated and the credentials are correct.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "explicit_constraint_violated",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "explicit_constraint_violated",
+          "unsupported_assumption"
+        ]
+      },
+      "end_to_end_seconds": 19.12492827400274,
+      "codex_content_review": {
+        "rating": "unacceptable",
+        "notes": "Only two tests; installs an existing runner, mocks endpoint and invents HTTP 200/401 behavior.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "G",
+      "input": {
+        "goal": "Draft a one-page explanation of SQLite transactions using only local notes",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": "Existing local text editor and notes; no internet or new downloads.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.409652316993743,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 10221188,
+            "total_duration": 9378363836,
+            "eval_count": 292,
+            "eval_duration": 8047352000,
+            "prompt_eval_count": 1282,
+            "prompt_eval_duration": 877743000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unrelated"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.656664665999415,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 9922890,
+            "total_duration": 7638341275,
+            "eval_count": 261,
+            "eval_duration": 7301638000,
+            "prompt_eval_count": 1367,
+            "prompt_eval_duration": 220749000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria",
+            "unrelated"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with a Simple Transaction Example",
+            "action": "Use local notes to draft a basic transaction example, such as inserting, updating, and deleting data in a single transaction.",
+            "completion_criteria": "A single page with a clear example of a transaction, including the use of BEGIN, COMMIT, and ROLLBACK commands.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Structure the Explanation with Clear Sections",
+            "action": "Organize the explanation into sections such as Introduction, Transaction Basics, Transaction Types, and Transaction Commands.",
+            "completion_criteria": "A structured one-page explanation with clear sections and bullet points or numbered lists.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Add Practical Example Using Local Notes",
+            "action": "Include a practical example using local notes, such as a simple database schema and a sample transaction.",
+            "completion_criteria": "A one-page explanation with a practical example using local notes, demonstrating how transactions work in a real-world scenario.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple Transaction",
+                "action": "Use the local text editor to create a new file and write a basic transaction example, such as 'BEGIN TRANSACTION; INSERT INTO table VALUES (1); COMMIT;' in a single block.",
+                "completion_criteria": "The file contains a single block of code with the transaction example, and the text editor shows the file was saved successfully.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Add a Simple Commit Statement",
+                "action": "Add a 'COMMIT;' statement to the transaction example and ensure it is properly formatted with correct syntax.",
+                "completion_criteria": "The file contains a complete transaction example with 'BEGIN TRANSACTION; INSERT ...; COMMIT;', and the text editor shows the file was saved successfully.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Format the Explanation",
+                "action": "Organize the transaction example into a one-page explanation, using clear headings and bullet points to explain the steps involved in a transaction.",
+                "completion_criteria": "The file contains a one-page explanation with clear headings and bullet points, and the text editor shows the file was saved successfully.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unrelated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple Transaction Example",
+                "action": "Use local notes to draft a basic transaction example, such as inserting, updating, and deleting data in a single transaction.",
+                "completion_criteria": "A single page with a clear example of a transaction, including the use of BEGIN, COMMIT, and ROLLBACK commands.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Structure the Explanation with Clear Sections",
+                "action": "Organize the explanation into sections such as Introduction, Transaction Basics, Transaction Types, and Transaction Commands.",
+                "completion_criteria": "A structured one-page explanation with clear sections and bullet points or numbered lists.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Add Practical Example Using Local Notes",
+                "action": "Include a practical example using local notes, such as a simple database schema and a sample transaction.",
+                "completion_criteria": "A one-page explanation with a practical example using local notes, demonstrating how transactions work in a real-world scenario.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria",
+            "unrelated"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria",
+          "unrelated"
+        ]
+      },
+      "end_to_end_seconds": 17.12984675500047,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "One-page explanatory structure helps, but misses named SQLite and invents database examples.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "I",
+      "input": {
+        "goal": "i want to make a dish but im tired",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which dish or ingredients you already have would you like to use?",
+      "fictional_clarification_answer": "Make a no-cook sandwich using sliced bread, cheese and washed lettuce that I already have.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.200183839006058,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 9689040,
+            "total_duration": 10140870384,
+            "eval_count": 310,
+            "eval_duration": 8833810000,
+            "prompt_eval_count": 1306,
+            "prompt_eval_duration": 876683000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 6.905646885999886,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 12783413,
+            "total_duration": 6869337196,
+            "eval_count": 233,
+            "eval_duration": 6569100000,
+            "prompt_eval_count": 1393,
+            "prompt_eval_duration": 215651000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Prepare the ingredients",
+            "action": "Wash the lettuce, spread the sliced bread, and place the cheese on the bread. This will create a basic sandwich structure.",
+            "completion_criteria": "The sliced bread, cheese, and washed lettuce are ready and arranged on a plate.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Assemble the sandwich",
+            "action": "Place the lettuce on the bread, add the cheese, and secure the bread with a small piece of plastic or a utensil.",
+            "completion_criteria": "The sandwich is assembled on a plate with the ingredients in place.",
+            "estimated_minutes": 3,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Serve the sandwich",
+            "action": "Place the assembled sandwich on a plate and serve it immediately.",
+            "completion_criteria": "The sandwich is on a plate and ready for serving.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the ingredients",
+                "action": "Wash the lettuce, spread the sliced bread, and place the cheese on top of the bread. Arrange the ingredients in a ready-to-eat configuration.",
+                "completion_criteria": "The sliced bread, cheese, and washed lettuce are arranged in a ready-to-eat configuration on a plate.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Focus on the observable physical outcome rather than the cooking process."
+              },
+              {
+                "title": "Assemble the sandwich",
+                "action": "Place the cheese on the bread, add the lettuce, and secure the sandwich with a small piece of bread or a plastic wrap.",
+                "completion_criteria": "The sandwich is assembled on a plate with the cheese, lettuce, and bread in the correct order.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": "Ensure the physical outcome is clear and observable."
+              },
+              {
+                "title": "Check the sandwich",
+                "action": "Inspect the sandwich to confirm it is ready for consumption and meets the basic requirements of a no-cook sandwich.",
+                "completion_criteria": "The sandwich is observable and ready for consumption, with all required ingredients present.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Focus on the final observable state of the sandwich."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the ingredients",
+                "action": "Wash the lettuce, spread the sliced bread, and place the cheese on the bread. This will create a basic sandwich structure.",
+                "completion_criteria": "The sliced bread, cheese, and washed lettuce are ready and arranged on a plate.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Assemble the sandwich",
+                "action": "Place the lettuce on the bread, add the cheese, and secure the bread with a small piece of plastic or a utensil.",
+                "completion_criteria": "The sandwich is assembled on a plate with the ingredients in place.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Serve the sandwich",
+                "action": "Place the assembled sandwich on a plate and serve it immediately.",
+                "completion_criteria": "The sandwich is on a plate and ready for serving.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 17.250022341999284,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "Sandwich uses supplied ingredients, but introduces plastic/utensil securing and repeats assembly/plating. Physical-state rule also falsely flags plate/serving wording.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "J",
+      "input": {
+        "goal": "Study Python list comprehensions using my three existing example lists",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.82370719499886,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8857896,
+            "total_duration": 10761076765,
+            "eval_count": 343,
+            "eval_duration": 9540231000,
+            "prompt_eval_count": 1269,
+            "prompt_eval_duration": 828140000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Explore the first list example",
+            "action": "Review and understand the first list example provided. Identify the elements and how they are structured. Create a simple list comprehension that transforms the elements.",
+            "completion_criteria": "The list comprehension is correctly written and produces the expected output for the first list example.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Focus on the syntax and how the list comprehension maps the original list to the new values."
+          },
+          {
+            "title": "Work with the second list example",
+            "action": "Review and understand the second list example. Identify the elements and how they are structured. Create a list comprehension that processes the elements in a specific way.",
+            "completion_criteria": "The list comprehension is correctly written and produces the expected output for the second list example.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Pay attention to the order of operations and how the list comprehension applies the transformation."
+          },
+          {
+            "title": "Analyze the third list example",
+            "action": "Review and understand the third list example. Identify the elements and how they are structured. Create a list comprehension that handles the third list example's unique requirements.",
+            "completion_criteria": "The list comprehension is correctly written and produces the expected output for the third list example.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Focus on the specific logic required for this list example and how it differs from the first two."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Explore the first list example",
+                "action": "Review and understand the first list example provided. Identify the elements and how they are structured. Create a simple list comprehension that transforms the elements.",
+                "completion_criteria": "The list comprehension is correctly written and produces the expected output for the first list example.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Focus on the syntax and how the list comprehension maps the original list to the new values."
+              },
+              {
+                "title": "Work with the second list example",
+                "action": "Review and understand the second list example. Identify the elements and how they are structured. Create a list comprehension that processes the elements in a specific way.",
+                "completion_criteria": "The list comprehension is correctly written and produces the expected output for the second list example.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Pay attention to the order of operations and how the list comprehension applies the transformation."
+              },
+              {
+                "title": "Analyze the third list example",
+                "action": "Review and understand the third list example. Identify the elements and how they are structured. Create a list comprehension that handles the third list example's unique requirements.",
+                "completion_criteria": "The list comprehension is correctly written and produces the expected output for the third list example.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Focus on the specific logic required for this list example and how it differs from the first two."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "fd35bc7f-0e94-4141-a49f-7beeab9d8dfa",
+        "goal": "Study Python list comprehensions using my three existing example lists",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:51:05.760149Z",
+        "updated_at": "2026-10-09T16:51:05.760149Z",
+        "available_minutes": 15,
+        "energy": "low",
+        "current_quest": {
+          "id": "1ca1ce68-6a67-491d-8c2f-dfc9b2e404a4",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Explore the first list example",
+          "action": "Review and understand the first list example provided. Identify the elements and how they are structured. Create a simple list comprehension that transforms the elements.",
+          "completion_criteria": "The list comprehension is correctly written and produces the expected output for the first list example.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Focus on the syntax and how the list comprehension maps the original list to the new values.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 12.874524381004449,
+      "end_to_end_seconds": 12.889359784996486,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "Uses existing lists and avoids invented language, but specific transformation/expected outputs are unspecified.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "K",
+      "input": {
+        "goal": "Make a no-cook vegetarian snack using only bread, tomato and cheese; no stove and no shopping",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.801596755998617,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 13823109,
+            "total_duration": 9765512940,
+            "eval_count": 305,
+            "eval_duration": 8466250000,
+            "prompt_eval_count": 1287,
+            "prompt_eval_duration": 867744000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 9.94380395799817,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 18063930,
+            "total_duration": 9895132634,
+            "eval_count": 335,
+            "eval_duration": 9585861000,
+            "prompt_eval_count": 1374,
+            "prompt_eval_duration": 210918000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Prepare the Base",
+            "action": "Take 1 slice of bread, 1 slice of tomato, and 1 slice of cheese from the existing materials. Arrange them on a clean plate to form the base of the snack.",
+            "completion_criteria": "The bread, tomato, and cheese are arranged on a clean plate, forming a visible base for the snack.",
+            "estimated_minutes": 3,
+            "difficulty": "easy",
+            "hint": "Ensure the ingredients are properly aligned and ready for assembly."
+          },
+          {
+            "title": "Assemble the Snack",
+            "action": "Take the prepared bread, tomato, and cheese and assemble them into a snack using the existing tools. Arrange the ingredients in a simple, observable configuration.",
+            "completion_criteria": "The bread, tomato, and cheese are arranged into a visible, observable snack configuration without the need for heat or additional tools.",
+            "estimated_minutes": 2,
+            "difficulty": "medium",
+            "hint": "Focus on creating a simple, recognizable shape or pattern."
+          },
+          {
+            "title": "Final Check",
+            "action": "Inspect the assembled snack to ensure it is observable and meets the requirements of no stove and no shopping.",
+            "completion_criteria": "The snack is observable, ready for consumption, and meets the specified criteria of no stove and no shopping.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": "Verify that all ingredients are present and the snack is ready for consumption."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the Base",
+                "action": "Take 1 slice of bread, 1 ripe tomato, and 1 slice of cheese. Arrange them on a plate to form a simple base for the snack.",
+                "completion_criteria": "The bread, tomato, and cheese are arranged on a plate in a visible, observable manner.",
+                "estimated_minutes": 3,
+                "difficulty": "easy",
+                "hint": "Focus on the arrangement and visibility for an observable outcome."
+              },
+              {
+                "title": "Create the Snack Shape",
+                "action": "Using the bread, tomato, and cheese, shape them into a simple, recognizable snack form (e.g., a triangle or circle).",
+                "completion_criteria": "The bread, tomato, and cheese form a visible, simple shape that can be easily recognized as a snack.",
+                "estimated_minutes": 2,
+                "difficulty": "medium",
+                "hint": "Focus on the shape and visibility to ensure it's observable."
+              },
+              {
+                "title": "Serve the Snack",
+                "action": "Place the shaped snack on a plate and serve it immediately.",
+                "completion_criteria": "The snack is on a plate and ready for serving.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Focus on the observable state of the snack on the plate."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the Base",
+                "action": "Take 1 slice of bread, 1 slice of tomato, and 1 slice of cheese from the existing materials. Arrange them on a clean plate to form the base of the snack.",
+                "completion_criteria": "The bread, tomato, and cheese are arranged on a clean plate, forming a visible base for the snack.",
+                "estimated_minutes": 3,
+                "difficulty": "easy",
+                "hint": "Ensure the ingredients are properly aligned and ready for assembly."
+              },
+              {
+                "title": "Assemble the Snack",
+                "action": "Take the prepared bread, tomato, and cheese and assemble them into a snack using the existing tools. Arrange the ingredients in a simple, observable configuration.",
+                "completion_criteria": "The bread, tomato, and cheese are arranged into a visible, observable snack configuration without the need for heat or additional tools.",
+                "estimated_minutes": 2,
+                "difficulty": "medium",
+                "hint": "Focus on creating a simple, recognizable shape or pattern."
+              },
+              {
+                "title": "Final Check",
+                "action": "Inspect the assembled snack to ensure it is observable and meets the requirements of no stove and no shopping.",
+                "completion_criteria": "The snack is observable, ready for consumption, and meets the specified criteria of no stove and no shopping.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Verify that all ingredients are present and the snack is ready for consumption."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 19.812979910995637,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "No heat or extra food, but abstract observable configuration and overlapping assembly steps are weak. Ready-for-consumption wording falsely flags observability.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "L",
+      "input": {
+        "goal": "Tidy the items on my desk using the storage already beside it",
+        "available_minutes": 5,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.271013965000748,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 13420556,
+            "total_duration": 9246354366,
+            "eval_count": 280,
+            "eval_duration": 7912252000,
+            "prompt_eval_count": 1272,
+            "prompt_eval_duration": 833924000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.036221682996256,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6593412,
+            "total_duration": 7002043509,
+            "eval_count": 238,
+            "eval_duration": 6676930000,
+            "prompt_eval_count": 1359,
+            "prompt_eval_duration": 212261000,
+            "thinking_present": false
+          },
+          "semantic_codes": []
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Position the storage container",
+            "action": "Place the storage container beside the desk in a convenient location, ensuring it is stable and accessible.",
+            "completion_criteria": "The storage container is positioned beside the desk and is clearly visible.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Sort items by category",
+            "action": "Take a few items from the desk and sort them into categories such as 'papers', 'tools', 'books', and 'miscellaneous'.",
+            "completion_criteria": "Items are sorted into categories and placed in the storage container.",
+            "estimated_minutes": 3,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Label the storage container",
+            "action": "Label the storage container with the name of the category it holds, such as 'Work Tools' or 'Personal Items'.",
+            "completion_criteria": "The storage container is labeled with a clear identifier.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Position the storage container",
+                "action": "Place the storage container beside the desk to organize items efficiently.",
+                "completion_criteria": "The storage container is positioned beside the desk and ready for use.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Ensure the storage container is stable and visible for easy access."
+              },
+              {
+                "title": "Sort items by category",
+                "action": "Group items on the desk by category (e.g., books, pens, utensils) and place them in the storage container.",
+                "completion_criteria": "Items are sorted by category and placed in the storage container.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": "Start with the most frequently used items to build a tidy system."
+              },
+              {
+                "title": "Remove unnecessary items",
+                "action": "Remove any items that are not needed or are not used frequently from the desk.",
+                "completion_criteria": "The desk is free of unnecessary items and the storage container is properly filled with relevant items.",
+                "estimated_minutes": 2,
+                "difficulty": "medium",
+                "hint": "Focus on items that are not used daily to maintain a tidy space."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Position the storage container",
+                "action": "Place the storage container beside the desk in a convenient location, ensuring it is stable and accessible.",
+                "completion_criteria": "The storage container is positioned beside the desk and is clearly visible.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Sort items by category",
+                "action": "Take a few items from the desk and sort them into categories such as 'papers', 'tools', 'books', and 'miscellaneous'.",
+                "completion_criteria": "Items are sorted into categories and placed in the storage container.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Label the storage container",
+                "action": "Label the storage container with the name of the category it holds, such as 'Work Tools' or 'Personal Items'.",
+                "completion_criteria": "The storage container is labeled with a clear identifier.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": []
+          }
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "4e588849-46ae-499c-a20e-36d1ca11efe6",
+        "goal": "Tidy the items on my desk using the storage already beside it",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T16:51:43.791417Z",
+        "updated_at": "2026-10-09T16:51:43.791417Z",
+        "available_minutes": 5,
+        "energy": "low",
+        "current_quest": {
+          "id": "e5dc4c2b-1f01-442b-a9a7-dd79fef29ab3",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Position the storage container",
+          "action": "Place the storage container beside the desk in a convenient location, ensuring it is stable and accessible.",
+          "completion_criteria": "The storage container is positioned beside the desk and is clearly visible.",
+          "estimated_minutes": 2,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 18.033337847999064,
+      "end_to_end_seconds": 18.05365819099825,
+      "codex_content_review": {
+        "rating": "partial",
+        "notes": "Sorting helps, but moves storage already beside the desk and invents labeling work.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    },
+    {
+      "case": "H",
+      "source_goal": "Improve my programming skills",
+      "synthetic_explicit_completion": true,
+      "profile_before": {
+        "id": 1,
+        "total_xp": 10,
+        "level": 1
+      },
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 12.374613313004375,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8007129,
+            "total_duration": 12347831620,
+            "eval_count": 380,
+            "eval_duration": 10789146000,
+            "prompt_eval_count": 1348,
+            "prompt_eval_duration": 1135629000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 11.748145612997178,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6767511,
+            "total_duration": 11725598645,
+            "eval_count": 396,
+            "eval_duration": 11424552000,
+            "prompt_eval_count": 1440,
+            "prompt_eval_duration": 213078000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with a Simple List Comprehension",
+            "action": "Identify three local example lists and apply a basic list comprehension to transform them. For example, convert a list of strings to uppercase.",
+            "completion_criteria": "Three transformed lists are produced, and each list is in uppercase.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Practice Basic List Comprehension Syntax",
+            "action": "Apply a list comprehension to transform a list of numbers, such as squaring each element.",
+            "completion_criteria": "A list of squared numbers is produced, and the transformation is correctly applied.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Transform Strings with List Comprehensions",
+            "action": "Take a list of strings and use a list comprehension to convert each string to uppercase.",
+            "completion_criteria": "A list of uppercase strings is produced, and each string is correctly transformed.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Combine Lists with List Comprehensions",
+            "action": "Merge two lists using a list comprehension, such as combining a list of names with a list of ages.",
+            "completion_criteria": "A new list containing both names and ages is produced, and the elements are correctly paired.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Review and Refactor",
+            "action": "Review the completed list comprehensions and refactor any inefficient or unclear code.",
+            "completion_criteria": "The code is clean, efficient, and the transformations are correctly implemented.",
+            "estimated_minutes": 5,
+            "difficulty": "hard",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple List Comprehension",
+                "action": "Identify three local example lists and apply a basic list comprehension to transform them. For example, convert a list of strings to uppercase.",
+                "completion_criteria": "Three transformed lists are produced, and each list is in uppercase.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Apply a Basic List Comprehension",
+                "action": "Use a list comprehension to transform the first list, converting all elements to uppercase.",
+                "completion_criteria": "The first list is transformed into uppercase, and the output is visible.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Transform the Second List",
+                "action": "Apply a list comprehension to the second list, removing any elements that are not strings.",
+                "completion_criteria": "The second list contains only string elements, and the output is visible.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Process the Third List",
+                "action": "Use a list comprehension to filter out any elements that are empty strings from the third list.",
+                "completion_criteria": "The third list contains no empty strings, and the output is visible.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Review and Refine",
+                "action": "Review the transformed lists and refine the list comprehensions for better performance or clarity.",
+                "completion_criteria": "The transformed lists are clean, and the code is well-structured.",
+                "estimated_minutes": 2,
+                "difficulty": "hard",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with a Simple List Comprehension",
+                "action": "Identify three local example lists and apply a basic list comprehension to transform them. For example, convert a list of strings to uppercase.",
+                "completion_criteria": "Three transformed lists are produced, and each list is in uppercase.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Practice Basic List Comprehension Syntax",
+                "action": "Apply a list comprehension to transform a list of numbers, such as squaring each element.",
+                "completion_criteria": "A list of squared numbers is produced, and the transformation is correctly applied.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Transform Strings with List Comprehensions",
+                "action": "Take a list of strings and use a list comprehension to convert each string to uppercase.",
+                "completion_criteria": "A list of uppercase strings is produced, and each string is correctly transformed.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Combine Lists with List Comprehensions",
+                "action": "Merge two lists using a list comprehension, such as combining a list of names with a list of ages.",
+                "completion_criteria": "A new list containing both names and ages is produced, and the elements are correctly paired.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Review and Refactor",
+                "action": "Review the completed list comprehensions and refactor any inefficient or unclear code.",
+                "completion_criteria": "The code is clean, efficient, and the transformations are correctly implemented.",
+                "estimated_minutes": 5,
+                "difficulty": "hard",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction"
+        ]
+      },
+      "history_preserved": true,
+      "xp_preserved": true,
+      "end_to_end_seconds": 24.213759772996127,
+      "codex_content_review": {
+        "rating": "unacceptable",
+        "notes": "Repeats completed transformation exactly and assumes input types; history/XP preserved on rejection.",
+        "reviewer": "Codex content inspection, separate from local model review; not human QA or actual task execution"
+      }
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "size": 1702593821,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2026-10-10T00:50:18.984927149+08:00",
+        "size_vram": 1702593821,
+        "context_length": 4096,
+        "runner": "llamacpp"
+      }
+    ]
+  },
+  "summary": {
+    "runs": 12,
+    "structurally_valid_plans": 12,
+    "pipeline_accepted": 3,
+    "first_attempt_structural_successes": 12,
+    "operations_with_retry": 10,
+    "timeouts": 0,
+    "median_end_to_end_seconds": 17.578173022000556,
+    "max_end_to_end_seconds": 24.213759772996127
+  },
+  "status": "Measured; Codex content inspection added; independent human QA pending",
+  "content_review_summary": {
+    "acceptable": 0,
+    "partial": 7,
+    "unacceptable": 5
+  }
+}

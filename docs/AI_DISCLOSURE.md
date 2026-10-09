@@ -24,13 +24,13 @@ Record the actual installed model digest, quantization/runtime metadata and
 Ollama version for submission. A tag/name alone is not an immutable artifact
 identifier. Fallback is not automatic and no model is downloaded by the API.
 
-The current model task is general prompt-to-text generation. Outputs can be
-incorrect or misleading; the UI displays text without claiming verified facts.
-Phase 1B adds an internal strict proposal module and synthetic
-[benchmark](AI_BENCHMARK.md), with partial semantic quality. There is no production
-quest response, automated semantic correctness evaluation or application persistence
-yet. Future persisted structured outputs must pass Pydantic and
-deterministic validation before saving. Financial arithmetic, date calculations
+The UI still displays general prompt-to-text generation. Phase 3 backend also
+supports persistent grounded quest generation/replanning, strict Pydantic,
+deterministic quality checks and one local structured review before saving.
+[Benchmarks](AI_BENCHMARK.md) show semantic recovery remains PARTIAL: a model can
+falsely approve its own plausible-looking plan. Checks do not prove correctness;
+unsupported or uncertain plans are rejected and context preserved. No independent
+human QA or real user-task success is claimed. Financial arithmetic, date calculations
 and validation must be implemented deterministically in Python.
 
 ## AI-assisted development
@@ -98,10 +98,11 @@ not add downloaded weights, private session logs or secrets to source control.
 - Model-installed status is not proof generation, accuracy or acceptable latency
   will succeed on every machine. Record real results and evaluation cases.
 - Synthetic task-specific evaluation is recorded in [AI_BENCHMARK](AI_BENCHMARK.md);
-  real user-task/hardware/offline acceptance is incomplete. No deterministic domain
-  workflow or automatic model fallback has been implemented.
-- Cached prompts/responses, SQLite application records and synchronization are
-  not implemented. A scratch SQLite probe is only infrastructure evidence.
+  real user-task/hardware/offline acceptance is incomplete. Deterministic state/XP
+  is implemented; automatic model fallback is not.
+- SQLite application records and recovery are implemented/tested with temporary
+  Linux files. Browser prompt caching/synchronization is not implemented; the
+  generic frontend is not the product quest UI yet.
 - Product is desktop web, not an installed PWA. Mobile installation/native AI and
   cross-device service access are excluded; no such capability is claimed.
 - Windows demo readiness, operation during actual internet disconnection and

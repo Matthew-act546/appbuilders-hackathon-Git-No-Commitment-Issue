@@ -1,20 +1,177 @@
 # P0 desktop frontend plan
 
-Proposed screens/components, not implemented files. Reuse current React Router,
+## Quest completion encouragement
+
+My Quests displays a forest-themed inline celebration panel after a confirmed
+completion response: “Quest Complete!”, the requested completed quest's message,
+actual `awarded_xp`, newly unlocked stage number or backend-confirmed final status,
+and “Continue Journey”. Replays show zero additional XP. No optimistic rewards,
+future details or completion-time model call. The panel heading receives focus;
+the continuation button returns focus to the Campaign Map. It has no timeout or
+modal trap and remains keyboard-accessible.
+
+Completed cards show their own messages after refresh, without automatically
+reopening a celebration or implying new rewards. Missing optional copy falls back
+to that quest's permitted title/action. The API boundary rejects non-null copy
+for active/paused quests. Messages remain plain React text and are not stored in
+browser persistence. Generation and state-recovery behavior are unchanged.
+
+## Phase 4C campaign presentation
+
+My Quests detail now presents YOUR ADAPTIVE QUEST SETTINGS, CAMPAIGN PROGRESS
+and a connected CAMPAIGN MAP using the existing safe Questline DTO. Stage titles,
+actions, estimates, difficulty and rewards are the actual permitted backend fields;
+no frontend-generated topic/title or future content is introduced. Settings report
+saved capacity/energy and explain planning guidance without promising AI suitability.
+
+Each current stage derives two reference checkpoints from action and original
+completion criteria, or three when the action has two complete sentences. Longer
+actions are retained whole, so requirements are not dropped. Native labeled
+checkboxes are optional and in memory only, reset on refresh/new stage, and award
+no XP. Only explicit whole-stage completion is persisted. Completed stage cards
+show the original checkpoints as reference text, not saved individual checkbox state.
+
+Complete stage reuses existing completion/revision/retry and backend profile updates.
+Pause/resume disables current stage controls while paused. Future stages contain
+only neutral Locked placeholders and count-derived stage numbers: no IDs, titles,
+actions, criteria, hints, estimates or rewards. Completed stages stay visible.
+Campaign XP earned is a display-only sum of backend-confirmed completed quest reward
+fields (the engine guarantees one matching completion ledger award per quest);
+lifetime XP and level come from the profile. No optimistic awards or local levels.
+
+Approved post-PRD sizing now supports initial campaigns of 2–6 stages. The local
+model chooses the smallest useful count for the complete goal, potentially across
+sessions, without filler. Home reflects this range. The existing map already
+renders backend totals dynamically; no layout or checkpoint persistence change.
+New replans cap completed plus remaining stages at six. The map preserves older
+backend-confirmed histories/counts instead of truncating legacy work.
+Adaptive sizing checks passed: typecheck/build, 12 frontend tests and 18 browser
+scenarios. The two/six-stage browser cases use actual API/temporary SQLite with
+mocked model count selection, confirming current-only fields, three temporary
+checkpoints, unlocking, duplicate protection, XP and refresh. The six-stage desktop
+screenshot was visually inspected; the existing forest design remains intact.
+Real local count examples and limitations are separate in
+[AI_BENCHMARK](AI_BENCHMARK.md#16-adaptive-campaign-sizing-26-stages).
+The separate Journey and advanced Progress pages retain their earlier foundations;
+this phase adds the campaign presentation to the working selected-questline dashboard.
+No hint/shrink/replan UI or broader Phase 4C adaptive features are introduced here.
+
+Phase 4C presentation verification: **PASS**. Frontend typecheck/build, 11 Node
+boundary/campaign tests, 111 unchanged backend regressions and diff check passed.
+Chromium: 16 mocked-Ollama scenarios plus one real qwen3:1.7b short campaign
+passed. The real no-cook snack generated three stages (not six), displayed three
+checkpoints on its first stage, completed all three via explicit UI actions,
+confirmed 40 campaign XP / 90 lifetime XP in isolated storage, and restored the
+completed campaign after refresh. Mocked tests also cover lost-response replay,
+no duplicate XP, unlocking, temporary checklist reset, keyboard Space interaction,
+paused controls, campaign/lifetime distinction, response/DOM filtering and 1440,
+640, 390px layouts. Screenshots were visually inspected at desktop and narrow
+widths. Evidence: /tmp/quest-phase4b-UU0tcZ/results.json and screenshot files there.
+Completion clicks are synthetic test acknowledgements, not physical task execution.
+No Windows or internet-disconnection test was performed. AI quality is inherited
+from the existing module and was not tuned or debugged in this presentation phase.
+
+## Phase 4B implementation record
+
+Home now submits the implemented `mode:start` check-in, preserves the server's
+original context, answers its exact single question through `mode:answer`, and
+offers explicit generation. Saved context can be restored through an opaque
+`?check_in=<UUID>` URL; no private content is written to local/session storage.
+Optional local deadlines become UTC ISO timestamps, and optional notes remain
+bounded. Unsaved drafts and idempotency keys are in memory only.
+
+My Quests lists paginated summaries, opens the selected route's safe detail DTO,
+shows current/paused work and completed history, completes explicitly, and
+pauses/resumes using server revisions. XP/level and unlocks update only from
+committed responses. Detail and profile reads are canceled/fenced so abandoned
+responses cannot overwrite the selected line or confirmed state. AI availability
+does not gate saved reads, completion or pause/resume.
+
+The typed adapter uses actual backend schemas, no-store and strict public response
+validation. Unexpected fields, including hidden-plan arrays, are rejected. Product
+error codes and non-JSON failures use fixed sanitized messages. Timeouts are 10s
+for reads, 15s for state/check-in writes and 150s for product generation, allowing
+the backend's 120s inference budget plus response overhead. There is no automatic
+mutation retry. Explicit retries retain the original key/body; changed payloads
+create a new intent. Completion retries retain the original quest ID/revision,
+even when a lost response has already unlocked the next quest. Pending responses
+honor Retry-After; 409 responses reload canonical state before another mutation.
+
+Keys do not survive a full reload. A saved check-in's consumed state recovers a
+committed generation; unfinished work remains protected by the backend's unique
+consumption and durable pending intent/lease. Unconfirmed check-in starts without
+a returned ID require retry before leaving the page to recover that same receipt.
+
+Linux verification: typecheck/build, 5/5 boundary tests, 14/14 Chromium browser
+scenarios and all 90 backend regressions passed. Browser scenarios use actual
+FastAPI and temporary SQLite with fictional HTTPX-mocked Ollama; pending/HTML
+gateway/lost-response fixtures are injected at the browser boundary. They cover
+deadline/notes, check-in/clarification, generation/persistence, refresh, completion/
+XP/idempotency, pause/resume, stale state/addresses, AI failure/rejection, strict
+visibility and abandoned reads. See `frontend/tests/` and README for commands.
+The one separate live primary-model attempt was **semantically rejected**: context
+remained ready and no questline was saved. It does not count as successful live
+generation. **Overall Phase 4B PARTIAL:** core integration passes; reliable live AI
+quest quality remains the Phase 3 blocker. No backend, AI prompt/model, PRD or
+contract changes; no Windows or disconnected-internet validation.
+
+Hint/shrink, AI replanning, full Journey and advanced Progress/history remain
+excluded until Phase 4C authorization. The four navigation destinations and their
+existing Phase 4A styling are preserved.
+
+## Phase 4A implementation record
+
+The shared forest-themed shell, original inline SVG sprout/icons, reusable UI
+primitives and four screen foundations are implemented. `/journey` is the
+unselected Journey destination; `/journey/:id` and `/questlines/:id` currently
+display the same clearly labeled foundations as their top-level routes, without
+fetching quest content. Only `GET /api/profile` is newly connected, with runtime
+shape validation, cancellation, refresh and neutral unavailable states. Completed
+quest counts/history remain unavailable rather than assuming zero. No private
+form content is persisted in browser storage and no quest mutations are sent.
+
+Home's editable check-in is explicitly an unsaved preview with a disabled CTA.
+The existing generic prompt diagnostic is preserved inside the local-service
+settings/status dialog. It is not a check-in or quest-generation endpoint. Phase
+4B connects the core saved-quest workflow; Phase 4C connects adaptive features and
+optional Journey/progress history. Preview pages are authorized for Phase 4A review;
+the release navigation fallback below still applies before feature freeze.
+
+System fonts avoid initial font downloads; SVG artwork and outline icons are
+original source assets, not extracted reference artwork. Dependencies, environment
+configuration, React Router entry point and backend/AI contracts are unchanged.
+
+Verification on Matthew's Linux machine: `npm run typecheck`, `npm run build`
+(from `frontend/`) and `git diff --check` passed. A temporary Chromium/CDP harness
+passed 11 browser cases, covering actual profile reads in dev/production, four
+keyboard navigation destinations, dialog focus/Escape, four layouts at 320–1280
+CSS px, unavailable-backend recovery, rejected invalid-profile fixtures, mocked
+generic AI submission/text rendering, fallback/logo, reduced motion, targeted
+contrast checks and local-only requests without PWA registration. Desktop 1440px
+and narrow screenshots were visually inspected. The 640px check covers
+200%-zoom-equivalent reflow, not actual browser UI zoom. No frontend test runner
+is configured. Live inference, disconnected-internet operation, Windows and a
+full accessibility audit were not performed in Phase 4A.
+
+The sections below plan backend-connected screens/components. Reuse current React Router,
 TypeScript strict checking, Tailwind/Vite and API helper patterns. Source PRD
 §6/§13/§15; [API_CONTRACT](API_CONTRACT.md) is authoritative for public types.
 
-## Screens and navigation
+## Screens and navigation — approved Phase 4 direction
 
-| Route | Screen | Owner / minimum behavior |
-| --- | --- | --- |
-| `/` | Home/check-in | Lawrence: goal/time/energy, optional deadline/notes, at most one follow-up, ready/generate flow. |
-| `/questlines/:id` | Selected active dashboard | James: current quest/actions, criteria/time/difficulty, XP/level/progress, history access, paused/completed states. |
-| `/questlines` | Saved questlines/basic progress history | James: bounded metadata list, select line, profile XP/level, plain completed history in detail. |
+The approved desktop navigation is **Home | My Quests | Journey | Progress** with a clickable logo returning Home, a selected-questline context label, and backend-derived XP/level in the shell. Follow `DESIGN_SYSTEM.md` for the approved forest palette, component styling, and local assets.
 
-No Quest Journey component/graph/locked milestone list in P0. No game world,
-avatar, rewards, streaks, leaderboard or mandatory login. Keep responsive desktop
-layout and keyboard operability; mobile inference is not a claim.
+| Route | Navigation | P0 behavior | Priority / owner |
+| --- | --- | --- | --- |
+| `/` | Home | Goal, minutes, energy, optional deadline/notes; persisted clarification; generate; Continue Journey when one exists | P0, Lawrence |
+| `/questlines` | My Quests | Saved questline selection, empty/paused/completed states, progress summaries | P0, James |
+| `/questlines/:id` | My Quests detail | Current quest, criteria, explicit completion, XP, pause/resume, replan, completed history; only server-visible data | P0, James |
+| `/journey/:id` | Journey | Optional visual nodes for completed/current and anonymous locked milestones; never invent or fetch hidden quest details | P1 if time, James |
+| `/progress` | Progress | Backend-derived XP, level, completed quest count and readable history from available API data | P1 if time, James |
+
+**Navigation fallback:** If Journey or Progress cannot be built safely before feature freeze, keep the four labels only when each route has meaningful working content. Otherwise hide unfinished links rather than shipping dead pages. A readable completed-history panel and XP display in My Quests satisfy P0 without separate P1 pages.
+
+**Scope boundary:** No game world, avatar customization, rewards economy, streaks, leaderboard, mandatory login or PWA. The quest journey is a lightweight visual representation, not an additional quest engine. Future quest titles/actions/criteria are unavailable at the API boundary and must never be fabricated in the client.
 
 ## Components and file ownership
 
@@ -22,9 +179,9 @@ Proposed under existing `frontend/src/`:
 
 | Area | Components/files | Owner |
 | --- | --- | --- |
-| pages | Home.tsx (convert existing), QuestDashboard.tsx, SavedQuestlines.tsx | Lawrence Home; James dashboard/list |
+| pages | Home.tsx (convert existing), QuestDashboard.tsx, SavedQuestlines.tsx; optional Journey.tsx, Progress.tsx | Lawrence Home; James dashboard/list |
 | components | CheckInForm, FollowUpQuestion, ReplanForm, AssistancePanel, LoadingState, ErrorNotice | Lawrence |
-| components | QuestCard, QuestActions, XPDisplay, ProgressSummary, QuestlineList, CompletedHistory | James |
+| components | QuestCard, QuestActions, XPDisplay, ProgressSummary, QuestlineList, CompletedHistory; optional JourneyNodes | James |
 | hooks | useQuestline, useProfile, local UI request/cancellation hooks | James; Lawrence coordinates adapters rather than duplicate hooks |
 | lib | api.ts and new shared questTypes.ts if needed | James primary; Matthew approves contract; Lawrence changes by coordination |
 | shared shell | App.tsx, main.tsx, styles.css, config/package | James primary; Matthew alone coordinates Phase 1 PWA cleanup |
@@ -94,6 +251,24 @@ with an alert. Prevent duplicate-click UX, keep user input on errors, allow retr
 and explicit return to saved work. Support empty list, first load, all-completed,
 paused, stale state, model unavailable, schema failure, timeout and storage failure.
 Respect reduced motion; animation is unnecessary for P0.
+
+## Phase 3 integration and semantic-quality safeguards
+
+Phase 3 is **PARTIAL** despite 90/90 passing backend tests. Live `qwen3:1.7b` plans were often semantically unacceptable. UI must display server clarification questions, preserve inputs on semantic rejection, and offer explicit retry or edit-goal actions. Do not silently save a rejected plan, display fabricated quest content, promise that AI plans are correct, or mask rejection as success. Keep an accessible loading state during local inference and allow returning to saved questlines even if Ollama is unavailable. Do not add an unapproved AI chat or client-side semantic scoring engine.
+
+Before implementing any endpoint adapter, inspect current `docs/API_CONTRACT.md` and actual FastAPI OpenAPI schema: Phase 3 added `POST /api/check-in`, `GET /api/check-in/{id}`, `POST /api/questlines`, and `POST /api/questlines/{id}/replan`. Never guess request fields, response shapes, idempotency semantics, or assistance routes. Hint/shrink buttons should only be actionable if their backend endpoints exist; otherwise omit or clearly defer them. Check-in generation and replan must respect the server's durable intent and retry contract.
+
+## Phase 4 implementation order and acceptance
+
+1. Audit existing React scaffold, current backend routes and approved design tokens; preserve the non-PWA architecture.
+2. Build shared app shell, responsive navigation, reusable design-system primitives, typed API client, and safe loading/error handling.
+3. Implement Home check-in → one clarification → explicit generate → navigate to selected questline.
+4. Implement My Quests saved list, current quest, completion/XP, pause/resume, replan, completed history and refresh/restart restoration.
+5. Verify API idempotency, stale revision recovery, disabled AI behavior when Ollama is down, and no locked content in rendered DOM.
+6. Only then add lightweight Journey and Progress screens if time allows; do not delay the complete P0 flow.
+7. Run typecheck/build and actual browser walkthrough; record manual tests honestly if no frontend test runner exists.
+
+Do not modify the finalized PRD, backend XP rules, database schema or Ollama settings for frontend convenience. No commit/push without team approval.
 
 ## Phase 1 and integration gates
 

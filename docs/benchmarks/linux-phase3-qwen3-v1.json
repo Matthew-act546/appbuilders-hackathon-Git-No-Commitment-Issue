@@ -1,0 +1,1131 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "grounded-quests-v1",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-09T22:41:12.506801+08:00",
+  "reference_time": "2026-10-09T23:00:00+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 6113607680,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 90,
+    "attempt_seconds": 60,
+    "review_seconds": 30,
+    "review_num_predict": 300
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Finish a programming assignment",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": "2026-10-10T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What does the assignment require you to produce? Describe the relevant task and any required tools.",
+      "fictional_clarification_answer": "Implement binary search on a sorted integer list in C++ using the supplied local assignment brief; record two test cases.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 16.05335038600606,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 5296705607,
+            "total_duration": 15977468000,
+            "eval_count": 320,
+            "eval_duration": 8845233000,
+            "prompt_eval_count": 1165,
+            "prompt_eval_duration": 1778311000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Implement Binary Search Logic",
+            "action": "Write a function to perform binary search on a sorted integer list using the provided assignment brief.",
+            "completion_criteria": "A working binary search function that correctly identifies the target element or returns the index if found, or indicates that the element is not present.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": "Focus on the core logic of dividing the search space in half and comparing with the middle element."
+          },
+          {
+            "title": "Test Binary Search Function",
+            "action": "Create two test cases to verify the binary search function's correctness.",
+            "completion_criteria": "Two test cases that pass using the provided test framework or output, confirming the function behaves as expected.",
+            "estimated_minutes": 8,
+            "difficulty": "medium",
+            "hint": "Use a simple test case with a known result and another with an unknown result to validate the function."
+          },
+          {
+            "title": "Record Test Results",
+            "action": "Document the results of the two test cases in the assignment brief or a separate log file.",
+            "completion_criteria": "A recorded log of the test results, including the input data, expected output, and actual output for each test case.",
+            "estimated_minutes": 6,
+            "difficulty": "easy",
+            "hint": "Use a simple text-based log or a basic data structure to store the results."
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "84d4a03a-aea1-4fa0-acd3-fe7ef26c3102",
+        "goal": "Finish a programming assignment",
+        "status": "active",
+        "deadline": "2026-10-10T15:59:00Z",
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T14:41:31.611691Z",
+        "updated_at": "2026-10-09T14:41:31.611691Z",
+        "available_minutes": 20,
+        "energy": "low",
+        "current_quest": {
+          "id": "690d0347-17fc-46e4-8a12-f5e41dfa6101",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Implement Binary Search Logic",
+          "action": "Write a function to perform binary search on a sorted integer list using the provided assignment brief.",
+          "completion_criteria": "A working binary search function that correctly identifies the target element or returns the index if found, or indicates that the element is not present.",
+          "estimated_minutes": 10,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Focus on the core logic of dividing the search space in half and comparing with the middle element.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 18.232263234996935,
+      "end_to_end_seconds": 18.340160908999678,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [],
+        "passed": true,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": true,
+        "unsupported_assumptions": false,
+        "notes": "Grounded binary-search implementation, two test cases and recorded outputs. First estimate is plausible guidance, not a measured task time.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "B",
+      "input": {
+        "goal": "Prepare for an Algorithms and Complexity exam",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": "2026-10-12T15:59:00Z",
+        "contextual_notes": "Use local lecture notes on sorting and asymptotic analysis.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.235906125999463,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 7047968,
+            "total_duration": 9209353434,
+            "eval_count": 292,
+            "eval_duration": 7976904000,
+            "prompt_eval_count": 1131,
+            "prompt_eval_duration": 855370000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Review Sorting Algorithms",
+            "action": "Review the lecture notes on sorting algorithms, focusing on quicksort, mergesort, and heapsort. Identify the key properties and time complexities.",
+            "completion_criteria": "Successfully review sorting algorithms and note their time complexities. Identify at least three key algorithms and their time complexity classes.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Practice Asymptotic Analysis",
+            "action": "Work through a few examples of asymptotic analysis, such as determining the time complexity of a given algorithm or analyzing the growth rate of a function.",
+            "completion_criteria": "Successfully complete at least two examples of asymptotic analysis and note the time complexity of each. Identify the dominant term in the complexity expression.",
+            "estimated_minutes": 20,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Create a Simple Complexity Table",
+            "action": "Create a table that maps common algorithms to their time complexity and space complexity. Include at least five algorithms and their respective complexities.",
+            "completion_criteria": "Successfully create a table mapping algorithms to their time and space complexity. Ensure the table includes at least five algorithms and their respective complexities.",
+            "estimated_minutes": 25,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "0fd342e8-fa15-4765-9d56-589c560410d9",
+        "goal": "Prepare for an Algorithms and Complexity exam",
+        "status": "active",
+        "deadline": "2026-10-12T15:59:00Z",
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T14:41:42.940573Z",
+        "updated_at": "2026-10-09T14:41:42.940573Z",
+        "available_minutes": 60,
+        "energy": "medium",
+        "current_quest": {
+          "id": "1d24fd8b-edbe-4372-8cb8-58cb38e8c3e5",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Review Sorting Algorithms",
+          "action": "Review the lecture notes on sorting algorithms, focusing on quicksort, mergesort, and heapsort. Identify the key properties and time complexities.",
+          "completion_criteria": "Successfully review sorting algorithms and note their time complexities. Identify at least three key algorithms and their time complexity classes.",
+          "estimated_minutes": 15,
+          "difficulty": "medium",
+          "xp_reward": 20,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 11.268836504001229,
+      "end_to_end_seconds": 11.279998206999153,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [],
+        "passed": true,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": true,
+        "unsupported_assumptions": false,
+        "notes": "v1 has observable notes/examples/table; v2 invents Python and includes review-only criteria without saved evidence.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "C",
+      "input": {
+        "goal": "Improve my programming skills",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which programming topic do you want to practice using tools you already have locally?",
+      "fictional_clarification_answer": "Practice Python list comprehensions by transforming three existing local example lists.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.821334168998874,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8913000,
+            "total_duration": 9792328350,
+            "eval_count": 315,
+            "eval_duration": 8594839000,
+            "prompt_eval_count": 1117,
+            "prompt_eval_duration": 817800000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Create and Transform a List",
+            "action": "Create a local list of three elements and use a list comprehension to transform each element by adding a suffix of 's' to it.",
+            "completion_criteria": "A transformed list where each element ends with 's' has been created and verified.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": "Use the list comprehension syntax: [item + 's' for item in original_list]"
+          },
+          {
+            "title": "Filter and Sort the List",
+            "action": "Take the transformed list and filter out any elements that are not strings, then sort the list alphabetically.",
+            "completion_criteria": "A filtered and sorted list of strings has been created and verified.",
+            "estimated_minutes": 8,
+            "difficulty": "medium",
+            "hint": "Use the list comprehension: [item for item in transformed_list if isinstance(item, str)]"
+          },
+          {
+            "title": "Count Occurrences",
+            "action": "Count how many times the word 'apple' appears in the sorted list and store this count as a variable.",
+            "completion_criteria": "A variable containing the count of 'apple' in the list has been created and verified.",
+            "estimated_minutes": 6,
+            "difficulty": "medium",
+            "hint": "Use the count method: count = sorted_list.count('apple')"
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "0cd49728-99cc-4440-9a14-cfaaa4fab58c",
+        "goal": "Improve my programming skills",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T14:41:54.832882Z",
+        "updated_at": "2026-10-09T14:41:54.832882Z",
+        "available_minutes": 30,
+        "energy": "medium",
+        "current_quest": {
+          "id": "f25f9206-f265-44e7-8478-7044a81ae0a7",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Create and Transform a List",
+          "action": "Create a local list of three elements and use a list comprehension to transform each element by adding a suffix of 's' to it.",
+          "completion_criteria": "A transformed list where each element ends with 's' has been created and verified.",
+          "estimated_minutes": 10,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Use the list comprehension syntax: [item + 's' for item in original_list]",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 11.800692684999376,
+      "end_to_end_seconds": 11.849803527002223,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [
+          "unsupported_assumption"
+        ],
+        "passed": false,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": false,
+        "unsupported_assumptions": true,
+        "notes": "Replaces the requested existing example lists with newly invented inputs; local reviewer approved v1 despite this.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "D",
+      "input": {
+        "goal": "Prepare a project presentation",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": "2026-10-09T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What is the presentation topic and the main result you need to communicate?",
+      "fictional_clarification_answer": "Explain how SQLite transactions prevent duplicate XP using the existing local project notes.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 7.66565950900258,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3920446,
+            "total_duration": 7621239050,
+            "eval_count": 228,
+            "eval_duration": 6426147000,
+            "prompt_eval_count": 1146,
+            "prompt_eval_duration": 873669000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Collect Project Notes",
+            "action": "Review existing local project notes to identify key information and structure for the presentation.",
+            "completion_criteria": "Have reviewed and organized existing local project notes, identifying key topics, data structures, and project milestones.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create Outline",
+            "action": "Draft a concise outline for the presentation based on the reviewed project notes.",
+            "completion_criteria": "Have created a structured outline with clear sections and key points for the presentation.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Prepare Key Points",
+            "action": "Compile a list of key points and supporting details for each section of the outline.",
+            "completion_criteria": "Have prepared a list of key points and supporting details for each section of the outline, ready for the presentation.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "96d73386-5f32-4b29-9800-93dbf71021d0",
+        "goal": "Prepare a project presentation",
+        "status": "active",
+        "deadline": "2026-10-09T15:59:00Z",
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T14:42:04.373076Z",
+        "updated_at": "2026-10-09T14:42:04.373076Z",
+        "available_minutes": 15,
+        "energy": "low",
+        "current_quest": {
+          "id": "8ca5de74-7e0e-43a8-ba40-fb84711b8c66",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Collect Project Notes",
+          "action": "Review existing local project notes to identify key information and structure for the presentation.",
+          "completion_criteria": "Have reviewed and organized existing local project notes, identifying key topics, data structures, and project milestones.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 9.52056761700078,
+      "end_to_end_seconds": 9.541743375004444,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [
+          "unobservable_criteria",
+          "unrelated"
+        ],
+        "passed": false,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": false,
+        "unsupported_assumptions": false,
+        "notes": "Generic presentation work does not explicitly address the supplied SQLite/duplicate-XP topic; v1 also uses subjective readiness criteria.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "E",
+      "input": {
+        "goal": "Build a basic CRUD web application",
+        "available_minutes": 90,
+        "energy": "high",
+        "deadline": "2026-10-16T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which records should the CRUD app manage, and which existing local stack will you use?",
+      "fictional_clarification_answer": "Manage book records with title and author using an existing FastAPI and SQLite project. Local CRUD only, no login or deployment.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.127001578999625,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 8766572,
+            "total_duration": 8112518233,
+            "eval_count": 241,
+            "eval_duration": 6845134000,
+            "prompt_eval_count": 1174,
+            "prompt_eval_duration": 977357000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Setup Project Structure",
+            "action": "Initialize a FastAPI project with SQLite using existing local tools and files.",
+            "completion_criteria": "Project structure is set up with necessary files (app.py, models.py, database.py) and SQLite database created.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create Book Model",
+            "action": "Define a Book model in models.py with fields for title and author, and establish a database connection.",
+            "completion_criteria": "Book model is defined with title and author fields, and a database connection is established.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Implement CRUD Operations",
+            "action": "Write CRUD operations (create, read, update, delete) for the Book model using FastAPI endpoints.",
+            "completion_criteria": "CRUD operations are implemented for the Book model, and basic endpoints are available.",
+            "estimated_minutes": 30,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 8.153374103996612,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [
+          "duplicate_or_contradiction"
+        ],
+        "passed": false,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": false,
+        "unsupported_assumptions": true,
+        "notes": "Starts a new project despite the supplied existing project; v1 was rejected by the original artifact filter, v2 by the contradiction check.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "F",
+      "input": {
+        "goal": "Write three unit tests for my FastAPI login endpoint",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": "Use the existing local test runner and fixtures. Three total tests, no new app or tools.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.522696560998156,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 16214058,
+            "total_duration": 8507147881,
+            "eval_count": 271,
+            "eval_duration": 7363706000,
+            "prompt_eval_count": 1116,
+            "prompt_eval_duration": 827633000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Set Up Test Environment",
+            "action": "Configure a test environment using the existing local test runner and fixtures to ensure the FastAPI login endpoint is accessible and ready for testing.",
+            "completion_criteria": "The test environment is set up and the login endpoint is accessible via the local test runner.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Create First Test",
+            "action": "Write a unit test for the login endpoint that verifies basic functionality, such as correct authentication and response status code.",
+            "completion_criteria": "A unit test has been written for the login endpoint, and it passes with the expected response status code and data.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Refactor and Expand Test",
+            "action": "Refactor the first test to include additional scenarios, such as invalid credentials, successful login, and edge cases, and ensure all scenarios are covered.",
+            "completion_criteria": "A second unit test has been written for the login endpoint, covering additional scenarios and passing with expected outcomes.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "0474e1dc-7826-49e6-ae43-41ef6cd63199",
+        "goal": "Write three unit tests for my FastAPI login endpoint",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T14:42:22.937825Z",
+        "updated_at": "2026-10-09T14:42:22.937825Z",
+        "available_minutes": 20,
+        "energy": "low",
+        "current_quest": {
+          "id": "3b5f574d-655c-47b7-9170-dbe5637cded7",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Set Up Test Environment",
+          "action": "Configure a test environment using the existing local test runner and fixtures to ensure the FastAPI login endpoint is accessible and ready for testing.",
+          "completion_criteria": "The test environment is set up and the login endpoint is accessible via the local test runner.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 10.448696528001165,
+      "end_to_end_seconds": 10.45436887699907,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [
+          "duplicate_or_contradiction"
+        ],
+        "passed": false,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": false,
+        "unsupported_assumptions": false,
+        "notes": "Only two tests are planned despite three requested. v2 additionally invents HTTP 200 behavior.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "G",
+      "input": {
+        "goal": "Draft a one-page explanation of SQLite transactions using only local notes",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": "Existing local text editor and notes; no internet or new downloads.",
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.14481147100014,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 10226480,
+            "total_duration": 10129163162,
+            "eval_count": 325,
+            "eval_duration": 8942057000,
+            "prompt_eval_count": 1114,
+            "prompt_eval_duration": 835062000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with a Simple Transaction",
+            "action": "Open a text editor and create a new file. Write a simple transaction example, such as `BEGIN TRANSACTION; INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'); COMMIT;`",
+            "completion_criteria": "The file contains a valid SQLite transaction example with proper syntax and clear structure.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Focus on the basic structure of a transaction and ensure the syntax is correct."
+          },
+          {
+            "title": "Add Basic Explanation",
+            "action": "Expand the file with a brief explanation of what a transaction is, its purpose, and how it works in SQLite.",
+            "completion_criteria": "The file contains a clear explanation of SQLite transactions, including the role of BEGIN, COMMIT, and ROLLBACK.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use simple language and include examples to illustrate the concept."
+          },
+          {
+            "title": "Format for Clarity",
+            "action": "Format the file with proper indentation, line breaks, and sectioning to make the explanation easy to read.",
+            "completion_criteria": "The file is well-structured and easy to follow, with clear sections and formatting.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use bullet points or numbered lists to break down the explanation."
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "01d8b3f6-440a-4476-b199-792583b8a315",
+        "goal": "Draft a one-page explanation of SQLite transactions using only local notes",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T14:42:35.131889Z",
+        "updated_at": "2026-10-09T14:42:35.131889Z",
+        "available_minutes": 15,
+        "energy": "low",
+        "current_quest": {
+          "id": "d81011fc-deaf-44af-a24c-82eae1725b48",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Start with a Simple Transaction",
+          "action": "Open a text editor and create a new file. Write a simple transaction example, such as `BEGIN TRANSACTION; INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'); COMMIT;`",
+          "completion_criteria": "The file contains a valid SQLite transaction example with proper syntax and clear structure.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Focus on the basic structure of a transaction and ensure the syntax is correct.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 12.149699535002583,
+      "end_to_end_seconds": 12.158758663004846,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [
+          "unobservable_criteria"
+        ],
+        "passed": false,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": false,
+        "unsupported_assumptions": false,
+        "notes": "v1 ends with subjective formatting criteria; v2 produces only SQL examples and omits the requested explanation.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    },
+    {
+      "case": "H",
+      "synthetic_explicit_completion": true,
+      "profile_before": {
+        "id": 1,
+        "total_xp": 10,
+        "level": 1
+      },
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 14.195513531994948,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 18669781,
+            "total_duration": 14145876334,
+            "eval_count": 439,
+            "eval_duration": 12141455000,
+            "prompt_eval_count": 1173,
+            "prompt_eval_duration": 1714860000,
+            "thinking_present": false
+          }
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Create Test Fixture",
+            "action": "Define a test fixture that mocks the FastAPI login endpoint with a predefined response, such as a successful login or an error response.",
+            "completion_criteria": "A test fixture is created that mocks the FastAPI login endpoint with a predefined response.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Write First Test",
+            "action": "Write a unit test that verifies the endpoint returns a 200 OK status code for a successful login.",
+            "completion_criteria": "A unit test is written that verifies the endpoint returns a 200 OK status code for a successful login.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Write Second Test",
+            "action": "Write another unit test that verifies the endpoint returns a 400 BAD REQUEST status code when the username or password is invalid.",
+            "completion_criteria": "A unit test is written that verifies the endpoint returns a 400 BAD REQUEST status code when the username or password is invalid.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Write Third Test",
+            "action": "Write a unit test that verifies the endpoint returns a 401 UNAUTHORIZED status code when the user is not authenticated.",
+            "completion_criteria": "A unit test is written that verifies the endpoint returns a 401 UNAUTHORIZED status code when the user is not authenticated.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Run and Validate Tests",
+            "action": "Run all three unit tests using the existing local test runner and verify that the endpoint behaves as expected.",
+            "completion_criteria": "All three unit tests are run and verified to pass, confirming the endpoint behaves as expected.",
+            "estimated_minutes": 5,
+            "difficulty": "hard",
+            "hint": null
+          }
+        ]
+      },
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "0474e1dc-7826-49e6-ae43-41ef6cd63199",
+        "goal": "Write three unit tests for my FastAPI login endpoint",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 2,
+        "revision": 3,
+        "progress": {
+          "completed_count": 1,
+          "remaining_count": 5,
+          "total_count": 6
+        },
+        "created_at": "2026-10-09T14:42:22.937825Z",
+        "updated_at": "2026-10-09T14:42:51.521270Z",
+        "available_minutes": 15,
+        "energy": "low",
+        "current_quest": {
+          "id": "22b75a35-2d05-4dec-957e-c5eed013d2b3",
+          "order": 2,
+          "plan_version": 2,
+          "status": "active",
+          "title": "Create Test Fixture",
+          "action": "Define a test fixture that mocks the FastAPI login endpoint with a predefined response, such as a successful login or an error response.",
+          "completion_criteria": "A test fixture is created that mocks the FastAPI login endpoint with a predefined response.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": [
+          {
+            "id": "3b5f574d-655c-47b7-9170-dbe5637cded7",
+            "order": 1,
+            "plan_version": 1,
+            "status": "completed",
+            "title": "Set Up Test Environment",
+            "action": "Configure a test environment using the existing local test runner and fixtures to ensure the FastAPI login endpoint is accessible and ready for testing.",
+            "completion_criteria": "The test environment is set up and the login endpoint is accessible via the local test runner.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "xp_reward": 10,
+            "hint": null,
+            "starting_action": null,
+            "completed_at": "2026-10-09T14:42:35.180410Z"
+          }
+        ]
+      },
+      "history_preserved": true,
+      "xp_preserved": true,
+      "end_to_end_seconds": 16.349650206997467,
+      "post_run_deterministic_recheck": {
+        "gate_version": "grounded-quests-v2.1",
+        "codes": [
+          "duplicate_or_contradiction",
+          "unrelated",
+          "unsupported_assumption"
+        ],
+        "passed": false,
+        "live_inference": false,
+        "persistence_performed": false
+      },
+      "content_quality_review": {
+        "acceptable": false,
+        "unsupported_assumptions": true,
+        "notes": "v1 invents endpoint response codes/mocks; v2 repeats the completed binary-search action. History/XP remained preserved in both.",
+        "reviewer": "Codex content inspection; independent team QA not performed",
+        "task_execution_verified": false
+      }
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": []
+  },
+  "summary": {
+    "runs": 8,
+    "structurally_valid_plans": 8,
+    "pipeline_accepted": 7,
+    "first_attempt_structural_successes": 8,
+    "operations_with_retry": 0,
+    "timeouts": 0,
+    "median_end_to_end_seconds": 11.564900867000688,
+    "max_end_to_end_seconds": 18.340160908999678
+  },
+  "status": "measured; independent semantic review pending"
+}

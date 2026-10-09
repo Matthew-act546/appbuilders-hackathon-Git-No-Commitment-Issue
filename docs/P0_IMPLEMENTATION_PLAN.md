@@ -51,7 +51,7 @@ Depends on Phase 0 decisions. Matthew + James:
 - [ ] Record model choice/config and proposed budgets; no automatic failover.
 
 Gate: all three services start locally; localhost frontend works after PWA cleanup;
-at least realistic 3–5-quest schema outputs are validated on the demo laptop without
+at least realistic 2–6-stage schema outputs are validated on the demo laptop without
 remote inference. If neither model meets validity/latency needs, record a blocker,
 do not invent performance or loosen trusted-state validation.
 
@@ -82,11 +82,20 @@ James/Lawrence may build agreed components independently; no mock data in final 
 
 ## Phase 3 — check-in and quest generation
 
+Backend handoff: persistent start/answer/retrieval, grounded local generation,
+safe creation/replan, v1 → v2 migration and durable intent fencing are implemented.
+The semantic gate is **PARTIAL**: live primary-model plans still lose details,
+invent assumptions or repeat completed work; conservative rejection protects
+state but reduces successful planning. See AI_BENCHMARK's Phase 3 results.
+Frontend integration and reliable semantic usefulness remain open; no Phase 4
+screens or hint/shrink APIs were implemented. Do not check the full working-loop
+or AI-quality gate merely because backend tests pass.
+
 Depends on Phase 1 AI gate and Phase 2 persistence. Matthew backend; Lawrence
 check-in form and James minimal dashboard integration:
 
 - [ ] Strict CheckInContext/one essential follow-up and ready/consumed states.
-- [ ] Initial 3–5 proposal generation, domain/schema validation and one bounded
+- [ ] Initial 2–6 proposal generation, domain/schema validation and one bounded
   malformed-output retry; backend assigns IDs/order/status/version/reward.
 - [ ] Durable idempotency/unique check-in use; no partial plans on AI/DB failure.
 - [ ] Integrate real check-in→current quest→explicit complete→XP→next unlock.
@@ -144,7 +153,7 @@ justify false claims, cloud inference or reward/state shortcuts.
 | Requirement | Implementation gate | Minimum evidence / owner |
 | --- | --- | --- |
 | FR-01 check-in | 3 | Typed context, relevant single follow-up/ready, optional deadline / Lawrence + Matthew; Gracianne QA |
-| FR-02 local generation | 1 + 3 | Schema-valid useful 3–5 quests from actual local model / Matthew + James |
+| FR-02 local generation | 1 + 3 | Schema-valid useful 2–6 stages from actual local model / Matthew + James |
 | FR-03 gating | 2–4 | One current per line; locked sentinel absent in API/DOM / Matthew + James |
 | FR-04 hint/shrink | 4 | Contextual assistance; original criteria/status/XP invariant / Lawrence + Matthew |
 | FR-05 replan | 4 | Completed snapshots/XP identical; failed/stale result leaves old plan / Matthew; Gracianne QA |

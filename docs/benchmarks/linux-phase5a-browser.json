@@ -1,0 +1,440 @@
+[
+  {
+    "name": "Specific check-in and explicit readiness",
+    "result": "PASS",
+    "evidence": "Actual API stores context; no unnecessary question; generation requires its own button"
+  },
+  {
+    "name": "Campaign map and keyboard checklist",
+    "result": "PASS",
+    "evidence": "Three backend-counted stages, two source-derived objectives, anonymous locked placeholders; keyboard checks do not mutate progress or XP"
+  },
+  {
+    "name": "Generate → save → dashboard, duplicate-click guard and visibility",
+    "result": "PASS",
+    "evidence": "Real questline transaction, safe current DTO, one generation POST; locked titles absent from response and DOM"
+  },
+  {
+    "name": "Refresh, pause and resume persistence",
+    "result": "PASS",
+    "evidence": "Same current quest and 0 XP restored; completion disabled while paused"
+  },
+  {
+    "name": "Completion celebration, response-loss recovery and keyboard continuation",
+    "result": "PASS",
+    "evidence": "No celebration before confirmed response; replay shows the completed quest’s own message and zero additional XP; focus moves to the heading then Campaign Map; next-stage copy stays private"
+  },
+  {
+    "name": "Completion, unlocking, lost-response replay and XP",
+    "result": "PASS",
+    "evidence": "Backend awards 10 XP once; retry uses original quest ID/body; only next quest appears after commit"
+  },
+  {
+    "name": "Distinct encouragement, missing-copy fallback and final refresh",
+    "result": "PASS",
+    "evidence": "Confirmed +20/+10 XP, next-stage number only, own-title messages, final campaign status; three completed-history messages persist without replaying celebration or rewards"
+  },
+  {
+    "name": "Stale revision recovery and final completion",
+    "result": "PASS",
+    "evidence": "Conflict reloads canonical revision without XP; explicit fresh completion unlocks final quest, then completes line; total 40 XP"
+  },
+  {
+    "name": "Actual clarification and check-in refresh",
+    "result": "PASS",
+    "evidence": "Exact server question; original goal/context and answer persist with revision 2; opaque URL ID restores the form"
+  },
+  {
+    "name": "AI unavailable, timeout, invalid output and semantic rejection",
+    "result": "PASS",
+    "evidence": "Actual API error paths using mocked Ollama: context retained, no plan saved or fabricated, same key/body on explicit retries"
+  },
+  {
+    "name": "Non-JSON error sanitization",
+    "result": "PASS",
+    "evidence": "Mocked HTML gateway error never exposes traces/private text; check-in remains retryable"
+  },
+  {
+    "name": "Pending response and lost generation response",
+    "result": "PASS",
+    "evidence": "Mocked 409/Retry-After prevents early retry; actual successful commit with dropped response is recovered through consumed check-in, without duplicate line"
+  },
+  {
+    "name": "Saved quests remain usable with AI unavailable",
+    "result": "PASS",
+    "evidence": "Real SQLite list/detail/pause/resume/completion work while the mocked runtime cannot connect; 50 total XP confirmed"
+  },
+  {
+    "name": "Strict public DTO boundary",
+    "result": "PASS",
+    "evidence": "Injected hidden field causes safe rejection; neither hidden content nor a current-quest UI is rendered until a valid response is loaded"
+  },
+  {
+    "name": "Stale questline address",
+    "result": "PASS",
+    "evidence": "Actual API 404 offers a return to saved questlines instead of an empty or fabricated dashboard"
+  },
+  {
+    "name": "Campaign versus lifetime progress",
+    "result": "PASS",
+    "evidence": "Completed campaign shows 40 earned XP while backend profile has 50 across campaigns; no locked stages remain"
+  },
+  {
+    "name": "Abandoned read and selected identity",
+    "result": "PASS",
+    "evidence": "Delayed previous questline cannot replace the newly selected route state"
+  },
+  {
+    "name": "Design and privacy regression",
+    "result": "PASS",
+    "evidence": "No horizontal overflow at 1440/640/390px; no private browser storage, service worker or uncaught exceptions"
+  },
+  {
+    "name": "2-stage Campaign Map integration",
+    "result": "PASS",
+    "evidence": "Mocked count selection, real API/SQLite: current-only content, anonymous locked stages, three temporary checkpoints, one-time XP, sequential unlocking and completed refresh persistence"
+  },
+  {
+    "name": "6-stage Campaign Map integration",
+    "result": "PASS",
+    "evidence": "Mocked count selection, real API/SQLite: current-only content, anonymous locked stages, three temporary checkpoints, one-time XP, sequential unlocking and completed refresh persistence"
+  },
+  {
+    "name": "Phase 5A A/E — household two-stage, real backend outage and immediate refresh",
+    "result": "PASS",
+    "evidence": {
+      "id": "d155219f-a471-406f-8564-d8df1d0ad809",
+      "campaignXP": 20,
+      "profileBefore": {
+        "id": 1,
+        "total_xp": 130,
+        "level": 2
+      },
+      "profileAfter": {
+        "id": 1,
+        "total_xp": 150,
+        "level": 2
+      },
+      "history": [
+        {
+          "id": "f8918ab6-94bd-4b7b-9d8a-f0e268dad9b7",
+          "order": 1,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Clear the desk",
+          "action": "Move items off the desk into the storage already beside it.",
+          "completion_criteria": "The desk surface has no loose items.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:47.198276Z",
+          "completion_encouragement": "“Clear the desk” is complete—your step: “Move items off the desk into the storage…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "4aa2ce4d-eab1-41e7-84ac-995a93e84a11",
+          "order": 2,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Set up the study space",
+          "action": "Place the existing study notes on the clear desk.",
+          "completion_criteria": "The notes are on the desk and the working area is clear.",
+          "estimated_minutes": 3,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:47.531177Z",
+          "completion_encouragement": "“Set up the study space” is complete—your step: “Place the existing study notes on the clear…”. Let this small step be a quiet win along your path."
+        }
+      ],
+      "model": "mocked",
+      "actualBackendStoppedAndRestarted": true,
+      "completionDuringSimulatedOllamaOutage": true
+    }
+  },
+  {
+    "name": "Phase 5A C — pause/reload/resume after completion",
+    "result": "PASS",
+    "evidence": {
+      "activeId": "67794136-9c22-47c4-b6ad-28dfcee71d3f",
+      "preservedHistory": [
+        {
+          "id": "307d457c-49cc-437a-922b-6df450ddd7fb",
+          "order": 1,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Read the loop notes",
+          "action": "Read the existing Python notes and write the difference between for and while loops.",
+          "completion_criteria": "A written sentence compares for and while loops.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:50.177483Z",
+          "completion_encouragement": "“Read the loop notes” is complete—your step: “Read the existing Python notes and write the…”. Let this small step be a quiet win along your path."
+        }
+      ],
+      "unchangedEarnedXP": 10,
+      "model": "mocked"
+    }
+  },
+  {
+    "name": "Phase 5A B — six-stage study full walkthrough",
+    "result": "PASS",
+    "evidence": {
+      "id": "c49d5123-46f1-48f4-b72e-cdfaea94f6a1",
+      "campaignXP": 80,
+      "profileBefore": {
+        "id": 1,
+        "total_xp": 150,
+        "level": 2
+      },
+      "profileAfter": {
+        "id": 1,
+        "total_xp": 230,
+        "level": 3
+      },
+      "history": [
+        {
+          "id": "307d457c-49cc-437a-922b-6df450ddd7fb",
+          "order": 1,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Read the loop notes",
+          "action": "Read the existing Python notes and write the difference between for and while loops.",
+          "completion_criteria": "A written sentence compares for and while loops.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:50.177483Z",
+          "completion_encouragement": "“Read the loop notes” is complete—your step: “Read the existing Python notes and write the…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "67794136-9c22-47c4-b6ad-28dfcee71d3f",
+          "order": 2,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Run a for loop",
+          "action": "Run a Python for loop over three existing values and record its output.",
+          "completion_criteria": "The output lists all three values.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:51.897671Z",
+          "completion_encouragement": "“Run a for loop” is complete—your step: “Run a Python for loop over three existing…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "d87fa781-230c-4bbf-92f0-277d36cdc8e5",
+          "order": 3,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Run a while loop",
+          "action": "Run a Python while loop with a stopping condition and record the output.",
+          "completion_criteria": "The output and stopping condition are recorded.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:52.320346Z",
+          "completion_encouragement": "“Run a while loop” is complete—your step: “Run a Python while loop with a stopping…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "e70d1637-cb62-4693-ac24-f018004947d2",
+          "order": 4,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Compare the loop results",
+          "action": "Compare the recorded for and while loop outputs in two sentences.",
+          "completion_criteria": "Two sentences compare the recorded outputs.",
+          "estimated_minutes": 5,
+          "difficulty": "medium",
+          "xp_reward": 20,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:53.453341Z",
+          "completion_encouragement": "“Compare the loop results” is complete—your step: “Compare the recorded for and while loop outputs…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "a9fc1a04-1859-438f-9a59-fc904b99c689",
+          "order": 5,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Check a boundary case",
+          "action": "Run the Python loops with an empty list or a false initial condition and record the result.",
+          "completion_criteria": "Each boundary-case result is recorded.",
+          "estimated_minutes": 5,
+          "difficulty": "medium",
+          "xp_reward": 20,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:53.871680Z",
+          "completion_encouragement": "“Check a boundary case” is complete—your step: “Run the Python loops with an empty list…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "4e853b31-08f8-4a1f-ac56-903d79750d7c",
+          "order": 6,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Test the loop knowledge",
+          "action": "Write two questions about Python loops and answer them using the recorded examples.",
+          "completion_criteria": "Two questions and their answers are written.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:54.258505Z",
+          "completion_encouragement": "“Test the loop knowledge” is complete—your step: “Write two questions about Python loops and answer…”. Let this small step be a quiet win along your path."
+        }
+      ],
+      "model": "mocked",
+      "refreshedAfterThree": true
+    }
+  },
+  {
+    "name": "Phase 5A D — API-initiated replan with frontend restoration",
+    "result": "PASS",
+    "evidence": {
+      "id": "1c8f0c25-afb2-4a91-a55b-f9e7bb4019ef",
+      "completedHistory": [
+        {
+          "id": "63f30d92-5dab-40de-91a7-24ffee6f0fbf",
+          "order": 1,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Read the loop notes",
+          "action": "Read the existing Python notes and write the difference between for and while loops.",
+          "completion_criteria": "A written sentence compares for and while loops.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": null,
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:27:57.271379Z",
+          "completion_encouragement": "“Read the loop notes” is complete—your step: “Read the existing Python notes and write the…”. Let this small step be a quiet win along your path."
+        }
+      ],
+      "XP": {
+        "id": 1,
+        "total_xp": 240,
+        "level": 3
+      },
+      "totalStages": 6,
+      "planVersion": 2,
+      "overCapError": "AI_INVALID_OUTPUT",
+      "staleError": "STALE_REVISION",
+      "sameKeyReplayPreserved": true,
+      "frontendReplanControlImplemented": false,
+      "model": "mocked"
+    }
+  },
+  {
+    "name": "Phase 5A F — presentation topic clarification and grounded save",
+    "result": "PASS",
+    "evidence": {
+      "question": "What is the presentation topic and the main result you need to communicate?",
+      "originalGoal": "I need to present a complex topic that I know nothing about.",
+      "retainedAnswer": "Introduce artificial intelligence to my classmates using my existing local notes, three slides and one timed five-minute rehearsal.",
+      "revision": 2,
+      "currentQuest": {
+        "id": "643bb68c-091c-47d0-88f6-e3bd4d645628",
+        "order": 1,
+        "plan_version": 1,
+        "status": "active",
+        "title": "Draft the AI introduction",
+        "action": "Use the existing local notes to create exactly three slides introducing artificial intelligence to classmates: definition, an example, and limitations.",
+        "completion_criteria": "Three slides contain the definition, example and limitations of artificial intelligence.",
+        "estimated_minutes": 10,
+        "difficulty": "easy",
+        "xp_reward": 10,
+        "hint": null,
+        "starting_action": null,
+        "completed_at": null,
+        "completion_encouragement": null
+      },
+      "model": "mocked",
+      "independentModelRelevanceProof": false
+    }
+  },
+  {
+    "name": "Live primary inference and full frontend completion: Constrained no-cook snack",
+    "result": "PASS",
+    "evidence": {
+      "model": "qwen3:1.7b",
+      "generationSeconds": 16.503,
+      "questlineId": "577a6247-990b-4f0c-b720-a82a995a5949",
+      "profileBefore": {
+        "id": 1,
+        "total_xp": 240,
+        "level": 3
+      },
+      "profileAfter": {
+        "id": 1,
+        "total_xp": 280,
+        "level": 3
+      },
+      "completedQuests": [
+        {
+          "id": "52288578-7c05-40c6-a1ea-d93e7e1aaace",
+          "order": 1,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Prepare the base",
+          "action": "Cut a loaf of bread into small pieces using hands, then arrange them in a bowl.",
+          "completion_criteria": "Bread is evenly distributed in the bowl and ready for assembly.",
+          "estimated_minutes": 2,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Ensure the bread is evenly cut for even distribution.",
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:28:19.307832Z",
+          "completion_encouragement": "“Prepare the base” is complete—your step: “Cut a loaf of bread into small pieces…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "6cce37e4-136f-43a9-904e-d58d14e32c47",
+          "order": 2,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Add ingredients",
+          "action": "Place a slice of cheese and a slice of tomato onto the bread in the bowl, ensuring they are evenly spaced.",
+          "completion_criteria": "Cheese and tomato are securely placed on the bread and ready for assembly.",
+          "estimated_minutes": 1,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Use hands to place the ingredients for even distribution.",
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:28:20.407366Z",
+          "completion_encouragement": "“Add ingredients” is complete—your step: “Place a slice of cheese and a slice…”. Let this small step be a quiet win along your path."
+        },
+        {
+          "id": "762f12f3-7826-4b37-868d-bd397eb0c604",
+          "order": 3,
+          "plan_version": 1,
+          "status": "completed",
+          "title": "Assemble the snack",
+          "action": "Gently press the cheese and tomato onto the bread in the bowl, forming a compact snack shape.",
+          "completion_criteria": "The snack is firmly pressed and ready to be served.",
+          "estimated_minutes": 1,
+          "difficulty": "medium",
+          "xp_reward": 20,
+          "hint": "Ensure the press is firm but not too forceful to avoid damaging the bread.",
+          "starting_action": null,
+          "completed_at": "2026-10-09T20:28:21.526453Z",
+          "completion_encouragement": "“Assemble the snack” is complete—your step: “Gently press the cheese and tomato onto the…”. Let this small step be a quiet win along your path."
+        }
+      ],
+      "statusAfterRefresh": "completed",
+      "ollamaUnavailableDuringCompletion": true,
+      "syntheticExplicitCompletion": true,
+      "actualUserTaskExecution": false
+    }
+  }
+]

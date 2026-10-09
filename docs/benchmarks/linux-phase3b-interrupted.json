@@ -1,0 +1,311 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "grounded-quests-v3b.2",
+  "prompt_version": "initial-quests-v3b.1",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-10T00:52:36.757306+08:00",
+  "reference_time": "2026-10-10T00:30:00+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 1873154048,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 120,
+    "attempt_seconds": 60,
+    "review_seconds": 30,
+    "review_num_predict": 300,
+    "max_proposal_attempts": 2,
+    "max_review_calls": 2,
+    "shared_format_quality_retry": true
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Finish a programming assignment",
+        "available_minutes": 20,
+        "energy": "low",
+        "deadline": "2026-10-11T15:59:00Z",
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What does the assignment require you to produce? Describe the relevant task and any required tools.",
+      "fictional_clarification_answer": "Implement binary search on a sorted integer list in C++ using the supplied local assignment brief; record two test cases.",
+      "check_in_status": "ready",
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.210724556003697,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 10332803,
+            "total_duration": 8187612101,
+            "eval_count": 241,
+            "eval_duration": 6741991000,
+            "prompt_eval_count": 1333,
+            "prompt_eval_duration": 964743000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ]
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 6.494650033004291,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 11771859,
+            "total_duration": 6450283209,
+            "eval_count": 224,
+            "eval_duration": 6148312000,
+            "prompt_eval_count": 1420,
+            "prompt_eval_duration": 206809000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ]
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Start with the Assignment Brief",
+            "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+            "completion_criteria": "Understand the requirements and have a clear plan for implementing binary search.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": null
+          },
+          {
+            "title": "Implement Binary Search Function",
+            "action": "Write a C++ function to perform binary search on a sorted integer list.",
+            "completion_criteria": "The function is implemented and works correctly for a given sorted list.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": null
+          },
+          {
+            "title": "Test the Binary Search Function",
+            "action": "Test the binary search function with two test cases provided in the assignment brief.",
+            "completion_criteria": "The function passes both test cases and returns the correct results.",
+            "estimated_minutes": 8,
+            "difficulty": "medium",
+            "hint": null
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with the Assignment Brief",
+                "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+                "completion_criteria": "Understand the requirements for implementing binary search on a sorted integer list in C++ and know the expected output format.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Implement the Binary Search Function",
+                "action": "Write the C++ code for the binary search function, ensuring it correctly handles a sorted integer list.",
+                "completion_criteria": "The binary search function is implemented and works correctly for a sorted integer list.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test the Binary Search Function",
+                "action": "Run two test cases to verify the functionality of the binary search function.",
+                "completion_criteria": "The binary search function passes both test cases, confirming its correctness.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Start with the Assignment Brief",
+                "action": "Review the provided assignment brief and understand the requirements for implementing binary search on a sorted integer list in C++.",
+                "completion_criteria": "Understand the requirements and have a clear plan for implementing binary search.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": null
+              },
+              {
+                "title": "Implement Binary Search Function",
+                "action": "Write a C++ function to perform binary search on a sorted integer list.",
+                "completion_criteria": "The function is implemented and works correctly for a given sorted list.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": null
+              },
+              {
+                "title": "Test the Binary Search Function",
+                "action": "Test the binary search function with two test cases provided in the assignment brief.",
+                "completion_criteria": "The function passes both test cases and returns the correct results.",
+                "estimated_minutes": 8,
+                "difficulty": "medium",
+                "hint": null
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 14.817250883999805
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "size": 1702593821,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2026-10-10T00:57:08.031548023+08:00",
+        "size_vram": 1702593821,
+        "context_length": 4096,
+        "runner": "llamacpp"
+      }
+    ]
+  },
+  "status": "interrupted: targeted case filter was initially missing; one completed A result retained, partial B inference cancelled, excluded from cohort statistics"
+}

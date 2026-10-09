@@ -1,6 +1,99 @@
 # SQLite and SQLAlchemy design
 
-## Phase 2 implementation — schema version 1
+## Completion encouragement — current schema version 4
+
+`quests.completion_encouragement` is nullable text for optional model copy; no new
+tables, rewards or state transitions. Proposal validation bounds and sanitizes
+copy independently of essential quest fields. Public DTOs return null before
+completion and a quest-specific message in completed history only. First
+completion saves grounded final copy atomically with existing ledger/XP/unlock
+writes; duplicate requests do not rewrite it or award XP. Existing completed rows
+with null copy use deterministic read-only fallback.
+
+Startup checks the exact v3 catalog then executes `ALTER TABLE quests ADD COLUMN
+completion_encouragement VARCHAR` and sets `user_version=4` in the guarded
+transaction. No data copy/drop/reset is needed for this upgrade; FKs stay enabled
+for v3→v4. Fresh databases initialize directly at v4; v1/v2 upgrades chain through
+v3 and v4 atomically. Full current ORM integrity verification runs after all mapped
+columns exist, before commit. Catalog/FK/state/XP checks still reject corruption;
+any failure rolls back the entire chain. Preserve a proper SQLite backup before
+upgrading important data. [test_encouragement.py](../backend/tests/test_encouragement.py)
+covers v3 row preservation, legacy fallback, rollback and schema mismatch refusal;
+the existing v1/v2 migration suites also run against the current schema.
+
+## Adaptive sizing — schema version 3 checkpoint
+
+Approved post-PRD initial campaigns are 2–6 stages; replacement proposals are 1–6,
+with the service additionally enforcing completed + remaining <=6 for new replans.
+The same service enforces total >=2: a single replacement requires completed history.
+No new entities/columns. PlanVersion's count CHECK is widened to <=6 and its
+initial minimum lowered to 2. Existing rows, IDs, state, XP, timestamps, check-ins,
+receipts and intents remain unchanged. Legacy longer histories remain valid.
+
+Startup explicitly migrates exact schema v2→v3 by creating a replacement
+plan_versions table, copying every column, dropping the old table and renaming
+the replacement inside one BEGIN IMMEDIATE transaction. It follows SQLite's
+[generalized ALTER procedure](https://www.sqlite.org/lang_altertable.html#otheralter):
+FK enforcement is disabled only on the dedicated migration connection before
+BEGIN, then exact catalog/FK/state checks precede commit. Enforcement is restored
+and verified before pooling the connection; failed restoration invalidates it.
+No writable_schema or database reset. A failure after DROP rolls back DDL, rows
+and user_version. Version-one startup chains both upgrades atomically. Normal v3
+startup retains FK enforcement and performs no table rebuild.
+
+Before using the updated backend with important data, stop the old backend and
+back up the configured SQLite database using SQLite's backup API. Startup handles
+the reviewed upgrade automatically; no manual edits to saved data are required.
+[test_adaptive_sizing.py](../backend/tests/test_adaptive_sizing.py) tests old 3–5
+campaigns, paused state, XP/history/receipts, rollback after DROP, FK restoration,
+unknown schema refusal and legacy larger-history completion.
+
+## Phase 3 implementation — schema version 2
+
+The six Phase 2 tables/constraints are unchanged. Two additive tables implement
+the current workflow in [models.py](../backend/app/models.py):
+
+- `check_ins`: UUID PK, profile FK, original bounded context, needs_follow_up/
+  ready/consumed status, revision, summary, original question/accepted answer,
+  follow_up_count 0/1 and timestamps. Unique nullable questline_id FK resides here,
+  rather than rebuilding questlines to add the inverse FK. CHECKs require matching
+  follow-up fields; consumed requires a line and ready requires an accepted summary.
+  Existing Phase 2 lines remain valid without a check-in link.
+- `generation_intents`: UUID key PK, profile FK, operation, typed-by-service target
+  ID, canonical request hash, pending/succeeded/failed state, attempt_number,
+  lease_expires_at, result resource ID, safe error code and timestamps. The partial
+  unique `(operation,target_id)` pending index serializes intents for one target.
+  CHECKs require a lease for pending and a result ID for success; no transcript or
+  raw plan is stored here. Resource IDs are validated by operation at startup.
+
+Check-in start/answer commits its successful receipt with context in one short
+transaction. AI intent reservation commits before inference. Generation/replan
+has a 120-second precommit budget, each attempt <=60, one shared format/essential
+correction; Phase 3D removed mandatory review. Lease=135. Commit rechecks intent state,
+attempt, unexpired lease and target revision/state. Existing quest services accept
+a private caller-owned Session to join the atomic plan + check-in consumption +
+successful receipt transaction. No second competing quest engine exists.
+
+If inference/validation/semantic checking/storage fails, business state rolls
+back and the owning intent is marked failed when storage permits. If the process
+dies or failure cannot be recorded, lease expiry permits explicit recovery.
+Attempt fencing prevents the previous worker from saving or overwriting a newer
+attempt. Old pause/resume receipts and AI intents reject cross-table key reuse.
+
+[schema.py](../backend/app/schema.py) contains explicit `migrate_v1_to_v2`.
+Startup validates the exact v1 catalog and state, adds only these two tables,
+sets user_version=2 and verifies catalog/FKs/state inside the same transaction.
+The migration changes no old rows, XP, completion history, quests, versions or
+constraints. Failed DDL rolls back with version 1 intact. Unknown/mismatched
+schemas are refused, never recreated. New empty databases initialize directly
+at v2. Back up important data with services stopped before upgrading.
+
+[test_check_in.py](../backend/tests/test_check_in.py) tests v1 fixtures containing
+earned XP/completed history, unchanged rows after migration, repeated bootstrap,
+failed migration rollback, new-process retrieval, expired leases and old-worker
+fencing. These are temporary-file Linux tests, not a Windows demo claim.
+
+## Phase 2 implementation record — schema version 1
 
 Implemented in [models.py](../backend/app/models.py),
 [schema.py](../backend/app/schema.py), [database.py](../backend/app/database.py)
@@ -137,7 +230,8 @@ Composite PK `(questline_id FK questlines.id, version INTEGER>=1)`. Fields:
 `reason` initial/replan, `available_minutes`, `energy`, optional `deadline`,
 `contextual_notes`, `change_reason` (<=1000), `check_in_summary`,
 `generated_quest_count`, `model_tag`, `prompt_version`, `created_at`.
-CHECK initial has version=1 and count 3–5; replan has version>1 and count 1–5.
+Current CHECK: initial has version=1 and count 2–6; replan has version>1 and count
+1–6. The service caps completed plus remaining at six before any replan mutation.
 Immutable context/audit snapshot, not a public API response. No raw model output
 or transcript is needed. Full quest content is in related quest rows.
 

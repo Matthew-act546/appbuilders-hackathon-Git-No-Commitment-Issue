@@ -8,6 +8,14 @@ deferred. Tests: [test_quests.py](../backend/tests/test_quests.py).
 [DATABASE_DESIGN](DATABASE_DESIGN.md) assigns DB/service enforcement;
 [API_CONTRACT](API_CONTRACT.md) defines public visibility and concurrency inputs.
 
+Approved post-PRD sizing: initial campaigns contain 2–6 meaningful stages selected
+by the local model for the entire goal, potentially across sessions. Session time
+limits only the first estimated action; no sum-of-campaign-duration limit exists.
+Replans preserve completed history and fit all remaining work into the unused
+slots of the six-stage cap. One replacement is allowed when sufficient; no filler.
+With no completed history, at least two replacement stages are required; with
+history, one is allowed. Total new/replanned campaign length remains 2–6.
+
 ## State machine
 
 ```mermaid
@@ -32,13 +40,13 @@ line. Follow-up answer reaches ready without another question.
 
 | User operation | Preconditions | Atomic result | Reward effect |
 | --- | --- | --- | --- |
-| Initial generation | Ready unconsumed check-in | Version 1, 3–5 quests, first active, pointer set, line active | None |
+| Initial generation | Ready unconsumed check-in | Version 1, 2–6 quests, first active, pointer set, line active | None |
 | Complete | Current active quest, active line, matching revision | Quest completed + ledger entry + profile update; smallest remaining current-version order becomes active, or line completed/pointer null | Once: 10/20/30 |
 | Duplicate completion | Existing completion ledger | No writes/reunlock; return already_completed and latest views | 0 additional |
 | Hint/shrink | Current active quest/line, matching revision at commit | Persist validated assistance and increment revision | None; criteria/action/reward/status unchanged |
 | Pause | Active line | Current quest paused, line paused, pointer retained, revision increments | None |
 | Resume | Paused line | Same quest active, same pointer/plan, line active, revision increments | None |
-| Replan | Active unfinished line, matching snapshot revision | New plan version, old unfinished superseded, 1–5 replacements with first active, pointer/capacity/revision updated | Completed ledger/profile unchanged |
+| Replan | Active unfinished line, matching snapshot revision, fewer than six completed stages | New version; old unfinished superseded; 1..(6−completed) replacements, first active; pointer/capacity/revision updated | Completed ledger/profile unchanged |
 
 Repeated pause/resume when already in the requested state is a no-op; durable
 receipt replay returns the latest view and never reapplies an old intent. Expired
@@ -93,6 +101,8 @@ all versions or reactivate a superseded quest.
 active/paused/locked unfinished quests, and total_count is their sum. Superseded
 quests are excluded. Replanning may change the denominator; show that honestly.
 For a completed line, remaining_count=0 and total_count=completed_count.
+New/replanned campaigns have at most six total stages. Older histories are never
+truncated or deleted to meet that cap; saved legacy work remains completable.
 
 ## Visibility and authoritative writes
 

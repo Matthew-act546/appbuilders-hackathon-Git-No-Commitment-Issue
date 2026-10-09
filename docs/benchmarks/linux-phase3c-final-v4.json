@@ -1,0 +1,1602 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "grounded-quests-v3c.4",
+  "prompt_version": "initial-quests-v3c.4",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-10T02:37:44.118255+08:00",
+  "reference_time": "2026-10-10T02:37:44.115323+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 8712458240,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 120,
+    "attempt_seconds": 60,
+    "review_seconds": 30,
+    "review_num_predict": 300,
+    "max_proposal_attempts": 2,
+    "max_review_calls": 2,
+    "shared_format_quality_retry": true
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "selected_initial_cases": null,
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Prepare a 5-minute introduction to artificial intelligence for my classmates. Research the basics, create three slides, and practice.",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Prepare a 5-minute introduction to artificial intelligence for my classmates. Research the basics, create three slides, and practice.",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 14.708473327998945,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3654818616,
+            "total_duration": 14696321009,
+            "eval_count": 370,
+            "eval_duration": 9509074000,
+            "prompt_eval_count": 1087,
+            "prompt_eval_duration": 1499602000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ],
+          "kind": "proposal"
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 3.808011440996779,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4616166,
+            "total_duration": 3797916432,
+            "eval_count": 103,
+            "eval_duration": 2571807000,
+            "prompt_eval_count": 736,
+            "prompt_eval_duration": 1036299000,
+            "thinking_present": false
+          },
+          "semantic_codes": [],
+          "kind": "targeted_repair"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": [],
+        "findings": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Research AI Basics",
+            "action": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications.",
+            "completion_criteria": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications. The session should include a visual summary of the key concepts and a brief explanation of how they relate to each other. The research should be completed within the session minutes and should be recorded with a timer to ensure the duration is maintained.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": "Focus on explaining AI in simple terms, avoiding technical jargon."
+          },
+          {
+            "title": "Create Slide Content",
+            "action": "Design three slides using a local tool (e.g., PowerPoint, Google Slides, or a digital whiteboard) to visually represent the AI basics researched.",
+            "completion_criteria": "Each slide must clearly convey a distinct point from the research, with a total of three slides and no more than five minutes of content per slide.",
+            "estimated_minutes": 15,
+            "difficulty": "medium",
+            "hint": "Use visuals to aid understanding, such as diagrams or icons, and ensure the slides are concise and visually appealing."
+          },
+          {
+            "title": "Practice the Introduction",
+            "action": "Rehearse the 5-minute introduction aloud, using a timer to ensure the duration is met, and record the elapsed time in text.",
+            "completion_criteria": "Perform a realistic, natural, and accurate 5-minute speech that covers the AI basics, with no pauses or repetitions, and note the elapsed time.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": "Practice in front of a mirror or record yourself to identify areas for improvement."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Research AI Basics",
+                "action": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications.",
+                "completion_criteria": "Identify at least three core concepts of AI, including their definitions and basic applications, and ensure the content is accurate and relevant to the audience.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": "Focus on explaining AI in simple terms, avoiding technical jargon."
+              },
+              {
+                "title": "Create Slide Content",
+                "action": "Design three slides using a local tool (e.g., PowerPoint, Google Slides, or a digital whiteboard) to visually represent the AI basics researched.",
+                "completion_criteria": "Each slide must clearly convey a distinct point from the research, with a total of three slides and no more than five minutes of content per slide.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": "Use visuals to aid understanding, such as diagrams or icons, and ensure the slides are concise and visually appealing."
+              },
+              {
+                "title": "Practice the Introduction",
+                "action": "Rehearse the 5-minute introduction aloud, using a timer to ensure the duration is met, and record the elapsed time in text.",
+                "completion_criteria": "Perform a realistic, natural, and accurate 5-minute speech that covers the AI basics, with no pauses or repetitions, and note the elapsed time.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Practice in front of a mirror or record yourself to identify areas for improvement."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": [
+            {
+              "quest_index": 0,
+              "fields": [
+                "completion_criteria"
+              ],
+              "codes": [
+                "unobservable_criteria"
+              ]
+            }
+          ]
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Research AI Basics",
+                "action": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications.",
+                "completion_criteria": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications. The session should include a visual summary of the key concepts and a brief explanation of how they relate to each other. The research should be completed within the session minutes and should be recorded with a timer to ensure the duration is maintained.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": "Focus on explaining AI in simple terms, avoiding technical jargon."
+              },
+              {
+                "title": "Create Slide Content",
+                "action": "Design three slides using a local tool (e.g., PowerPoint, Google Slides, or a digital whiteboard) to visually represent the AI basics researched.",
+                "completion_criteria": "Each slide must clearly convey a distinct point from the research, with a total of three slides and no more than five minutes of content per slide.",
+                "estimated_minutes": 15,
+                "difficulty": "medium",
+                "hint": "Use visuals to aid understanding, such as diagrams or icons, and ensure the slides are concise and visually appealing."
+              },
+              {
+                "title": "Practice the Introduction",
+                "action": "Rehearse the 5-minute introduction aloud, using a timer to ensure the duration is met, and record the elapsed time in text.",
+                "completion_criteria": "Perform a realistic, natural, and accurate 5-minute speech that covers the AI basics, with no pauses or repetitions, and note the elapsed time.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Practice in front of a mirror or record yourself to identify areas for improvement."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": [],
+            "findings": []
+          },
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "f4ddbf27-acdf-4040-9275-c71061107dd9",
+        "goal": "Prepare a 5-minute introduction to artificial intelligence for my classmates. Research the basics, create three slides, and practice.",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T18:38:05.651793Z",
+        "updated_at": "2026-10-09T18:38:05.651793Z",
+        "available_minutes": 60,
+        "energy": "medium",
+        "current_quest": {
+          "id": "357f20f6-8e6a-4215-a810-20db2c87823f",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Research AI Basics",
+          "action": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications.",
+          "completion_criteria": "Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications. The session should include a visual summary of the key concepts and a brief explanation of how they relate to each other. The research should be completed within the session minutes and should be recorded with a timer to ensure the duration is maintained.",
+          "estimated_minutes": 10,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Focus on explaining AI in simple terms, avoiding technical jargon.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 21.30096687000332,
+      "end_to_end_seconds": 21.316093654000724,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Research AI Basics\",\n      \"action\": \"Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications.\",\n      \"completion_criteria\": \"Identify at least three core concepts of AI, including their definitions and basic applications, and ensure the content is accurate and relevant to the audience.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Focus on explaining AI in simple terms, avoiding technical jargon.\"\n    },\n    {\n      \"title\": \"Create Slide Content\",\n      \"action\": \"Design three slides using a local tool (e.g., PowerPoint, Google Slides, or a digital whiteboard) to visually represent the AI basics researched.\",\n      \"completion_criteria\": \"Each slide must clearly convey a distinct point from the research, with a total of three slides and no more than five minutes of content per slide.\",\n      \"estimated_minutes\": 15,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use visuals to aid understanding, such as diagrams or icons, and ensure the slides are concise and visually appealing.\"\n    },\n    {\n      \"title\": \"Practice the Introduction\",\n      \"action\": \"Rehearse the 5-minute introduction aloud, using a timer to ensure the duration is met, and record the elapsed time in text.\",\n      \"completion_criteria\": \"Perform a realistic, natural, and accurate 5-minute speech that covers the AI basics, with no pauses or repetitions, and note the elapsed time.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Practice in front of a mirror or record yourself to identify areas for improvement.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "repair",
+          "status": 200,
+          "response": "{\n  \"repairs\": [\n    {\n      \"quest_index\": 0,\n      \"completion_criteria\": \"Conduct a 5-minute research session on artificial intelligence, focusing on key concepts such as machine learning, neural networks, and AI applications. The session should include a visual summary of the key concepts and a brief explanation of how they relate to each other. The research should be completed within the session minutes and should be recorded with a timer to ensure the duration is maintained.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "review",
+          "status": 200,
+          "response": "{\n  \"acceptable\": true,\n  \"confidence\": \"high\",\n  \"issues\": [],\n  \"findings\": []\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "codex_content_inspection": {
+        "rating": "partial",
+        "hard_user_requirement_compliance": null,
+        "notes": "Covers AI, three slides and rehearsal, but demands no pauses/repetitions, adds a per-slide time limit and overcomplicated timed research. Useful outline; not fully satisfactory.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": true
+    },
+    {
+      "case": "B",
+      "input": {
+        "goal": "I want to make something simple to eat, but I'm tired.",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "Which dish or ingredients you already have would you like to use?",
+      "fictional_clarification_answer": "Use sliced bread, tomato and cheese I already have to make a no-cook sandwich.",
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "I want to make something simple to eat, but I'm tired.",
+        "available_minutes": 10,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 7.797275481003453,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 3778782,
+            "total_duration": 7780417692,
+            "eval_count": 263,
+            "eval_duration": 6686066000,
+            "prompt_eval_count": 1083,
+            "prompt_eval_duration": 858707000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ],
+          "kind": "proposal"
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 2.618680833002145,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4474832,
+            "total_duration": 2610304718,
+            "eval_count": 56,
+            "eval_duration": 1443569000,
+            "prompt_eval_count": 719,
+            "prompt_eval_duration": 985554000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ],
+          "kind": "targeted_repair"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Prepare the Sandwich Base",
+            "action": "Slice the bread into thin pieces, place them on a plate, and add a layer of tomato on top.",
+            "completion_criteria": "Bread is sliced and placed on a plate with tomato.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": "Use the provided sliced bread and tomato to create the base."
+          },
+          {
+            "title": "Add Cheese Layer",
+            "action": "Place a layer of cheese over the tomato and bread, ensuring even coverage.",
+            "completion_criteria": "Place a layer of cheese over the tomato and bread, ensuring even coverage with hands, using the provided bread, cheese, and tomato.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": "Use the available cheese to create a smooth layer."
+          },
+          {
+            "title": "Assemble and Serve",
+            "action": "Place the sandwich together, ensuring all components are properly aligned and secure.",
+            "completion_criteria": "The sandwich is assembled and ready to be served.",
+            "estimated_minutes": 1,
+            "difficulty": "easy",
+            "hint": "Use hands to place the components, avoiding the need for a knife."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the Sandwich Base",
+                "action": "Slice the bread into thin pieces, place them on a plate, and add a layer of tomato on top.",
+                "completion_criteria": "Bread is sliced and placed on a plate with tomato.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Use the provided sliced bread and tomato to create the base."
+              },
+              {
+                "title": "Add Cheese Layer",
+                "action": "Place a layer of cheese over the tomato and bread, ensuring even coverage.",
+                "completion_criteria": "Cheese is added over the tomato and bread.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Use the available cheese to create a smooth layer."
+              },
+              {
+                "title": "Assemble and Serve",
+                "action": "Place the sandwich together, ensuring all components are properly aligned and secure.",
+                "completion_criteria": "The sandwich is assembled and ready to be served.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Use hands to place the components, avoiding the need for a knife."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": [
+            {
+              "quest_index": 1,
+              "fields": [
+                "completion_criteria"
+              ],
+              "codes": [
+                "unobservable_criteria"
+              ]
+            }
+          ]
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Prepare the Sandwich Base",
+                "action": "Slice the bread into thin pieces, place them on a plate, and add a layer of tomato on top.",
+                "completion_criteria": "Bread is sliced and placed on a plate with tomato.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Use the provided sliced bread and tomato to create the base."
+              },
+              {
+                "title": "Add Cheese Layer",
+                "action": "Place a layer of cheese over the tomato and bread, ensuring even coverage.",
+                "completion_criteria": "Place a layer of cheese over the tomato and bread, ensuring even coverage with hands, using the provided bread, cheese, and tomato.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Use the available cheese to create a smooth layer."
+              },
+              {
+                "title": "Assemble and Serve",
+                "action": "Place the sandwich together, ensuring all components are properly aligned and secure.",
+                "completion_criteria": "The sandwich is assembled and ready to be served.",
+                "estimated_minutes": 1,
+                "difficulty": "easy",
+                "hint": "Use hands to place the components, avoiding the need for a knife."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": [
+            {
+              "quest_index": 1,
+              "fields": [
+                "completion_criteria"
+              ],
+              "codes": [
+                "unobservable_criteria"
+              ]
+            }
+          ]
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "unobservable_criteria"
+        ]
+      },
+      "end_to_end_seconds": 10.44199589699565,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Prepare the Sandwich Base\",\n      \"action\": \"Slice the bread into thin pieces, place them on a plate, and add a layer of tomato on top.\",\n      \"completion_criteria\": \"Bread is sliced and placed on a plate with tomato.\",\n      \"estimated_minutes\": 2,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use the provided sliced bread and tomato to create the base.\"\n    },\n    {\n      \"title\": \"Add Cheese Layer\",\n      \"action\": \"Place a layer of cheese over the tomato and bread, ensuring even coverage.\",\n      \"completion_criteria\": \"Cheese is added over the tomato and bread.\",\n      \"estimated_minutes\": 1,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use the available cheese to create a smooth layer.\"\n    },\n    {\n      \"title\": \"Assemble and Serve\",\n      \"action\": \"Place the sandwich together, ensuring all components are properly aligned and secure.\",\n      \"completion_criteria\": \"The sandwich is assembled and ready to be served.\",\n      \"estimated_minutes\": 1,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use hands to place the components, avoiding the need for a knife.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "repair",
+          "status": 200,
+          "response": "{\n  \"repairs\": [\n    {\n      \"quest_index\": 1,\n      \"completion_criteria\": \"Place a layer of cheese over the tomato and bread, ensuring even coverage with hands, using the provided bread, cheese, and tomato.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "codex_content_inspection": {
+        "rating": "partial",
+        "hard_user_requirement_compliance": true,
+        "notes": "Uses only supplied foods and no heat, but redundantly slices already sliced bread; repaired criterion is another instruction rather than a resulting state. Correctly not persisted.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": true
+    },
+    {
+      "case": "C",
+      "input": {
+        "goal": "Study Python loops for tomorrow's quiz.",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Study Python loops for tomorrow's quiz.",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.524903644000005,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4268860,
+            "total_duration": 8507399397,
+            "eval_count": 300,
+            "eval_duration": 7607572000,
+            "prompt_eval_count": 991,
+            "prompt_eval_duration": 700039000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ],
+          "kind": "proposal"
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 2.2878906589976395,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4479554,
+            "total_duration": 2279614364,
+            "eval_count": 52,
+            "eval_duration": 1282149000,
+            "prompt_eval_count": 631,
+            "prompt_eval_duration": 837524000,
+            "thinking_present": false
+          },
+          "semantic_codes": [],
+          "kind": "targeted_repair"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": [],
+        "findings": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Study Python Loop Basics",
+            "action": "Review Python loop syntax, focusing on for and while loops, and practice with simple examples.",
+            "completion_criteria": "Successfully complete a simple for loop example in Python, such as iterating over a list of numbers and printing each value.",
+            "estimated_minutes": 10,
+            "difficulty": "easy",
+            "hint": "Try writing a loop that prints numbers from 1 to 10 using a for loop."
+          },
+          {
+            "title": "Practice Loop Logic",
+            "action": "Write a simple loop that counts up from 1 to 10 and prints each number.",
+            "completion_criteria": "The loop should correctly print numbers from 1 to 10.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use a for loop with a range() function to achieve this."
+          },
+          {
+            "title": "Apply Loop in Real Context",
+            "action": "Create a small program that uses a loop to calculate the sum of numbers from 1 to 10.",
+            "completion_criteria": "The program should compute the sum correctly and output the result.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use a for loop to iterate through the numbers and accumulate the sum."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Study Python Loop Basics",
+                "action": "Review Python loop syntax, focusing on for and while loops, and practice with simple examples.",
+                "completion_criteria": "Successfully complete a basic loop exercise, such as printing numbers from 1 to 10 using a for loop.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": "Try writing a loop that prints numbers from 1 to 10 using a for loop."
+              },
+              {
+                "title": "Practice Loop Logic",
+                "action": "Write a simple loop that counts up from 1 to 10 and prints each number.",
+                "completion_criteria": "The loop should correctly print numbers from 1 to 10.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a for loop with a range() function to achieve this."
+              },
+              {
+                "title": "Apply Loop in Real Context",
+                "action": "Create a small program that uses a loop to calculate the sum of numbers from 1 to 10.",
+                "completion_criteria": "The program should compute the sum correctly and output the result.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a for loop to iterate through the numbers and accumulate the sum."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": [
+            {
+              "quest_index": 0,
+              "fields": [
+                "completion_criteria"
+              ],
+              "codes": [
+                "unobservable_criteria"
+              ]
+            }
+          ]
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Study Python Loop Basics",
+                "action": "Review Python loop syntax, focusing on for and while loops, and practice with simple examples.",
+                "completion_criteria": "Successfully complete a simple for loop example in Python, such as iterating over a list of numbers and printing each value.",
+                "estimated_minutes": 10,
+                "difficulty": "easy",
+                "hint": "Try writing a loop that prints numbers from 1 to 10 using a for loop."
+              },
+              {
+                "title": "Practice Loop Logic",
+                "action": "Write a simple loop that counts up from 1 to 10 and prints each number.",
+                "completion_criteria": "The loop should correctly print numbers from 1 to 10.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a for loop with a range() function to achieve this."
+              },
+              {
+                "title": "Apply Loop in Real Context",
+                "action": "Create a small program that uses a loop to calculate the sum of numbers from 1 to 10.",
+                "completion_criteria": "The program should compute the sum correctly and output the result.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a for loop to iterate through the numbers and accumulate the sum."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": [],
+            "findings": []
+          },
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "a8f72019-6db2-435b-95fa-8d94ac14eeab",
+        "goal": "Study Python loops for tomorrow's quiz.",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T18:38:29.559028Z",
+        "updated_at": "2026-10-09T18:38:29.559028Z",
+        "available_minutes": 30,
+        "energy": "medium",
+        "current_quest": {
+          "id": "2aec389b-ce46-46ff-9f61-a009b675724e",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Study Python Loop Basics",
+          "action": "Review Python loop syntax, focusing on for and while loops, and practice with simple examples.",
+          "completion_criteria": "Successfully complete a simple for loop example in Python, such as iterating over a list of numbers and printing each value.",
+          "estimated_minutes": 10,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Try writing a loop that prints numbers from 1 to 10 using a for loop.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 13.489782564996858,
+      "end_to_end_seconds": 13.493780955999682,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Study Python Loop Basics\",\n      \"action\": \"Review Python loop syntax, focusing on for and while loops, and practice with simple examples.\",\n      \"completion_criteria\": \"Successfully complete a basic loop exercise, such as printing numbers from 1 to 10 using a for loop.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Try writing a loop that prints numbers from 1 to 10 using a for loop.\"\n    },\n    {\n      \"title\": \"Practice Loop Logic\",\n      \"action\": \"Write a simple loop that counts up from 1 to 10 and prints each number.\",\n      \"completion_criteria\": \"The loop should correctly print numbers from 1 to 10.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use a for loop with a range() function to achieve this.\"\n    },\n    {\n      \"title\": \"Apply Loop in Real Context\",\n      \"action\": \"Create a small program that uses a loop to calculate the sum of numbers from 1 to 10.\",\n      \"completion_criteria\": \"The program should compute the sum correctly and output the result.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use a for loop to iterate through the numbers and accumulate the sum.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "repair",
+          "status": 200,
+          "response": "{\n  \"repairs\": [\n    {\n      \"quest_index\": 0,\n      \"completion_criteria\": \"Successfully complete a simple for loop example in Python, such as iterating over a list of numbers and printing each value.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "review",
+          "status": 200,
+          "response": "{\n  \"acceptable\": true,\n  \"confidence\": \"high\",\n  \"issues\": [],\n  \"findings\": []\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "codex_content_inspection": {
+        "rating": "acceptable",
+        "hard_user_requirement_compliance": true,
+        "notes": "Goal-grounded local Python loop practice with observable printing/sum outputs and a bounded first action. Initial review and counting examples overlap slightly.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": true
+    },
+    {
+      "case": "D",
+      "input": {
+        "goal": "Clean my desk before studying.",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Clean my desk before studying.",
+        "available_minutes": 15,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.038826639000035,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 9762341,
+            "total_duration": 8021099831,
+            "eval_count": 272,
+            "eval_duration": 6967986000,
+            "prompt_eval_count": 1030,
+            "prompt_eval_duration": 766245000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria",
+            "unsupported_assumption"
+          ],
+          "kind": "proposal"
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 7.815365593000024,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 7246455,
+            "total_duration": 7799471019,
+            "eval_count": 295,
+            "eval_duration": 7570986000,
+            "prompt_eval_count": 1142,
+            "prompt_eval_duration": 190345000,
+            "thinking_present": false
+          },
+          "semantic_codes": [],
+          "kind": "proposal"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": [],
+        "findings": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Sort and label desk items",
+            "action": "Take a moment to identify and sort items on the desk, labeling them with their purpose (e.g., books, pens, papers).",
+            "completion_criteria": "All items are sorted and labeled, and the desk is visually organized.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Start with the most frequently used items to build visual clarity."
+          },
+          {
+            "title": "Remove and clean visible dirt",
+            "action": "Gently remove dust and debris from surfaces using a soft cloth or brush, focusing on visible areas.",
+            "completion_criteria": "No visible dirt remains on surfaces, and the desk is free of clutter.",
+            "estimated_minutes": 3,
+            "difficulty": "easy",
+            "hint": "Use a microfiber cloth for precision cleaning."
+          },
+          {
+            "title": "Ensure a clear and accessible workspace",
+            "action": "Check that all items are accessible and that there are no obstructions in the path to the study area.",
+            "completion_criteria": "The desk is fully cleared and accessible, with no unnecessary items blocking the study space.",
+            "estimated_minutes": 2,
+            "difficulty": "easy",
+            "hint": "Remove any items that are not needed for studying."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Clean Desk",
+                "action": "Use a microfiber cloth to wipe surfaces, removing dust and fingerprints from the desk.",
+                "completion_criteria": "The desk is clean and free of visible dust and fingerprints.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Focus on key surfaces like the desk top, keyboard, and mouse."
+              },
+              {
+                "title": "Organize Items",
+                "action": "Reposition items on the desk to a more logical and accessible arrangement.",
+                "completion_criteria": "Items are neatly organized and in a logical order.",
+                "estimated_minutes": 3,
+                "difficulty": "medium",
+                "hint": "Group similar items together and ensure a clear path to the study area."
+              },
+              {
+                "title": "Final Check",
+                "action": "Conduct a quick visual inspection of the desk to ensure all items are in place and the desk is tidy.",
+                "completion_criteria": "The desk is completely clean, organized, and ready for studying.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Verify that no items were missed and that the desk is in a usable state."
+              }
+            ]
+          },
+          "codes": [
+            "unobservable_criteria",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": []
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Sort and label desk items",
+                "action": "Take a moment to identify and sort items on the desk, labeling them with their purpose (e.g., books, pens, papers).",
+                "completion_criteria": "All items are sorted and labeled, and the desk is visually organized.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Start with the most frequently used items to build visual clarity."
+              },
+              {
+                "title": "Remove and clean visible dirt",
+                "action": "Gently remove dust and debris from surfaces using a soft cloth or brush, focusing on visible areas.",
+                "completion_criteria": "No visible dirt remains on surfaces, and the desk is free of clutter.",
+                "estimated_minutes": 3,
+                "difficulty": "easy",
+                "hint": "Use a microfiber cloth for precision cleaning."
+              },
+              {
+                "title": "Ensure a clear and accessible workspace",
+                "action": "Check that all items are accessible and that there are no obstructions in the path to the study area.",
+                "completion_criteria": "The desk is fully cleared and accessible, with no unnecessary items blocking the study space.",
+                "estimated_minutes": 2,
+                "difficulty": "easy",
+                "hint": "Remove any items that are not needed for studying."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": [],
+            "findings": []
+          },
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "b81ca2ff-ab42-4ed3-98b0-8c69e8b43bfb",
+        "goal": "Clean my desk before studying.",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T18:38:48.071531Z",
+        "updated_at": "2026-10-09T18:38:48.071531Z",
+        "available_minutes": 15,
+        "energy": "low",
+        "current_quest": {
+          "id": "55018f8c-c8eb-4b1a-896c-78581828f8db",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Sort and label desk items",
+          "action": "Take a moment to identify and sort items on the desk, labeling them with their purpose (e.g., books, pens, papers).",
+          "completion_criteria": "All items are sorted and labeled, and the desk is visually organized.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Start with the most frequently used items to build visual clarity.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 18.43640119399788,
+      "end_to_end_seconds": 18.45962002700253,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Clean Desk\",\n      \"action\": \"Use a microfiber cloth to wipe surfaces, removing dust and fingerprints from the desk.\",\n      \"completion_criteria\": \"The desk is clean and free of visible dust and fingerprints.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Focus on key surfaces like the desk top, keyboard, and mouse.\"\n    },\n    {\n      \"title\": \"Organize Items\",\n      \"action\": \"Reposition items on the desk to a more logical and accessible arrangement.\",\n      \"completion_criteria\": \"Items are neatly organized and in a logical order.\",\n      \"estimated_minutes\": 3,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Group similar items together and ensure a clear path to the study area.\"\n    },\n    {\n      \"title\": \"Final Check\",\n      \"action\": \"Conduct a quick visual inspection of the desk to ensure all items are in place and the desk is tidy.\",\n      \"completion_criteria\": \"The desk is completely clean, organized, and ready for studying.\",\n      \"estimated_minutes\": 2,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Verify that no items were missed and that the desk is in a usable state.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Sort and label desk items\",\n      \"action\": \"Take a moment to identify and sort items on the desk, labeling them with their purpose (e.g., books, pens, papers).\",\n      \"completion_criteria\": \"All items are sorted and labeled, and the desk is visually organized.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Start with the most frequently used items to build visual clarity.\"\n    },\n    {\n      \"title\": \"Remove and clean visible dirt\",\n      \"action\": \"Gently remove dust and debris from surfaces using a soft cloth or brush, focusing on visible areas.\",\n      \"completion_criteria\": \"No visible dirt remains on surfaces, and the desk is free of clutter.\",\n      \"estimated_minutes\": 3,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use a microfiber cloth for precision cleaning.\"\n    },\n    {\n      \"title\": \"Ensure a clear and accessible workspace\",\n      \"action\": \"Check that all items are accessible and that there are no obstructions in the path to the study area.\",\n      \"completion_criteria\": \"The desk is fully cleared and accessible, with no unnecessary items blocking the study space.\",\n      \"estimated_minutes\": 2,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Remove any items that are not needed for studying.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "review",
+          "status": 200,
+          "response": "{\n  \"acceptable\": true,\n  \"confidence\": \"high\",\n  \"issues\": [],\n  \"findings\": []\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "codex_content_inspection": {
+        "rating": "partial",
+        "hard_user_requirement_compliance": null,
+        "notes": "Relevant desk cleaning and low-energy estimates, but imposes labeling and unconfirmed cloth/brush choices; hint adds microfiber. Ordinary supplies may be available but this was not established.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": true
+    },
+    {
+      "case": "E",
+      "input": {
+        "goal": "Prepare a short presentation with exactly three slides and one timed rehearsal.",
+        "available_minutes": 45,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What is the presentation topic and the main result you need to communicate?",
+      "fictional_clarification_answer": "Introduce artificial intelligence to my classmates using locally available materials.",
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Prepare a short presentation with exactly three slides and one timed rehearsal.",
+        "available_minutes": 45,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 8.948802726001304,
+          "error_code": null,
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4711615,
+            "total_duration": 8935032702,
+            "eval_count": 307,
+            "eval_duration": 7845909000,
+            "prompt_eval_count": 1098,
+            "prompt_eval_duration": 857193000,
+            "thinking_present": false
+          },
+          "semantic_codes": [],
+          "kind": "proposal"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 0,
+      "review": {
+        "acceptable": true,
+        "confidence": "high",
+        "issues": [],
+        "findings": []
+      },
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Introduce AI Concept",
+            "action": "Use a local tool to explain artificial intelligence, focusing on its core principles and applications.",
+            "completion_criteria": "The explanation must include a definition, key components, and a simple example of AI in everyday life.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Start with a basic definition and use a local tool to illustrate an AI application."
+          },
+          {
+            "title": "Design Slide Layout",
+            "action": "Create three slides using a local tool, ensuring each slide has a clear visual and textual content.",
+            "completion_criteria": "Slides must contain the AI concept, a visual representation, and a summary of key points.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use a local tool to layout the slides and ensure they follow the specified structure."
+          },
+          {
+            "title": "Perform Timed Rehearsal",
+            "action": "Rehearse the presentation aloud using a timer, recording the duration of the rehearsal in text.",
+            "completion_criteria": "The rehearsal must be completed within the session time and the duration must be noted in the output.",
+            "estimated_minutes": 10,
+            "difficulty": "medium",
+            "hint": "Focus on delivering the content clearly and maintaining a steady pace during the rehearsal."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Introduce AI Concept",
+                "action": "Use a local tool to explain artificial intelligence, focusing on its core principles and applications.",
+                "completion_criteria": "The explanation must include a definition, key components, and a simple example of AI in everyday life.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Start with a basic definition and use a local tool to illustrate an AI application."
+              },
+              {
+                "title": "Design Slide Layout",
+                "action": "Create three slides using a local tool, ensuring each slide has a clear visual and textual content.",
+                "completion_criteria": "Slides must contain the AI concept, a visual representation, and a summary of key points.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use a local tool to layout the slides and ensure they follow the specified structure."
+              },
+              {
+                "title": "Perform Timed Rehearsal",
+                "action": "Rehearse the presentation aloud using a timer, recording the duration of the rehearsal in text.",
+                "completion_criteria": "The rehearsal must be completed within the session time and the duration must be noted in the output.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Focus on delivering the content clearly and maintaining a steady pace during the rehearsal."
+              }
+            ]
+          },
+          "codes": [],
+          "stage": "local_review",
+          "review": {
+            "acceptable": true,
+            "confidence": "high",
+            "issues": [],
+            "findings": []
+          },
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": true,
+      "error_code": null,
+      "public_view": {
+        "id": "5639d8b2-eb26-4552-bfd9-342fe0a42575",
+        "goal": "Prepare a short presentation with exactly three slides and one timed rehearsal.",
+        "status": "active",
+        "deadline": null,
+        "plan_version": 1,
+        "revision": 1,
+        "progress": {
+          "completed_count": 0,
+          "remaining_count": 3,
+          "total_count": 3
+        },
+        "created_at": "2026-10-09T18:38:59.360186Z",
+        "updated_at": "2026-10-09T18:38:59.360186Z",
+        "available_minutes": 45,
+        "energy": "medium",
+        "current_quest": {
+          "id": "e3c246ec-ee21-4f74-a250-1290d9156338",
+          "order": 1,
+          "plan_version": 1,
+          "status": "active",
+          "title": "Introduce AI Concept",
+          "action": "Use a local tool to explain artificial intelligence, focusing on its core principles and applications.",
+          "completion_criteria": "The explanation must include a definition, key components, and a simple example of AI in everyday life.",
+          "estimated_minutes": 5,
+          "difficulty": "easy",
+          "xp_reward": 10,
+          "hint": "Start with a basic definition and use a local tool to illustrate an AI application.",
+          "starting_action": null,
+          "completed_at": null
+        },
+        "completed_quests": []
+      },
+      "pipeline_latency_seconds": 11.276736839005025,
+      "end_to_end_seconds": 11.285408488001849,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Introduce AI Concept\",\n      \"action\": \"Use a local tool to explain artificial intelligence, focusing on its core principles and applications.\",\n      \"completion_criteria\": \"The explanation must include a definition, key components, and a simple example of AI in everyday life.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Start with a basic definition and use a local tool to illustrate an AI application.\"\n    },\n    {\n      \"title\": \"Design Slide Layout\",\n      \"action\": \"Create three slides using a local tool, ensuring each slide has a clear visual and textual content.\",\n      \"completion_criteria\": \"Slides must contain the AI concept, a visual representation, and a summary of key points.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use a local tool to layout the slides and ensure they follow the specified structure.\"\n    },\n    {\n      \"title\": \"Perform Timed Rehearsal\",\n      \"action\": \"Rehearse the presentation aloud using a timer, recording the duration of the rehearsal in text.\",\n      \"completion_criteria\": \"The rehearsal must be completed within the session time and the duration must be noted in the output.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Focus on delivering the content clearly and maintaining a steady pace during the rehearsal.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "review",
+          "status": 200,
+          "response": "{\n  \"acceptable\": true,\n  \"confidence\": \"high\",\n  \"issues\": [],\n  \"findings\": []\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "codex_content_inspection": {
+        "rating": "acceptable",
+        "hard_user_requirement_compliance": true,
+        "notes": "Accepted topic grounds three slides and one aloud timed rehearsal. Local tool is unspecified; estimates and session-bound wording still require team review.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": true
+    },
+    {
+      "case": "F",
+      "input": {
+        "goal": "I need to present a complex topic that I know nothing about.",
+        "available_minutes": 60,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": "What is the presentation topic and the main result you need to communicate?",
+      "fictional_clarification_answer": null,
+      "check_in_status": "needs_follow_up",
+      "effective_context": {
+        "goal": "I need to present a complex topic that I know nothing about.",
+        "available_minutes": 60,
+        "energy": "low",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": false,
+      "structural_validity": false,
+      "attempts": [],
+      "first_attempt_structural_success": null,
+      "retry_count": 0,
+      "review": null,
+      "generated_plan": null,
+      "candidates": [],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": null,
+      "awaiting_clarification": true,
+      "end_to_end_seconds": 0.003993135003838688,
+      "codex_content_inspection": {
+        "rating": "not_applicable",
+        "hard_user_requirement_compliance": null,
+        "notes": "Focused missing-topic clarification; no candidate or fabricated answer.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": null
+    },
+    {
+      "case": "G",
+      "input": {
+        "goal": "Write three unit tests for my FastAPI login endpoint using the existing local test runner and fixtures.",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Write three unit tests for my FastAPI login endpoint using the existing local test runner and fixtures.",
+        "available_minutes": 30,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 9.620729914997355,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4411516,
+            "total_duration": 9609310398,
+            "eval_count": 337,
+            "eval_duration": 8581656999,
+            "prompt_eval_count": 1047,
+            "prompt_eval_duration": 792844000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ],
+          "kind": "proposal"
+        },
+        {
+          "number": 2,
+          "validation_success": true,
+          "latency_seconds": 9.007457220002834,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 4135611,
+            "total_duration": 8993467284,
+            "eval_count": 338,
+            "eval_duration": 8752800000,
+            "prompt_eval_count": 1161,
+            "prompt_eval_duration": 202049000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ],
+          "kind": "proposal"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": {
+        "quests": [
+          {
+            "title": "Test Login Endpoint",
+            "action": "Inspect the FastAPI login endpoint's documentation and fixtures to identify expected input parameters and output structure.",
+            "completion_criteria": "Verify that the test covers valid login credentials, handles successful authentication, and returns a 200 status code for success.",
+            "estimated_minutes": 5,
+            "difficulty": "easy",
+            "hint": "Use the existing test runner and fixtures to simulate valid and invalid login requests."
+          },
+          {
+            "title": "Validate Token Response",
+            "action": "Write a test that verifies the response structure when a valid token is returned, including the `access_token` and `token_type` fields.",
+            "completion_criteria": "Ensure the test confirms the presence of `access_token` and `token_type` in the response, and that the token is correctly formatted.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use the test runner to send a valid login request and inspect the response for expected fields."
+          },
+          {
+            "title": "Handle Authentication Errors",
+            "action": "Write a test that simulates invalid credentials and verifies the appropriate error response is returned.",
+            "completion_criteria": "Confirm the test returns a 401 status code when invalid credentials are provided and includes an error message in the response.",
+            "estimated_minutes": 5,
+            "difficulty": "medium",
+            "hint": "Use the test runner to send invalid credentials and inspect the response for the correct HTTP status code and message."
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Identify the endpoint and fixtures",
+                "action": "Inspect the local FastAPI project for the login endpoint and associated fixtures, such as `test_login` and `test_login_with_invalid_credentials`.",
+                "completion_criteria": "Verify that the endpoint is accessible and the fixtures are correctly set up in the test runner.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Look for files like `test_cases.py` or `test_login.py` in the project directory."
+              },
+              {
+                "title": "Write the first test",
+                "action": "Use the existing test runner to write a unit test that verifies the login endpoint returns a 200 OK status when valid credentials are provided.",
+                "completion_criteria": "The test should pass and return a 200 HTTP status code.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Use the `pytest` runner and ensure the test function is named `test_login`."
+              },
+              {
+                "title": "Write the second test",
+                "action": "Write another unit test that verifies the login endpoint returns a 401 Unauthorized status when invalid credentials are provided.",
+                "completion_criteria": "The test should pass and return a 401 HTTP status code.",
+                "estimated_minutes": 10,
+                "difficulty": "medium",
+                "hint": "Use the `pytest` runner and ensure the test function is named `test_login_with_invalid_credentials`."
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": []
+        },
+        {
+          "plan": {
+            "quests": [
+              {
+                "title": "Test Login Endpoint",
+                "action": "Inspect the FastAPI login endpoint's documentation and fixtures to identify expected input parameters and output structure.",
+                "completion_criteria": "Verify that the test covers valid login credentials, handles successful authentication, and returns a 200 status code for success.",
+                "estimated_minutes": 5,
+                "difficulty": "easy",
+                "hint": "Use the existing test runner and fixtures to simulate valid and invalid login requests."
+              },
+              {
+                "title": "Validate Token Response",
+                "action": "Write a test that verifies the response structure when a valid token is returned, including the `access_token` and `token_type` fields.",
+                "completion_criteria": "Ensure the test confirms the presence of `access_token` and `token_type` in the response, and that the token is correctly formatted.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use the test runner to send a valid login request and inspect the response for expected fields."
+              },
+              {
+                "title": "Handle Authentication Errors",
+                "action": "Write a test that simulates invalid credentials and verifies the appropriate error response is returned.",
+                "completion_criteria": "Confirm the test returns a 401 status code when invalid credentials are provided and includes an error message in the response.",
+                "estimated_minutes": 5,
+                "difficulty": "medium",
+                "hint": "Use the test runner to send invalid credentials and inspect the response for the correct HTTP status code and message."
+              }
+            ]
+          },
+          "codes": [
+            "duplicate_or_contradiction",
+            "unsupported_assumption"
+          ],
+          "stage": "deterministic",
+          "review": null,
+          "repair_targets": []
+        }
+      ],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_SEMANTIC_REJECTED",
+      "error_details": {
+        "codes": [
+          "duplicate_or_contradiction",
+          "unsupported_assumption"
+        ]
+      },
+      "end_to_end_seconds": 18.646583392001048,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Identify the endpoint and fixtures\",\n      \"action\": \"Inspect the local FastAPI project for the login endpoint and associated fixtures, such as `test_login` and `test_login_with_invalid_credentials`.\",\n      \"completion_criteria\": \"Verify that the endpoint is accessible and the fixtures are correctly set up in the test runner.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Look for files like `test_cases.py` or `test_login.py` in the project directory.\"\n    },\n    {\n      \"title\": \"Write the first test\",\n      \"action\": \"Use the existing test runner to write a unit test that verifies the login endpoint returns a 200 OK status when valid credentials are provided.\",\n      \"completion_criteria\": \"The test should pass and return a 200 HTTP status code.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use the `pytest` runner and ensure the test function is named `test_login`.\"\n    },\n    {\n      \"title\": \"Write the second test\",\n      \"action\": \"Write another unit test that verifies the login endpoint returns a 401 Unauthorized status when invalid credentials are provided.\",\n      \"completion_criteria\": \"The test should pass and return a 401 HTTP status code.\",\n      \"estimated_minutes\": 10,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use the `pytest` runner and ensure the test function is named `test_login_with_invalid_credentials`.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Test Login Endpoint\",\n      \"action\": \"Inspect the FastAPI login endpoint's documentation and fixtures to identify expected input parameters and output structure.\",\n      \"completion_criteria\": \"Verify that the test covers valid login credentials, handles successful authentication, and returns a 200 status code for success.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Use the existing test runner and fixtures to simulate valid and invalid login requests.\"\n    },\n    {\n      \"title\": \"Validate Token Response\",\n      \"action\": \"Write a test that verifies the response structure when a valid token is returned, including the `access_token` and `token_type` fields.\",\n      \"completion_criteria\": \"Ensure the test confirms the presence of `access_token` and `token_type` in the response, and that the token is correctly formatted.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use the test runner to send a valid login request and inspect the response for expected fields.\"\n    },\n    {\n      \"title\": \"Handle Authentication Errors\",\n      \"action\": \"Write a test that simulates invalid credentials and verifies the appropriate error response is returned.\",\n      \"completion_criteria\": \"Confirm the test returns a 401 status code when invalid credentials are provided and includes an error message in the response.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use the test runner to send invalid credentials and inspect the response for the correct HTTP status code and message.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        }
+      ],
+      "codex_content_inspection": {
+        "rating": "unacceptable",
+        "hard_user_requirement_compliance": false,
+        "notes": "Only two test-writing activities; invents 200/401 and access_token/token_type instead of inspecting actual endpoint behavior. Rejected before persistence.",
+        "reviewer": "Codex code author; not independent human QA",
+        "actual_task_executed": false
+      },
+      "last_attempt_structural_success": true
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": []
+  },
+  "replan_status": "not requested: targeted/reliability cases",
+  "summary": {
+    "runs": 7,
+    "generation_operations": 6,
+    "awaiting_clarification": 1,
+    "structurally_valid_plans": 6,
+    "pipeline_accepted": 4,
+    "first_attempt_structural_successes": 6,
+    "operations_with_retry": 5,
+    "timeouts": 0,
+    "average_end_to_end_seconds": 15.607247069000246,
+    "median_end_to_end_seconds": 15.976700491501106,
+    "max_end_to_end_seconds": 21.316093654000724
+  },
+  "status": "measured; independent semantic review pending",
+  "codex_content_summary": {
+    "generation_denominator": 6,
+    "acceptable_candidates": 2,
+    "saved_acceptable_candidates": 2,
+    "confirmed_hard_requirement_compliance": 3,
+    "observed_hard_requirement_violations": 1,
+    "uncertain_hard_requirement_compliance": 2,
+    "independent_human_qa": false,
+    "method": "Inspect final recorded candidate for concrete contribution, observable outcomes, known explicit requirements and invented mandatory dependencies. Not a general semantic proof."
+  }
+}

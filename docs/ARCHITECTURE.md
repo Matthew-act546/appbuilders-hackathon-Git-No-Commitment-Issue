@@ -14,6 +14,14 @@ The Phase 2 implementation sections in [DATABASE_DESIGN](DATABASE_DESIGN.md)
 and [API_CONTRACT](API_CONTRACT.md) take precedence over the original proposed
 file/schema descriptions below.
 
+Phase 3 adds persistent check-ins, deterministic one-question clarification,
+local generation/replan orchestration, durable intent leases and the explicit
+v1 → v2 migration. All eight tables run locally; no frontend screens are added.
+AI feasibility remains PARTIAL. Current rollout/schema details are in the Phase 3
+sections of API_CONTRACT/DATABASE_DESIGN, superseding the historical Phase 2 inventory.
+The same Ollama client performs generation plus one compact structured review;
+known quality violations and uncertain reviews reject before mutation.
+
 ## System overview
 
 ```mermaid
@@ -90,7 +98,7 @@ background queue, Docker or separate AI server abstraction is needed.
 1. Check-in validates user capacity/deadline, interprets locally, then saves ready
    context or one essential follow-up. No repeated interview loop.
 2. Generation loads a ready check-in, reserves an idempotency receipt, calls AI
-   outside a write transaction, validates 3–5 quests, assigns trusted fields, and
+   outside a write transaction, validates 2–6 whole-goal stages, assigns trusted fields, and
    atomically creates line/version/quests, consumes the check-in and succeeds the
    receipt. Only current quest and aggregate counts are returned.
 3. Completion serializes a short SQLite write: check unique completion first,

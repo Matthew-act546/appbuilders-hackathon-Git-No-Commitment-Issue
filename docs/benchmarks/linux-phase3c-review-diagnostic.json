@@ -1,0 +1,241 @@
+{
+  "benchmark_version": 1,
+  "quality_version": "grounded-quests-v3c.2",
+  "prompt_version": "initial-quests-v3c.2",
+  "machine_label": "Matthew Linux development machine",
+  "checkpoint": "aa9552e2c119b40eb236799eeec64cd8f73cce8e",
+  "started_at": "2026-10-10T02:21:26.679421+08:00",
+  "reference_time": "2026-10-10T02:21:26.675343+08:00",
+  "hardware": {
+    "os": "Linux",
+    "os_release": "7.2.5-3-omarchy",
+    "architecture": "x86_64",
+    "cpu": "AMD A10-7860K Radeon R7, 12 Compute Cores 4C+8G",
+    "ram_bytes": 15640678400,
+    "available_ram_bytes_at_start": 7225630720,
+    "gpu_detected": [
+      "00:01.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Kaveri [Radeon R7 Graphics] (rev d6)",
+      "01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)"
+    ],
+    "nvidia_gpu_memory": "NVIDIA GeForce GTX 1050 Ti, 4096 MiB",
+    "python": "3.14.7",
+    "packages": {
+      "pydantic": "2.14.0",
+      "httpx": "0.28.1"
+    }
+  },
+  "model": "qwen3:1.7b",
+  "url": "http://127.0.0.1:11434",
+  "settings": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 1600,
+    "num_ctx": 4096,
+    "think": false,
+    "pipeline_seconds": 120,
+    "generation_seconds": 120,
+    "attempt_seconds": 60,
+    "review_seconds": 30,
+    "review_num_predict": 300,
+    "max_proposal_attempts": 2,
+    "max_review_calls": 2,
+    "shared_format_quality_retry": true
+  },
+  "internet_disconnected": false,
+  "fictional_inputs_only": true,
+  "selected_initial_cases": [
+    "A"
+  ],
+  "rows": [
+    {
+      "case": "A",
+      "input": {
+        "goal": "Prepare a 5-minute introduction to artificial intelligence for my classmates. Research the basics, create three slides, and practice.",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null,
+        "mode": "start"
+      },
+      "clarification_question": null,
+      "fictional_clarification_answer": null,
+      "check_in_status": "ready",
+      "effective_context": {
+        "goal": "Prepare a 5-minute introduction to artificial intelligence for my classmates. Research the basics, create three slides, and practice.",
+        "available_minutes": 60,
+        "energy": "medium",
+        "deadline": null,
+        "contextual_notes": null
+      },
+      "inference_attempted": true,
+      "structural_validity": true,
+      "attempts": [
+        {
+          "number": 1,
+          "validation_success": true,
+          "latency_seconds": 10.415329748000659,
+          "error_code": "AI_SEMANTIC_REJECTED",
+          "validation_codes": [],
+          "ollama_metrics": {
+            "load_duration": 6623029,
+            "total_duration": 10403578575,
+            "eval_count": 363,
+            "eval_duration": 9356224000,
+            "prompt_eval_count": 1062,
+            "prompt_eval_duration": 844866000,
+            "thinking_present": false
+          },
+          "semantic_codes": [
+            "unobservable_criteria"
+          ],
+          "kind": "proposal"
+        },
+        {
+          "number": 2,
+          "validation_success": null,
+          "latency_seconds": 0.023854938001022674,
+          "error_code": "AI_UPSTREAM_ERROR",
+          "validation_codes": [],
+          "ollama_metrics": {},
+          "semantic_codes": [],
+          "kind": "proposal"
+        }
+      ],
+      "first_attempt_structural_success": true,
+      "retry_count": 1,
+      "review": null,
+      "generated_plan": null,
+      "candidates": [],
+      "human_quality_review": {
+        "acceptable": null,
+        "unsupported_assumptions": null,
+        "notes": null,
+        "reviewer": null
+      },
+      "pipeline_accepted": false,
+      "error_code": "AI_UPSTREAM_ERROR",
+      "error_details": null,
+      "end_to_end_seconds": 10.485401792997436,
+      "native_outputs": [
+        {
+          "schema_kind": "proposal",
+          "status": 200,
+          "response": "{\n  \"quests\": [\n    {\n      \"title\": \"Research AI Basics\",\n      \"action\": \"Conduct a quick search on AI fundamentals, focusing on key concepts like machine learning, neural networks, and algorithms.\",\n      \"completion_criteria\": \"Identify three core concepts and ensure accurate definitions.\",\n      \"estimated_minutes\": 5,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Focus on clarity and relevance to a 5-minute presentation.\"\n    },\n    {\n      \"title\": \"Create Slide 1: Introduction\",\n      \"action\": \"Use a local tool to create a slide with the title 'Artificial Intelligence' and a brief explanation of its purpose.\",\n      \"completion_criteria\": \"Slide must be visually clear and contain the title and brief explanation.\",\n      \"estimated_minutes\": 2,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Use simple language and avoid technical jargon.\"\n    },\n    {\n      \"title\": \"Create Slide 2: Key Concepts\",\n      \"action\": \"Add a second slide with three core concepts from the research, formatted in bullet points.\",\n      \"completion_criteria\": \"Slide must include three distinct concepts with clear labels.\",\n      \"estimated_minutes\": 3,\n      \"difficulty\": \"medium\",\n      \"hint\": \"Ensure each concept is concise and relevant to the presentation.\"\n    },\n    {\n      \"title\": \"Create Slide 3: Practice and Conclusion\",\n      \"action\": \"Add a third slide with a short conclusion and a call to action for the class to ask questions.\",\n      \"completion_criteria\": \"Slide must summarize key points and encourage interaction.\",\n      \"estimated_minutes\": 2,\n      \"difficulty\": \"easy\",\n      \"hint\": \"Keep the language friendly and engaging.\"\n    }\n  ]\n}",
+          "done": true,
+          "done_reason": "stop",
+          "error": null
+        },
+        {
+          "schema_kind": "repair",
+          "status": 400,
+          "response": null,
+          "done": null,
+          "done_reason": null,
+          "error": "{\"error\":{\"code\":400,\"message\":\"Field 'json_schema': \\\"json_schema\\\": JSON schema conversion failed:\\nJSON schema error at #/properties/repairs/items: schema must be an object\",\"type\":\"invalid_request_error\"}}"
+        }
+      ]
+    }
+  ],
+  "discovery": {
+    "available": true,
+    "server_available": true,
+    "model_available": true,
+    "model": "qwen3:1.7b",
+    "message": "Ollama is reachable and the model is installed."
+  },
+  "runtime": {
+    "version": "0.40.2"
+  },
+  "installed": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "modified_at": "2026-10-09T14:56:16.846084909+08:00",
+        "size": 1359293444,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 40960,
+          "embedding_length": 2048,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools",
+          "thinking"
+        ]
+      },
+      {
+        "name": "qwen2.5:1.5b",
+        "model": "qwen2.5:1.5b",
+        "modified_at": "2026-10-09T14:07:15.876169249+08:00",
+        "size": 986061892,
+        "digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen2",
+          "families": [
+            "qwen2"
+          ],
+          "parameter_size": "1.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 32768,
+          "embedding_length": 1536,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion",
+          "tools"
+        ]
+      }
+    ]
+  },
+  "resident_before": {
+    "models": [
+      {
+        "name": "qwen3:1.7b",
+        "model": "qwen3:1.7b",
+        "size": 1702593821,
+        "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "2.0B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2026-10-10T02:25:14.813356345+08:00",
+        "size_vram": 1702593821,
+        "context_length": 4096,
+        "runner": "llamacpp"
+      }
+    ]
+  },
+  "replan_status": "not requested: targeted/reliability cases",
+  "summary": {
+    "runs": 1,
+    "generation_operations": 1,
+    "awaiting_clarification": 0,
+    "structurally_valid_plans": 1,
+    "pipeline_accepted": 0,
+    "first_attempt_structural_successes": 1,
+    "operations_with_retry": 1,
+    "timeouts": 0,
+    "average_end_to_end_seconds": 10.485401792997436,
+    "median_end_to_end_seconds": 10.485401792997436,
+    "max_end_to_end_seconds": 10.485401792997436
+  },
+  "status": "measured; independent semantic review pending"
+}

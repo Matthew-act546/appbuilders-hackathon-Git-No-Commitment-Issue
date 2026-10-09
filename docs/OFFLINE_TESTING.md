@@ -2,8 +2,10 @@
 
 Local AI Quest Companion P0, PRD §7/§15–18. **This is a phase-gated manual checklist,
 not a completed test report.** Phase 0 does not execute product tests or create
-schema. Current scaffold has no quest routes/tables. Sections 1–2 can verify
-foundation; product sections require their Phase 2–4 implementations. Use synthetic
+schema. Phase 3 now has SQLite state/check-in/generation/replan APIs; the frontend
+remains generic and hint/shrink are pending. Backend checks can run directly via
+the API or `python -m app.benchmark_pipeline` from backend/ using a new fictional
+results filename. UI sections still require Phase 4. Use synthetic
 data and record PASS/FAIL/BLOCKED/NOT RUN with evidence, never expected=actual.
 
 ## 1. Demo machine preparation (Phase 1)
@@ -100,8 +102,15 @@ cd backend
 Omit reload for the repeatable demo; README development commands retain --reload.
 For isolated QA only, set DATABASE_URL to a dedicated file before starting (Linux
 example `DATABASE_URL=sqlite:///./qa-demo.db` before the command; PowerShell
-`$env:DATABASE_URL='sqlite:///./qa-demo.db'`). Phase 2 bootstrap must initialize it;
-Phase 0/current engine alone will not provide product persistence.
+`$env:DATABASE_URL='sqlite:///./qa-demo.db'`). Current startup initializes an empty
+schema v2 or atomically migrates a verified v1. Keep important data backed up with
+services stopped; never delete an unknown schema to make a test appear successful.
+
+Phase 3 evidence in AI_BENCHMARK was collected while internet remained connected.
+After genuinely disconnecting internet while retaining loopback, the pipeline CLI
+can exercise local check-in/generation/SQLite without the unfinished product UI.
+Its quality rejections are real failures to obtain a usable plan, not an offline
+connectivity failure. Record both separately; no offline pass is asserted here.
 
 Frontend terminal (both platforms), from repository root:
 
@@ -169,7 +178,7 @@ evidence, not structured quest generation or a model-performance benchmark.
   deadline/notes optional. At most one relevant essential follow-up; missing
   optional deadline must not trigger a question. Answer if essential, then Generate.
 - [ ] Capture line ID from /questlines/:id, selected current ID/revision and profile
-  XP before completion. Initial total_count is 3–5, one quest visible, criteria/
+  XP before completion. Initial total_count is 2–6, one quest visible, criteria/
   estimate/difficulty/reward present. No locked IDs/text in response or DOM.
 - [ ] Exercise the API duplicate-completion check below against a current active
   synthetic line, **before completing that quest in UI**. The API call is the
