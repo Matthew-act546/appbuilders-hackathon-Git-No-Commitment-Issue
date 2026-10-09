@@ -5,6 +5,51 @@ are **not benchmarked in Phase 0**. Reuse [ollama.py](../backend/app/ollama.py) 
 HTTPX lifecycle. React talks only to FastAPI. [API_CONTRACT](API_CONTRACT.md)
 describes user-facing inputs; schemas below describe **internal model outputs**.
 
+## Phase 1B implemented boundary and evidence
+
+The existing [schemas.py](../backend/app/schemas.py) now provides strict
+CheckInInput, QuestProposal and initial QuestPlan models. The existing adapter's
+`generate_quest_plan` returns a validated content result or a typed recoverable
+QuestGenerationError. It reuses HTTPX transport, local `/api/generate`, native
+JSON schema format and Qwen3 think=false. Generic public endpoints/contracts
+remain unchanged; no DB import/write, production quest endpoint or state engine.
+Only initial generation is implemented, not the other proposed operations below.
+
+CheckInInput is the authorized Phase 1B minimal subset (goal/time/energy/deadline).
+Accepted interpretation summary, notes and follow-up orchestration are future
+Phase 3 integration, not present features. Strict strings/integers/enums, extra
+field rejection, 3–5 bounds, normalized duplicate detection and first-estimate
+capacity validation are implemented. Deadline arithmetic is Python-owned.
+Unknown IDs/XP/status/etc are forbidden content fields. Structural validation
+does not prove goal relevance, effort or semantic safety.
+
+Actual default budgets: connect <=3 seconds, attempt <=60 seconds, total <=120
+including validation/retry. One correction with safe validator codes, never
+raw failed output; no transport/timeout retry or model failover. Non-loopback
+structured inference URLs are refused. Reuse the existing lifespan client with
+trust_env=False. The generic diagnostic transport's response/error contract is
+preserved; only the new structured method uses these stricter guards.
+
+Run `python -m app.benchmark_ai --model qwen3:1.7b` from backend/ in its existing
+virtual environment. It has fictional A–E cases, manual model/URL/timeout selection,
+repeat counts, optional JSON output and unrated quality fields for content review.
+Full commands/data/settings are in [AI_BENCHMARK](AI_BENCHMARK.md).
+
+Final Linux v3 primary: 10/10 accepted, all first attempt, median 8.60 s/max 13.29 s.
+Backup alone: 10/10 accepted, 9 first attempt/1 after correction, 10/11 valid
+attempts, median 8.00 s/max 14.76 s. Earlier backup partial-GPU runs timed out;
+all cohorts are retained. Native schema/think=false compatibility is verified
+for these installed Linux artifacts, not James's Windows laptop.
+
+**Phase 1B is PARTIAL for product feasibility:** primary assignment/ambiguous plans
+still invent work/language; backup adds online/cloud/auth scope and weak criteria.
+Use qwen3 with temperature 0/seed 42/num_ctx 4096/num_predict 1600 for the next
+iteration, not as a claim that content is approved. Neither JSON format, stronger
+prompts nor the one chat probe established reliable semantic compliance. Phase 3
+needs ready context/one essential clarification and renewed quality evidence.
+Actual Windows, disconnected-internet operation and peak RAM remain unmeasured.
+The broader operation/benchmark plans below remain requirements, not completed tests.
+
 ## Runtime and structured validation
 
 Primary `qwen3:1.7b`, manually configured backup `qwen2.5:1.5b`; endpoint from

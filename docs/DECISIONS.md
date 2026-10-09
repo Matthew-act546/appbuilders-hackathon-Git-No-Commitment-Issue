@@ -3,7 +3,7 @@
 Authority: complete [PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx) and the user's
 locked decisions. Earlier generic/AralSpace/CampusPilot concepts are superseded.
 Phase 0 was documentation only. Product targets below remain unimplemented;
-the foundation changes authorized for Phase 1A are recorded separately below.
+the foundation changes authorized for Phases 1A/1B are recorded separately below.
 
 ## Locked decisions
 
@@ -39,7 +39,7 @@ the foundation changes authorized for Phase 1A are recorded separately below.
 | Generic generation, no quests | Reuse adapter and diagnostic /api/ai/status; retire raw demo generation after UI migration | 3–4 |
 | detail errors and no idempotency header | Typed product errors/validation; permit Idempotency-Key; legacy compatibility until migration | 1–3 |
 | No tables/FK enforcement/bootstrap | Designed models and short serialized transactions; no reset of unknown databases | 2 |
-| Plain text AI, no format/domain schemas | Real schema-format benchmark, strict validation and one bounded malformed-output retry | 1 / 3 |
+| Plain text diagnostic AI, no product generation | Internal strict initial proposal module/benchmark added; semantic quality remains partial; production orchestration later | 1B / 3 |
 | PRD model/XP/profile open decisions | User tags, deterministic 10/20/30 XP, 100 XP levels, single local profile | Locked now |
 | PRD Journey screen/demo despite P1 priority | Keep Journey excluded; plain completed history for P0 | Locked now |
 | Optional FastAPI docs CDN assets | Direct API/JSON schema for offline proof; optional utility only | No required source change |
@@ -68,6 +68,36 @@ Actual internet-disconnection, existing developer-profile cleanup and Windows
 demo-machine validation remain pending. Phase 1B can begin when separately authorized;
 performance/structured-output evidence must still be collected on actual hardware.
 
+## Phase 1B implementation record — October 9, 2026
+
+Added strict internal proposal/check-in schemas and `OllamaClient.generate_quest_plan`,
+reusing the existing HTTPX transport. Use local `/api/generate`, native JSON schema,
+non-streaming output, Qwen3 think=false and temperature 0/seed 42 with 4096 context/
+1600 output-token cap. Keep the generic API contracts/model environment configuration.
+One bounded format/domain retry; connection/timeout/upstream failures stay distinct.
+New structured calls enforce loopback and Python deadline arithmetic; no cloud,
+automatic fallback/download, DB tables, endpoints, frontend or progression changes.
+
+Repeatable developer CLI: `python -m app.benchmark_ai` from backend/. See
+[AI_BENCHMARK](AI_BENCHMARK.md) for 50 scenario runs, three diagnostic calls,
+hardware/installed digests, all historical failures and Windows reproduction.
+Final two-sweep primary results: 10/10 accepted with no retry, median 8.60 seconds.
+Backup solo: 10/10 accepted, one retry, median 8.00 seconds. Earlier partial GPU
+placement coincided with five backup timeouts. Unload the previous benchmark model
+manually before a controlled switch; do not introduce automatic runtime failover.
+
+**Status PARTIAL:** transport/strict validation/testing criteria met, semantic
+product-readiness gate open. Primary substitutes invented assignment work and
+Python on ambiguous goals; backup proposes unasked authentication/Heroku and
+online tasks. Shape-valid text is not an approved plan. Keep primary configuration
+for the next iteration; implement ready-context/one essential clarification in its
+authorized phase and re-evaluate those cases. No benchmark quality/Windows/offline
+success may be inferred from the 25 passing mocked tests.
+
+Phase 2 deterministic state-engine work is independently ready for authorization;
+AI quality and actual demo-hardware/offline evidence still block declaring the P0
+AI gate passed. No Phase 2 implementation, commit or push occurred in Phase 1B.
+
 ## Chosen assumptions
 
 No job queue, pagination framework, multi-user server, deletes/exports or new
@@ -82,7 +112,7 @@ Superseded content stays internal/auditable; completed IDs/records are immutable
 | Check | Owner | Gate |
 | --- | --- | --- |
 | Actual demo OS/RAM/CPU/GPU, Ollama version and installed digests | James + Matthew | Phase 1 before performance promises |
-| JSON-schema format and think=false compatibility; realistic latency/validity | Matthew on James's laptop | Phase 1 benchmark; no invented results |
+| JSON-schema/think=false on actual Windows hardware; semantic plan quality and real offline inference | Matthew + James; Gracianne independent review | Linux format/latency measured in Phase 1B; Windows and product-quality gates remain open |
 | Official upload destination/deadline semantics/pitch/Q&A/disclosure rules | Gracianne | Phase 5; PRD's event notes are team-provided, not official verification |
 | Exact licenses and repository source-license choice | Gracianne + Matthew | Before submission; disclosure ledger remains NOT VERIFIED |
 

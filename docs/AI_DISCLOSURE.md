@@ -26,8 +26,10 @@ identifier. Fallback is not automatic and no model is downloaded by the API.
 
 The current model task is general prompt-to-text generation. Outputs can be
 incorrect or misleading; the UI displays text without claiming verified facts.
-There is no structured domain response, automated correctness evaluation or
-application persistence yet. Future structured outputs must pass Pydantic and
+Phase 1B adds an internal strict proposal module and synthetic
+[benchmark](AI_BENCHMARK.md), with partial semantic quality. There is no production
+quest response, automated semantic correctness evaluation or application persistence
+yet. Future persisted structured outputs must pass Pydantic and
 deterministic validation before saving. Financial arithmetic, date calculations
 and validation must be implemented deterministically in Python.
 
@@ -95,8 +97,9 @@ not add downloaded weights, private session logs or secrets to source control.
 
 - Model-installed status is not proof generation, accuracy or acceptable latency
   will succeed on every machine. Record real results and evaluation cases.
-- No task-specific evaluation, deterministic domain workflow or automatic model
-  fallback has been implemented.
+- Synthetic task-specific evaluation is recorded in [AI_BENCHMARK](AI_BENCHMARK.md);
+  real user-task/hardware/offline acceptance is incomplete. No deterministic domain
+  workflow or automatic model fallback has been implemented.
 - Cached prompts/responses, SQLite application records and synchronization are
   not implemented. A scratch SQLite probe is only infrastructure evidence.
 - Product is desktop web, not an installed PWA. Mobile installation/native AI and

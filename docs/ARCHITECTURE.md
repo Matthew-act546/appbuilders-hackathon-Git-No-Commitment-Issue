@@ -6,6 +6,8 @@ product behavior below is not implemented yet. Phase 1A has retired the legacy
 PWA and aligned Vite's host with localhost; the generic status/prompt page and
 backend diagnostics remain. [DECISIONS](DECISIONS.md) records conflicts;
 [P0_IMPLEMENTATION_PLAN](P0_IMPLEMENTATION_PLAN.md) sets acceptance gates.
+Phase 1B adds internal strict initial proposals and a developer benchmark;
+[AI_BENCHMARK](AI_BENCHMARK.md) records partial semantic feasibility, not product readiness.
 
 ## System overview
 
@@ -44,7 +46,7 @@ worker, mobile packaging or game-world engine belongs to P0.
 | [main.py](../backend/app/main.py), [routes.py](../backend/app/routes.py) | FastAPI lifecycle, explicit CORS, local HTTPX | Existing health is liveness only; no quest API. CORS must allow Idempotency-Key. |
 | [config.py](../backend/app/config.py) | Pydantic Settings and dotenv examples | URL type permits remote hosts; local-only is currently a rule, not enforced. Relative DB path depends on working directory. |
 | [database.py](../backend/app/database.py) | SQLAlchemy engine, base/session dependency | No tables, bootstrap/migrations, FK enforcement, WAL setup or state transactions currently exist. |
-| [ollama.py](../backend/app/ollama.py), [schemas.py](../backend/app/schemas.py) | Tags check, non-streaming generation, timeout/error translation | Plain text only; no strict structured output, format retry or domain validation. |
+| [ollama.py](../backend/app/ollama.py), [schemas.py](../backend/app/schemas.py) | Tags/plain-text diagnostics plus internal strict initial proposals, bounded retry and capacity validation in Phase 1B | No production quest orchestration/persistence; semantic quality remains partial. |
 | [test_smoke.py](../backend/tests/test_smoke.py) | unittest/HTTPX mocking, lifecycle/schema/CORS checks | Not proof of real model performance, disk persistence, concurrent XP safety or product behavior. |
 | Existing governance/disclosure docs | Setup, style/review practices, license placeholders and QA discipline | Generic-product/PWA wording must be reconciled with this desktop product. |
 

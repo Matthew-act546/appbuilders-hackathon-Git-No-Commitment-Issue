@@ -5,8 +5,10 @@ deliverables and reported time/energy into manageable quests, one current quest
 per questline, with deterministic XP and local persistence. The finalized
 [PRD v2.0](docs/Local_AI_Quest_Companion_Final_PRD.docx) is the product source of truth.
 
-**Current status: Phase 1A desktop foundation.** Working code remains
-the generic landing/status/prompt scaffold; quest APIs, state engine and persistence
+**Current status: Phase 1A foundation complete; Phase 1B AI feasibility partial.**
+The UI remains the generic landing/status/prompt scaffold. An internal structured
+proposal module and developer benchmark exist; semantic quality needs improvement.
+Quest APIs, state engine and persistence
 are planned, not implemented. Target platform is desktop web, **not PWA**. The PWA
 plugin, registration, manifest and cache/update UI have been removed. Previously
 used browsers need the scoped cleanup procedure below.
@@ -232,6 +234,7 @@ do not require those pages or their assets.
 - [Database design](docs/DATABASE_DESIGN.md) — schema, constraints and transactions.
 - [Quest rules](docs/QUEST_RULES.md) — lifecycle, deterministic XP and replan safety.
 - [AI design](docs/AI_DESIGN.md) — operation schemas, validation and benchmark plan.
+- [AI benchmark](docs/AI_BENCHMARK.md) — Phase 1B measurements, quality failures and Windows reproduction.
 - [Frontend plan](docs/FRONTEND_PLAN.md) — desktop screens/components and integration.
 - [Decisions](docs/DECISIONS.md) — locked choices, conflicts and unresolved evidence.
 
