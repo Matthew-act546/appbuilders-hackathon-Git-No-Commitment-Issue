@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from contextlib import nullcontext
 from typing import Literal
 from uuid import UUID, uuid4
 
@@ -7,7 +8,8 @@ from sqlalchemy.orm import Session
 
 from ..database import unit_of_work
 from ..errors import QuestError
-from ..models import Completion, PlanVersion, Profile, Quest, Questline, TransitionReceipt
+from ..encouragement import completed_encouragement
+from ..models import Completion, GenerationIntent, PlanVersion, Profile, Quest, Questline, TransitionReceipt
 from ..schemas import (
     CompletionView, PlanMetadata, ProfileView, ProgressView, QuestlineContext,
     QuestlineList, QuestlineSummary, QuestlineView, QuestPlan, QuestView,
@@ -89,7 +91,9 @@ def quest_view(quest: Quest) -> QuestView:
     return QuestView(id=quest.id, order=quest.position, plan_version=quest.plan_version, status=quest.status,
                      title=quest.title, action=quest.action, completion_criteria=quest.completion_criteria,
                      estimated_minutes=quest.estimated_minutes, difficulty=quest.difficulty, xp_reward=quest.xp_reward,
-                     hint=quest.hint, starting_action=quest.starting_action, completed_at=quest.completed_at)
+                     hint=quest.hint, starting_action=quest.starting_action, completed_at=quest.completed_at,
+                     completion_encouragement=completed_encouragement(quest.title, quest.completion_encouragement, action=quest.action)
+                     if quest.status == "completed" else None)
 
 
 def summary_view(session: Session, line: Questline) -> QuestlineSummary:
@@ -147,6 +151,7 @@ def add_version(session: Session, line: Questline, plan: QuestPlan, metadata: Pl
                           completion_criteria=proposal.completion_criteria, estimated_minutes=proposal.estimated_minutes,
                           difficulty=proposal.difficulty, xp_reward=XP_BY_DIFFICULTY[proposal.difficulty],
                           status="active" if index == 0 else "locked", hint=proposal.hint, starting_action=None,
+                          completion_encouragement=proposal.completion_encouragement,
                           created_at=now, updated_at=now, completed_at=None, superseded_at=None))
     session.flush()
     return ids[0]
@@ -157,13 +162,14 @@ class QuestService:
         self.database = database
 
     def create_questline(self, context: QuestlineContext, plan: QuestPlan, *, summary: str,
-                         model_tag: str | None = None, prompt_version: str | None = None) -> QuestlineView:
+                         model_tag: str | None = None, prompt_version: str | None = None,
+                         _session: Session | None = None) -> QuestlineView:
         # Revalidate even a mutated/model_construct proposal; never trust instance identity.
         context = QuestlineContext.model_validate(context.model_dump())
         plan = QuestPlan.model_validate(plan.model_dump(), context={"available_minutes": context.available_minutes})
         metadata = PlanMetadata(summary=summary, model_tag=model_tag, prompt_version=prompt_version)
         now = utc_text()
-        with unit_of_work(self.database, write=True) as session:
+        with (nullcontext(_session) if _session is not None else unit_of_work(self.database, write=True)) as session:
             line = Questline(id=str(uuid4()), profile_id=1, goal=context.goal, check_in_summary=metadata.summary,
                              **context_values(context), status="active", plan_version=1, revision=1,
                              active_quest_id=str(uuid4()), created_at=now, updated_at=now, completed_at=None)
@@ -216,6 +222,7 @@ class QuestService:
             check_revision(line, revision)
             now = utc_text()
             quest.status, quest.completed_at, quest.updated_at = "completed", now, now
+            quest.completion_encouragement = completed_encouragement(quest.title, quest.completion_encouragement, action=quest.action)
             session.add(Completion(quest_id=quest.id, profile_id=1, xp_awarded=quest.xp_reward, completed_at=now))
             profile = session.get(Profile, 1)
             profile.total_xp += quest.xp_reward
@@ -244,6 +251,8 @@ class QuestService:
         action, desired = ("pause", "paused") if paused else ("resume", "active")
         with unit_of_work(self.database, write=True) as session:
             line = get_line(session, line_id)
+            if session.get(GenerationIntent, key):
+                raise QuestError("IDEMPOTENCY_CONFLICT", 409, "This idempotency key belongs to a different request.")
             receipt = session.get(TransitionReceipt, key)
             if receipt:
                 if (receipt.questline_id, receipt.action, receipt.expected_revision) != (line_id, action, revision):
@@ -268,12 +277,13 @@ class QuestService:
 
     def replace_unfinished(self, line_id: str, expected_revision: int, plan: ReplacementPlan,
                            context: QuestlineContext, *, summary: str, reason: str | None = None,
-                           model_tag: str | None = None, prompt_version: str | None = None) -> QuestlineView:
+                           model_tag: str | None = None, prompt_version: str | None = None,
+                           _session: Session | None = None) -> QuestlineView:
         revision = RevisionRequest(expected_revision=expected_revision).expected_revision
         context = QuestlineContext.model_validate(context.model_dump())
         plan = ReplacementPlan.model_validate(plan.model_dump(), context={"available_minutes": context.available_minutes})
         metadata = PlanMetadata(summary=summary, change_reason=reason, model_tag=model_tag, prompt_version=prompt_version)
-        with unit_of_work(self.database, write=True) as session:
+        with (nullcontext(_session) if _session is not None else unit_of_work(self.database, write=True)) as session:
             line = get_line(session, valid_id(line_id))
             verify_line(session, line)
             if line.status != "active":
@@ -284,6 +294,12 @@ class QuestService:
                 raise QuestError("VALIDATION_ERROR", 422, "Replanning cannot change the goal.")
             quests = line_quests(session, line)
             completed = [q for q in quests if q.status == "completed"]
+            if len(completed) >= 6:
+                raise QuestError("INVALID_STATE", 409, "Completed history already uses six stages; it cannot be discarded by replanning.")
+            if len(completed) + len(plan.quests) > 6:
+                raise QuestError("VALIDATION_ERROR", 422, "Completed history and replacement work must fit within six campaign stages.")
+            if len(completed) + len(plan.quests) < 2:
+                raise QuestError("VALIDATION_ERROR", 422, "The updated campaign must contain at least two total stages.")
             completed_actions = {" ".join(q.action.casefold().split()) for q in completed}
             if any(" ".join(q.action.casefold().split()) in completed_actions for q in plan.quests):
                 raise QuestError("VALIDATION_ERROR", 422, "Replacement work repeats a completed action.")

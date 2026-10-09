@@ -50,8 +50,8 @@ class ProposalSchemaTests(unittest.TestCase):
             ("float integer", lambda p: p["quests"][0].update(estimated_minutes=10.0)),
             ("boolean integer", lambda p: p["quests"][0].update(estimated_minutes=True)),
             ("numeric action", lambda p: p["quests"][0].update(action=123)),
-            ("too few", lambda p: p.update(quests=p["quests"][:2])),
-            ("too many", lambda p: p.update(quests=p["quests"] * 2)),
+            ("too few", lambda p: p.update(quests=p["quests"][:1])),
+            ("too many", lambda p: p.update(quests=p["quests"] * 3)),
             ("duplicate title", lambda p: p["quests"][1].update(title=" SCOUT THE REQUIREMENTS ")),
             ("duplicate action", lambda p: p["quests"][1].update(action=p["quests"][0]["action"].upper())),
             ("first over capacity", lambda p: p["quests"][0].update(estimated_minutes=21)),
@@ -153,7 +153,7 @@ class StructuredGenerationTests(unittest.IsolatedAsyncioTestCase):
                 await self.generate([outer(invalid), outer(invalid)])
             self.assertEqual(raised.exception.code, "AI_INVALID_OUTPUT")
             self.assertEqual(len(self.requests), 2)
-        for quests in (valid_plan()["quests"][:2], valid_plan()["quests"] * 2):
+        for quests in (valid_plan()["quests"][:1], valid_plan()["quests"] * 3):
             with self.subTest(count=len(quests)), self.assertRaises(QuestGenerationError):
                 await self.generate([outer({"quests": quests}), outer({"quests": quests})])
             self.assertEqual(len(self.requests), 2)

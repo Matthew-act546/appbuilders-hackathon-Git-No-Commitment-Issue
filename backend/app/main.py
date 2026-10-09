@@ -45,6 +45,7 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type", "Idempotency-Key"],
+    expose_headers=["Retry-After"],
 )
 app.include_router(router)
 app.include_router(quest_router)
@@ -52,7 +53,10 @@ app.include_router(quest_router)
 
 @app.exception_handler(QuestError)
 async def quest_error(request, exc: QuestError):
-    return JSONResponse(status_code=exc.status_code, headers={"Cache-Control": "no-store"}, content={
+    headers = {"Cache-Control": "no-store"}
+    if hasattr(exc, "retry_after"):
+        headers["Retry-After"] = str(exc.retry_after)
+    return JSONResponse(status_code=exc.status_code, headers=headers, content={
         "error": {"code": exc.code, "message": str(exc), "retryable": exc.retryable,
                   "request_id": getattr(request.state, "product_request_id", str(uuid4())), "details": exc.details}})
 

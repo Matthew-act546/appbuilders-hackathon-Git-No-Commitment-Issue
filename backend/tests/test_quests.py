@@ -19,7 +19,7 @@ from app.database import create_sqlite_engine, unit_of_work
 from app.errors import QuestError
 from app.main import app
 from app.models import Completion, Profile, Quest, Questline, PlanVersion, TransitionReceipt
-from app.schema import initialize_database
+from app.schema import SCHEMA_VERSION, initialize_database
 from app.schemas import QuestlineContext, QuestPlan, ReplacementPlan
 from app.services.quests import QuestService, utc_text
 
@@ -75,7 +75,7 @@ class QuestEngineTests(unittest.TestCase):
                 self.assertEqual(connection.scalar(text("PRAGMA synchronous")), 2)
                 self.assertEqual(connection.scalar(text("PRAGMA busy_timeout")), 5000)
                 self.assertEqual(connection.scalar(text("PRAGMA journal_mode")), "wal")
-                self.assertEqual(connection.scalar(text("PRAGMA user_version")), 1)
+                self.assertEqual(connection.scalar(text("PRAGMA user_version")), SCHEMA_VERSION)
             self.database.dispose()
 
     def test_initial_creation_and_multiple_lines_have_one_current_each(self):
@@ -154,7 +154,7 @@ class QuestEngineTests(unittest.TestCase):
     def test_concurrent_replan_and_completion_allow_only_one_revision_winner(self):
         line = self.create()
         barrier = Barrier(2)
-        replacement = ReplacementPlan(**proposal(1, "Replacement"))
+        replacement = ReplacementPlan(**proposal(2, "Replacement"))
         def operation(replan):
             barrier.wait(timeout=5)
             try:
@@ -235,9 +235,9 @@ class QuestEngineTests(unittest.TestCase):
         self.assertEqual(len(result.completed_quests), 3)
         self.assertEqual(self.service.get_profile().total_xp, 40)
 
-    def test_replan_single_quest_and_multiple_versions(self):
+    def test_replan_variable_quest_counts_and_multiple_versions(self):
         line = self.create()
-        for count in (1, 5, 2):
+        for count in (2, 5, 2):
             line = self.service.replace_unfinished(line.id, line.revision, ReplacementPlan(**proposal(count, f"v{line.revision}")),
                                                   context(), summary="Revised fixture")
             self.assertEqual(line.progress.remaining_count, count)
@@ -528,10 +528,12 @@ class QuestAPITests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("PRIVATE_SENTINEL", response.text)
         self.assertEqual(response.headers["cache-control"], "no-store")
 
-    async def test_no_generation_or_replan_product_endpoints(self):
-        self.assertEqual((await self.client.post("/api/questlines", json={})).status_code, 405)
-        self.assertEqual((await self.client.post(f"/api/questlines/{self.line.id}/replan", json={})).status_code, 404)
-        self.assertEqual((await self.client.post("/api/check-in", json={})).status_code, 404)
+    async def test_generation_routes_validate_and_hint_shrink_remain_absent(self):
+        self.assertEqual((await self.client.post("/api/questlines", json={})).status_code, 422)
+        self.assertEqual((await self.client.post(f"/api/questlines/{self.line.id}/replan", json={})).status_code, 422)
+        self.assertEqual((await self.client.post("/api/check-in", json={})).status_code, 422)
+        self.assertEqual((await self.client.post(f"/api/quests/{self.line.current_quest.id}/hint", json={})).status_code, 404)
+        self.assertEqual((await self.client.post(f"/api/quests/{self.line.current_quest.id}/shrink", json={})).status_code, 404)
 
 
 class StorageStartupTests(unittest.IsolatedAsyncioTestCase):

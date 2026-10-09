@@ -52,7 +52,7 @@ class SmokeTests(TemporaryDatabase, unittest.IsolatedAsyncioTestCase):
         self.assertEqual(str(settings.ollama_base_url), "http://127.0.0.1:11435/")
         self.assertEqual(settings.cors_origins, ["http://localhost:9999"])
         self.assertEqual(settings.database_url, "sqlite:///:memory:")
-        self.assertEqual(set(Base.metadata.tables), {"profiles", "questlines", "plan_versions", "quests", "completions", "transition_receipts"})
+        self.assertEqual(set(Base.metadata.tables), {"profiles", "questlines", "plan_versions", "quests", "completions", "transition_receipts", "check_ins", "generation_intents"})
         engine = create_engine("sqlite:///:memory:")
         with Session(engine) as session:
             with patch("app.database.SessionLocal", return_value=session):
@@ -66,7 +66,7 @@ class SmokeTests(TemporaryDatabase, unittest.IsolatedAsyncioTestCase):
 class OllamaRouteTests(TemporaryDatabase, unittest.IsolatedAsyncioTestCase):
     async def call(self, handler, path, body=None):
         async with app.router.lifespan_context(app):
-            async with httpx.AsyncClient(transport=httpx.MockTransport(handler), base_url="http://ollama.test") as upstream:
+            async with httpx.AsyncClient(transport=httpx.MockTransport(handler), base_url="http://127.0.0.1:11434") as upstream:
                 app.state.ollama = OllamaClient(upstream, Settings(_env_file=None))
                 async with httpx.AsyncClient(transport=httpx.ASGITransport(app), base_url="http://api.test") as client:
                     return await client.get(path) if body is None else await client.post(path, json=body)

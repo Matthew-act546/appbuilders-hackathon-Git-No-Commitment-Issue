@@ -1,14 +1,17 @@
-"""State-only API. Creation/replan remain internal until AI orchestration exists."""
+"""Private quest/check-in API, with AI outside all SQLite write units."""
 from typing import Annotated, Literal
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, Header, Query, Request
+from fastapi import APIRouter, Body, Depends, Header, Query, Request, Response
 from fastapi.routing import APIRoute
 from pydantic import UUID4
 
 from .errors import QuestError
-from .schemas import CompletionView, ErrorView, ProfileView, QuestlineList, QuestlineView, RevisionRequest
+from .schemas import (CheckInAnswer, CheckInStart, CheckInView, CompletionView, ErrorView,
+                      GenerateQuestlineRequest, ProfileView, QuestlineList, QuestlineView, ReplanRequest, RevisionRequest)
 from .services.quests import QuestService
+from .services.check_in import CheckInService
+from .routes import OllamaDependency
 
 
 class ProductRoute(APIRoute):
@@ -75,3 +78,30 @@ def pause(id: UUID4, body: RevisionRequest, idempotency_key: KeyHeader, quests: 
 @router.post("/questlines/{id}/resume", response_model=QuestlineView)
 def resume(id: UUID4, body: RevisionRequest, idempotency_key: KeyHeader, quests: QuestDependency) -> QuestlineView:
     return quests.set_paused(str(id), body.expected_revision, paused=False, idempotency_key=str(idempotency_key))
+
+
+@router.post("/check-in", response_model=CheckInView)
+def check_in(body: Annotated[CheckInStart | CheckInAnswer, Body(discriminator="mode")], response: Response,
+             idempotency_key: KeyHeader, quests: QuestDependency) -> CheckInView:
+    result, replayed = CheckInService(quests).submit(body, str(idempotency_key))
+    response.status_code = 201 if isinstance(body, CheckInStart) and not replayed else 200
+    return result
+
+
+@router.get("/check-in/{id}", response_model=CheckInView)
+def saved_check_in(id: UUID4, quests: QuestDependency) -> CheckInView:
+    return CheckInService(quests).get(str(id))
+
+
+@router.post("/questlines", response_model=QuestlineView)
+async def generate(body: GenerateQuestlineRequest, response: Response, idempotency_key: KeyHeader,
+                   quests: QuestDependency, ollama: OllamaDependency) -> QuestlineView:
+    result = await CheckInService(quests).generate(body, str(idempotency_key), ollama)
+    response.status_code = 200 if result.replayed else 201
+    return result.view
+
+
+@router.post("/questlines/{id}/replan", response_model=QuestlineView)
+async def replan(id: UUID4, body: ReplanRequest, idempotency_key: KeyHeader,
+                 quests: QuestDependency, ollama: OllamaDependency) -> QuestlineView:
+    return (await CheckInService(quests).generate(body, str(idempotency_key), ollama, line_id=str(id))).view
