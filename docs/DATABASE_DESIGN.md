@@ -1,5 +1,56 @@
 # SQLite and SQLAlchemy design
 
+## Phase 2 implementation — schema version 1
+
+Implemented in [models.py](../backend/app/models.py),
+[schema.py](../backend/app/schema.py), [database.py](../backend/app/database.py)
+and [services/quests.py](../backend/app/services/quests.py). The original seven-entity
+blueprint below remains the future check-in/AI orchestration baseline; it is not
+the current schema inventory.
+
+Current tables: `profiles`, `questlines`, `plan_versions`, `quests`, `completions`,
+`transition_receipts`. Accepted goal/summary/time/energy/deadline/notes live on
+questlines and immutable plan versions. CheckIn and its unique consumed-context
+link are deferred to Phase 3; no incomplete check-in state machine is installed.
+The creation service accepts validated context/plan, not a check-in ID, and does
+not deduplicate creation intents yet. There is no public creation route.
+
+The core PK/FK/CHECK/index design below is implemented: singleton profile;
+deferred same-line current pointer/current plan FKs; unique per-version order;
+partial unique active/paused index; bounded integers/content; difficulty-to-XP
+checks and terminal timestamp checks. Completion has a unique quest PK and a
+composite `(quest_id,xp_awarded)` FK to `(quests.id,quests.xp_reward)`, additionally
+rejecting a mismatched reward. ORM relationships are read-only navigation;
+services explicitly sequence flushes around circular FKs and current-slot changes.
+
+`transition_receipts` is the smallest durable mechanism needed for exposed
+pause/resume endpoints: key UUIDv4 PK, profile/questline FKs, action pause/resume,
+positive expected_revision and created_at. Comparing all three intent fields
+detects key conflicts. Receipt and state commit together; a replay returns the
+latest public view without reapplying an old pause/resume. General pending AI
+receipts, leases and fencing below remain future work; completion uses its ledger.
+
+All service writes use BEGIN IMMEDIATE before reading; reads use explicit BEGIN
+snapshots. Every connection enables FKs, five-second busy timeout and synchronous
+FULL; bootstrap sets file WAL outside transactions. Memory databases use SQLite's
+memory journal. Supported production persistence is file-backed SQLite.
+
+Bootstrap creates tables/profile and sets user_version=1 only for an empty
+version-0 database. Valid restarts compare the complete table/index SQL catalog
+against the version-one schema, check foreign keys and verify line/current/ledger/
+XP invariants. Unsupported, partial or inconsistent storage is never repaired,
+reset or silently migrated; HTTP diagnostics remain available and product routes
+return STORAGE_UNAVAILABLE. An invalid URL or unreadable parent may still prevent
+startup. Future CheckIn/AI-receipt additions need a reviewed versioned migration;
+create_all cannot change a saved schema. Back up before that change.
+
+Tests in [test_quests.py](../backend/tests/test_quests.py) use temporary files,
+separate connections/threads and a new Python process. They cover rollback at each
+write stage, deferred-FK commit failure, concurrent completion and durable receipt
+replay. This is Linux automated evidence, not Windows/offline demo approval.
+
+## Original full P0 blueprint (remaining orchestration is proposed)
+
 Proposed P0 schema; **no models, tables or migrations are created in Phase 0**.
 Follow [QUEST_RULES](QUEST_RULES.md) and [API_CONTRACT](API_CONTRACT.md). Seven
 SQLAlchemy entities support the journey; request receipts are a small durability

@@ -43,8 +43,9 @@ a PWA; current service-worker code is retired only in authorized Phase 1 work.
   for new models/state services: backend IDs/rewards, unique completions, short
   serialized writes, revision/receipt guards and no DB write lock during inference.
 - Use SQLAlchemy for SQLite work. Close sessions through `get_session`; commit
-  successful writes explicitly and roll back failed transactions. The current
-  scaffold has no application tables or write endpoints.
+  successful writes explicitly and roll back failed transactions. Phase 2 state
+  services use unit_of_work with explicit read BEGIN/write BEGIN IMMEDIATE and
+  own their sessions; do not mix that transaction strategy with another begin hook.
 - Perform financial arithmetic, date calculations and validation deterministically
   in Python. For money, select an explicit decimal/rounding policy; never accept
   LLM arithmetic or generated SQL as authoritative.

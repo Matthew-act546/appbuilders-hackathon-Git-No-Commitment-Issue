@@ -1,5 +1,39 @@
 # Proposed P0 API contract
 
+## Phase 2 implemented subset
+
+Implemented: list/detail/profile, completion, pause and resume with the request,
+response, visibility and error rules below. Product errors and input-validation
+errors use sanitized `error` envelopes with opaque request IDs; all product
+responses use Cache-Control: no-store. UUIDv4 paths/keys, strict positive revision
+integers and forbidden extra body fields are validated. CORS now permits
+Idempotency-Key. Generic AI diagnostics retain their existing response/detail
+contracts. There are no check-in, generation, hint, shrink or replan product routes.
+
+Pause/resume use compact durable transition receipts, not the future general AI
+receipt table/leases. Required UUIDv4 keys bind to line/action/body revision and
+replay the latest view without reapplying state. No Retry-After exposure is needed
+yet because no REQUEST_IN_PROGRESS endpoint is implemented.
+
+Current GET /api/health: 200
+`{status:"ok",service:"appbuilders-backend",components:{database:{available:true}}}`;
+503 uses status `unavailable` and available=false. Bootstrap occurs at startup,
+not GET; health checks that the initialized profile can be read. Ollama readiness
+remains GET /api/ai/status, not an inference/combined health check. The full
+combined readiness schema below remains proposed and requires future client work.
+
+Internal QuestService interfaces: create_questline(context, validated initial
+QuestPlan, summary/model metadata), list_questlines, get_questline, get_profile,
+complete_quest, set_paused and replace_unfinished(line_id, expected_revision,
+validated ReplacementPlan/context, summary/reason/model metadata). Replacement
+is 1–5 proposals; caller supplies effective optional context (future HTTP
+orchestration must resolve omitted fields versus explicit null first). No Ollama
+call occurs in these methods. Internal creation is not yet check-in-consumption/
+creation-idempotency orchestration; replacement is revision-safe but has no public
+AI intent receipt. The production creation/replan contracts below are unchanged.
+
+## Complete P0 target contract
+
 **Not implemented in Phase 0.** Based on PRD §6–12; decisions in
 [DECISIONS](DECISIONS.md). Current scaffold endpoints and compatibility are in
 [ARCHITECTURE](ARCHITECTURE.md). Database entities are internal; never return an

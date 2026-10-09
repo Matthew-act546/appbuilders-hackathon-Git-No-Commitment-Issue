@@ -5,11 +5,13 @@ deliverables and reported time/energy into manageable quests, one current quest
 per questline, with deterministic XP and local persistence. The finalized
 [PRD v2.0](docs/Local_AI_Quest_Companion_Final_PRD.docx) is the product source of truth.
 
-**Current status: Phase 1A foundation complete; Phase 1B AI feasibility partial.**
+**Current status: Phase 2 deterministic backend implemented; Phase 1B AI feasibility partial.**
 The UI remains the generic landing/status/prompt scaffold. An internal structured
 proposal module and developer benchmark exist; semantic quality needs improvement.
-Quest APIs, state engine and persistence
-are planned, not implemented. Target platform is desktop web, **not PWA**. The PWA
+SQLite state, completion/XP, saved reads and pause/resume APIs are implemented.
+Creation and replacement are internal services accepting validated proposals;
+live check-in/generation orchestration and quest UI remain future phases.
+Target platform is desktop web, **not PWA**. The PWA
 plugin, registration, manifest and cache/update UI have been removed. Previously
 used browsers need the scoped cleanup procedure below.
 
@@ -23,9 +25,10 @@ used browsers need the scoped cleanup procedure below.
 | `docs/` and `AGENTS.md` | Architecture, conventions, responsibilities, manual verification and AI disclosure. |
 
 Intended flow: React desktop frontend → local FastAPI REST API → Ollama + SQLite,
-all on one laptop. Current SQLAlchemy engine/session is ready for future persistence.
-No application tables or database-backed endpoints are
-created. Prompts/responses are currently in browser memory and disappear on reload.
+all on one laptop. Startup initializes a new empty SQLite database and singleton
+profile; saved quests/history/XP persist through the backend services. Unknown or
+incompatible databases are preserved and reported unavailable, never reset.
+The generic frontend's prompts/responses still disappear on reload.
 No cloud database, remote AI API or runtime CDN asset is required by the frontend
 or core API/inference flow. FastAPI's optional interactive API documentation uses
 its default external assets; see the offline limitations below.
@@ -143,7 +146,8 @@ Vite dev and preview bind `localhost` by default. The backend still permits the
 previous 127.0.0.1 frontend CORS origins for compatibility; use localhost for the
 documented frontend commands.
 
-`GET /api/health` reports FastAPI health, not database/AI health.
+`GET /api/health` reports database availability (200 `ok`, 503 `unavailable`),
+preserving the existing `service` field; it does not check Ollama.
 `GET /api/ai/status` separately reports Ollama reachability and model installation
 with availability flags, including when unavailable. `POST /api/ai/generate` accepts
 `{"prompt":"Hello"}` and returns `{"model":"qwen3:1.7b","response":"..."}`.
@@ -153,6 +157,14 @@ generation has a two-minute limit. Browser connectivity is only a browser signal
 and is not proof that the backend, AI, or internet is available.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full current route semantics.
+
+State-only endpoints: `GET /api/profile`, `GET /api/questlines`,
+`GET /api/questlines/{id}`, `POST /api/quests/{id}/complete`, and
+`POST /api/questlines/{id}/pause` / `resume`. Writes accept
+`{"expected_revision":1}`; pause/resume also require a UUIDv4 `Idempotency-Key`.
+Detail responses reveal only the current quest and completed history. There is
+no public fixture-creation or AI quest-generation endpoint yet; new databases
+have no questlines. See [API contract](docs/API_CONTRACT.md) for the rollout subset.
 
 ## Build and backend checks
 
@@ -165,8 +177,9 @@ npm run preview
 ```
 
 The build also runs type checking. `preview` stays running until Ctrl+C. Backend
-smoke tests use standard-library unittest and mocked Ollama responses; they do not
-verify real inference or disk persistence.
+tests use standard-library unittest, mocked Ollama and temporary SQLite files.
+State tests include concurrent completion, rollback and new-process persistence;
+they do not prove real offline inference or Windows demo readiness.
 
 From `backend/` on Linux (the earlier setup activates the virtual environment;
 the explicit path also works without activation):

@@ -1,9 +1,11 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
 
 from .ollama import OllamaClient, OllamaError
 from .schemas import AIStatus, GenerateRequest, GenerateResponse
+from .errors import QuestError
 
 router = APIRouter(prefix="/api")
 
@@ -16,8 +18,16 @@ OllamaDependency = Annotated[OllamaClient, Depends(get_ollama)]
 
 
 @router.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok", "service": "appbuilders-backend"}
+def health(request: Request) -> JSONResponse:
+    available = getattr(request.app.state, "database_available", False)
+    if available:
+        try:
+            request.app.state.quests.get_profile()
+        except QuestError:
+            available = False
+    return JSONResponse(status_code=200 if available else 503, headers={"Cache-Control": "no-store"}, content={
+        "status": "ok" if available else "unavailable", "service": "appbuilders-backend",
+        "components": {"database": {"available": available}}})
 
 
 @router.get("/ai/status", response_model=AIStatus)

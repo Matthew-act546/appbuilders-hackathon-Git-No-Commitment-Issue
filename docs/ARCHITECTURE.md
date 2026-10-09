@@ -8,6 +8,11 @@ backend diagnostics remain. [DECISIONS](DECISIONS.md) records conflicts;
 [P0_IMPLEMENTATION_PLAN](P0_IMPLEMENTATION_PLAN.md) sets acceptance gates.
 Phase 1B adds internal strict initial proposals and a developer benchmark;
 [AI_BENCHMARK](AI_BENCHMARK.md) records partial semantic feasibility, not product readiness.
+Phase 2 adds persistent deterministic state and state-only APIs. Check-in/live
+generation/adaptive AI orchestration and frontend product screens remain future.
+The Phase 2 implementation sections in [DATABASE_DESIGN](DATABASE_DESIGN.md)
+and [API_CONTRACT](API_CONTRACT.md) take precedence over the original proposed
+file/schema descriptions below.
 
 ## System overview
 
@@ -43,34 +48,40 @@ worker, mobile packaging or game-world engine belongs to P0.
 | [frontend/package.json](../frontend/package.json) | React 19.3, TypeScript 7, Vite 8.3, Tailwind 4.3, Router 8.4; strict type/build scripts and lockfile | PWA plugin removed in Phase 1A; no product screens or automated UI runner. Exact locked versions remain authoritative. |
 | [frontend/src](../frontend/src/) | Pages/components/hooks/API helper locations; typed loading/errors; cancellation | Current page is generic prompt generation, not quests; no persisted selection/progress. |
 | [vite.config.ts](../frontend/vite.config.ts) | Local asset build; localhost:5173 dev and localhost:4173 preview, strict ports | No generated manifest/worker. Browsers with a previous PWA installation require scoped cleanup. |
-| [main.py](../backend/app/main.py), [routes.py](../backend/app/routes.py) | FastAPI lifecycle, explicit CORS, local HTTPX | Existing health is liveness only; no quest API. CORS must allow Idempotency-Key. |
+| [main.py](../backend/app/main.py), [routes.py](../backend/app/routes.py), [quest_routes.py](../backend/app/quest_routes.py) | Lifecycle/bootstrap, explicit CORS/Idempotency-Key, diagnostics and state routes | Health checks storage; combined AI readiness and AI product routes remain future. |
 | [config.py](../backend/app/config.py) | Pydantic Settings and dotenv examples | URL type permits remote hosts; local-only is currently a rule, not enforced. Relative DB path depends on working directory. |
-| [database.py](../backend/app/database.py) | SQLAlchemy engine, base/session dependency | No tables, bootstrap/migrations, FK enforcement, WAL setup or state transactions currently exist. |
+| [database.py](../backend/app/database.py), [models.py](../backend/app/models.py), [schema.py](../backend/app/schema.py), [quests.py](../backend/app/services/quests.py) | Six state tables, FK/WAL/explicit transactions, guarded bootstrap, deterministic progression | No CheckIn/AI receipt leases or migration to future tables yet. |
 | [ollama.py](../backend/app/ollama.py), [schemas.py](../backend/app/schemas.py) | Tags/plain-text diagnostics plus internal strict initial proposals, bounded retry and capacity validation in Phase 1B | No production quest orchestration/persistence; semantic quality remains partial. |
 | [test_smoke.py](../backend/tests/test_smoke.py) | unittest/HTTPX mocking, lifecycle/schema/CORS checks | Not proof of real model performance, disk persistence, concurrent XP safety or product behavior. |
 | Existing governance/disclosure docs | Setup, style/review practices, license placeholders and QA discipline | Generic-product/PWA wording must be reconciled with this desktop product. |
 
-Current application routes are `GET /api/health` (liveness), `GET /api/ai/status`
+Diagnostic routes are `GET /api/health` (database readiness), `GET /api/ai/status`
 (tags/model availability), `POST /api/ai/generate` (`{prompt}` → `{model,response}`).
-Existing errors use `detail`; the new product contract uses a typed `error`
+Generic diagnostic errors use `detail`; state routes use a typed `error`
 envelope. `/docs`, `/redoc`, `/openapi.json` are framework utilities. Optional
 interactive docs reference external UI assets; core application use must not rely
 on them. No working source/configuration is changed in Phase 0.
 
+Health now checks DB availability without contacting Ollama. State routes add saved list/detail/profile,
+complete and pause/resume. These use explicit filtered DTOs, sanitized error
+envelopes and no-store responses. Generic AI routes retain their contracts.
+Internal create/replace operations never call AI; no hidden-plan/fixture endpoint.
+Services open their own short synchronous units in FastAPI worker threads.
+
 ## Responsibilities and proposed file boundaries
 
-Reuse current directories. Phase 2 adds `backend/app/models.py` and a small
-`backend/app/services/quests.py`; Phase 3 adds `services/check_in.py`. Keep schemas
-in `schemas.py`, inference in `ollama.py`, HTTP orchestration in `routes.py`
-(split one quest router only if needed), and bootstrap in a small `schema.py`.
-These are proposed paths, not existing files. No repository layer, event bus,
+Reuse current directories. Phase 2 added `backend/app/models.py`,
+`backend/app/services/quests.py`, `quest_routes.py` and bootstrap in `schema.py`.
+Phase 3's `services/check_in.py` remains proposed. Keep schemas in `schemas.py`,
+inference in `ollama.py` and diagnostics in `routes.py`. No repository layer, event bus,
 background queue, Docker or separate AI server abstraction is needed.
 
 - HTTP: strict inputs, recoverable errors, public projections and request IDs.
 - Quest service: revisions, transactions, profile/XP, pause/resume and gating.
 - AI adapter: five operation schemas, prompts, bounded retries and deadlines.
-- SQLite: check-ins, profile, questlines, versions, quests, completion ledger and
-  small request receipts. See [DATABASE_DESIGN](DATABASE_DESIGN.md).
+- SQLite now: profile, questlines, versions, quests, completion ledger and compact
+  pause/resume receipts. Check-ins and AI intent leases remain future.
+  See [DATABASE_DESIGN](DATABASE_DESIGN.md).
 - React: check-in, one selected line/current quest, saved summaries/history,
   explicit actions and recovery. See [FRONTEND_PLAN](FRONTEND_PLAN.md).
 
@@ -105,6 +116,9 @@ values. Intended UI: `http://localhost:5173`; backend/Ollama:
 Retain 127.0.0.1 CORS origins while supporting localhost. Phase 1A retains the
 existing Content-Type-only CORS header policy, with no wildcard origins/credentials.
 Idempotency-Key and exposed Retry-After remain planned product-contract work.
+
+Phase 2 now permits Idempotency-Key for pause/resume. Retry-After/AI lease headers
+remain deferred because no pending-inference product operation is exposed.
 
 Primary `qwen3:1.7b`; manually select installed backup `qwen2.5:1.5b` and restart.
 No automatic failover/pull. Settings load backend dotenv by absolute location;

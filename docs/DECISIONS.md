@@ -2,8 +2,8 @@
 
 Authority: complete [PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx) and the user's
 locked decisions. Earlier generic/AralSpace/CampusPilot concepts are superseded.
-Phase 0 was documentation only. Product targets below remain unimplemented;
-the foundation changes authorized for Phases 1A/1B are recorded separately below.
+Phase 0 was documentation only. Authorized implementation records distinguish
+current behavior from future product orchestration.
 
 ## Locked decisions
 
@@ -99,6 +99,40 @@ AI quality and actual demo-hardware/offline evidence still block declaring the P
 AI gate passed. No Phase 2 implementation, commit or push occurred in Phase 1B.
 
 ## Chosen assumptions
+
+### Phase 2 implementation decisions
+
+- Six schema-version-one tables implement state: Profile, Questline, PlanVersion,
+  Quest, Completion and TransitionReceipt. Check-in context/summary are stored on
+  the line and immutable version snapshots; CheckIn/consumption is Phase 3.
+  This follows the authorized minimum-entity/simplification instruction.
+- Use the contract's paused quest representation; active/paused are mutually
+  unique per line. Deferred composite FKs protect same-line pointer/current plan,
+  and service postconditions enforce exactly-one and ledger/XP consistency.
+- Only pause/resume needs a small durable intent receipt now, so an old pause
+  replay after resume cannot undo newer work. No general request leases/job
+  infrastructure is implemented. Future AI orchestration still needs D16's
+  intent/lease/fencing guarantees before exposing creation/replan/hint/shrink.
+- Expose list/detail/profile/complete/pause/resume only; validated creation and
+  replacement are internal service primitives. No public seed/test endpoint.
+- Health adds DB readiness with 200/503 and keeps status/service compatibility.
+  Combined Ollama readiness remains future; existing AI status is unchanged.
+- Bootstrap only empty DBs; validate schema/catalog/FKs/state on restart and
+  refuse unknown/inconsistent files without resetting them. Future additions
+  need an explicit reviewed migration, not create_all on saved databases.
+- Phase 1B prompts/settings/results and frontend remain untouched. Semantic AI
+  feasibility is still PARTIAL; state correctness does not approve generated text.
+
+Phase 2 Linux verification: `.venv/bin/python -m unittest discover -s tests -v`
+from backend/ passed 57/57 (32 new state/API/startup tests + 25 existing tests).
+The initial sandboxed HTTP test stalled; its bounded diagnostic run timed out.
+Rerunning with sandbox escalation passed, including real file-backed writer
+serialization and new-process restart tests. A reference-schema connection
+ResourceWarning from the first passing run was fixed; the final run has no such
+warning. pip check, compileall, FastAPI/OpenAPI imports, documentation link-target
+checks and git diff --check passed. No live model benchmark, disconnected-internet
+test, Windows test, frontend edit, Phase 3 work, commit or push occurred.
+
 
 No job queue, pagination framework, multi-user server, deletes/exports or new
 services in P0. List uses bounded limit/offset. Local owner trusts laptop; disclose

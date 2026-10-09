@@ -6,12 +6,21 @@ from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session
 
 from app.config import Settings
-from app.database import Base, get_session
+from app.database import Base, create_sqlite_engine, get_session
 from app.main import app
 from app.ollama import OllamaClient
 
 
-class SmokeTests(unittest.IsolatedAsyncioTestCase):
+class TemporaryDatabase:
+    def setUp(self):
+        database = create_sqlite_engine("sqlite:///:memory:")
+        replacement = patch("app.main.engine", database)
+        replacement.start()
+        self.addCleanup(replacement.stop)
+        self.addCleanup(database.dispose)
+
+
+class SmokeTests(TemporaryDatabase, unittest.IsolatedAsyncioTestCase):
     async def test_startup_health_cors_and_validation(self):
         async with app.router.lifespan_context(app):
             async with httpx.AsyncClient(transport=httpx.ASGITransport(app), base_url="http://api.test") as client:
@@ -43,7 +52,7 @@ class SmokeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(str(settings.ollama_base_url), "http://127.0.0.1:11435/")
         self.assertEqual(settings.cors_origins, ["http://localhost:9999"])
         self.assertEqual(settings.database_url, "sqlite:///:memory:")
-        self.assertEqual(list(Base.metadata.tables), [])
+        self.assertEqual(set(Base.metadata.tables), {"profiles", "questlines", "plan_versions", "quests", "completions", "transition_receipts"})
         engine = create_engine("sqlite:///:memory:")
         with Session(engine) as session:
             with patch("app.database.SessionLocal", return_value=session):
@@ -54,7 +63,7 @@ class SmokeTests(unittest.IsolatedAsyncioTestCase):
         engine.dispose()
 
 
-class OllamaRouteTests(unittest.IsolatedAsyncioTestCase):
+class OllamaRouteTests(TemporaryDatabase, unittest.IsolatedAsyncioTestCase):
     async def call(self, handler, path, body=None):
         async with app.router.lifespan_context(app):
             async with httpx.AsyncClient(transport=httpx.MockTransport(handler), base_url="http://ollama.test") as upstream:

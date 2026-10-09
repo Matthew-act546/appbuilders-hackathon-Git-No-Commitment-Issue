@@ -3,7 +3,9 @@
 Source: complete [PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx), especially
 §5–8/§14–19. Current phase is **Phase 0, documentation only**. Unchecked tasks are
 planned, not completed features. Deadline: October 10, 2026, 10:00 AM Philippine
-time (UTC+08:00). Proposed internal feature freeze 9:00 AM, submission target
+time (UTC+08:00). Phase 2 backend state implementation now exists; original
+checkboxes below are the full roadmap, not the current implementation inventory.
+Proposed internal feature freeze 9:00 AM, submission target
 9:30 AM; Gracianne verifies official rules/destination. Scope is P0 only.
 
 ## Critical path
@@ -54,6 +56,13 @@ remote inference. If neither model meets validity/latency needs, record a blocke
 do not invent performance or loosen trusted-state validation.
 
 ## Phase 2 — database and quest state engine
+
+Implementation handoff: six core/state-receipt entities, guarded bootstrap/FKs/
+WAL/explicit transactions, public views, saved reads/profile, completion/XP,
+pause/resume receipts and atomic validated replacement primitives are implemented.
+CheckIn and general AI receipts/leases are deferred to Phase 3/4 orchestration.
+The original seven-entity task list below is superseded by this scoped Phase 2
+decision; readiness currently checks DB, with AI status remaining separate.
 
 Depends on schema/contract agreement, not cosmetic UI. Matthew:
 

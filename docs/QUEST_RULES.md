@@ -1,6 +1,10 @@
 # Quest state and reward rules
 
-Proposed P0 rules from PRD §6–8/§11–12 and locked decisions. Not implemented yet.
+P0 rules from PRD §6–8/§11–12 and locked decisions. Phase 2 implements the quest/
+questline transitions, XP/level, public projections and atomic initial/replacement
+plan primitives below. Check-in states and live hint/shrink/replan orchestration
+remain future work. Pause/resume uses compact durable receipts; AI leases are
+deferred. Tests: [test_quests.py](../backend/tests/test_quests.py).
 [DATABASE_DESIGN](DATABASE_DESIGN.md) assigns DB/service enforcement;
 [API_CONTRACT](API_CONTRACT.md) defines public visibility and concurrency inputs.
 
