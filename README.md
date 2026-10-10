@@ -8,7 +8,9 @@ deliverables and reported time/energy into manageable quests, one current quest
 per questline, with deterministic XP and local persistence. The finalized
 [PRD v2.0](docs/Local_AI_Quest_Companion_Final_PRD.docx) is the product source of truth.
 
-**Current status: working core quest flow with Phase 4C campaign presentation.**
+**Current status: working core quest flow, Journey history and frontend replanning.**
+Use the [Windows demo guide](docs/DEMO_GUIDE.md) for startup/rehearsal and
+[demo readiness](docs/DEMO_READINESS.md) for confirmed results and remaining work.
 The Phase 4A forest-themed shell is preserved. Home now submits check-ins, presents
 the server's clarification, and explicitly generates a saved questline. Generation
 shows a centered loading popup with encouragement matched to the saved energy level.
@@ -249,13 +251,25 @@ node --test --test-isolation=none tests/validation.test.mjs tests/campaign.test.
 node tests/core-flow.mjs
 ```
 
+On the verified Windows Node 22 setup, run the boundary tests with TypeScript
+stripping instead (Node 22 does not support the isolation flag above):
+
+```powershell
+# From frontend/; verified with Node 22.13.1
+node --experimental-strip-types --test tests/validation.test.mjs tests/campaign.test.mjs
+# Optional: select your installed Chromium-based browser before running the harness.
+# $env:CHROMIUM_BINARY = 'C:\path\to\your\browser.exe'
+node tests/core-flow.mjs
+```
+
 The boundary tests use Node's native TypeScript support. Browser tests require
 Chromium (`CHROMIUM_BINARY` may specify its executable), the existing backend
 virtual environment, and a production build. They start isolated test services on
 8004/4184/9229, use temporary SQLite and fictional mocked Ollama, and write evidence
 to a printed temporary directory. They never seed the user's database. No test
-dependency or package script was added; these commands were not verified on Windows
-or other Node versions. `node tests/core-flow.mjs --live-campaign` adds one real
+dependency or package script was added. The current Windows follow-up passed
+14 boundary tests and 40 Opera GX browser cases with mocked Ollama; see
+[demo readiness](docs/DEMO_READINESS.md). `node tests/core-flow.mjs --live-campaign` adds one real
 short-campaign generation and full frontend completion test using temporary SQLite.
 `node tests/core-flow.mjs --live-ai` explicitly adds one real
 primary-model check-in/generation attempt; a recoverable rejection is reported
@@ -304,7 +318,9 @@ To test offline AI, disconnect internet while keeping loopback communication and
 all local servers available. Browser DevTools Offline can block localhost and is
 not the correct test. Actual internet-disconnection and Windows demo testing
 remain unexecuted in Phase 1A; follow [docs/OFFLINE_TESTING.md](docs/OFFLINE_TESTING.md)
-and record actual results. Local AI Quest Companion uses one laptop with local
+and record actual results. The later Windows user report confirms restarting all
+three services offline and generating a fresh questline; it does not retroactively
+change the historical Phase 1A record. Sibol uses one laptop with local
 servers. Cross-device serving, PWA/mobile packaging and HTTPS deployment are
 outside this P0 scope.
 
@@ -321,8 +337,11 @@ do not require those pages or their assets.
 - [Team](docs/TEAM.md) — ownership and independent documentation/QA deliverables.
 - [Offline testing](docs/OFFLINE_TESTING.md) — executable Linux/Windows manual checklist.
 - [AI disclosure](docs/AI_DISCLOSURE.md) — AI use, downloads and license verification placeholders.
+- [Demo guide](docs/DEMO_GUIDE.md) — Windows startup, synthetic walkthrough and manual fallback.
+- [Demo readiness](docs/DEMO_READINESS.md) — user-reported results, automated checks and remaining QA.
+- [UI evidence](docs/screenshots/sibol-ui/README.md) — screenshots from fictional mocked-Ollama QA.
 - [P0 roadmap](docs/P0_IMPLEMENTATION_PLAN.md) — ordered phases, owners and acceptance gates.
-- [API contract](docs/API_CONTRACT.md) — proposed typed P0 endpoints and hidden-data boundaries.
+- [API contract](docs/API_CONTRACT.md) — typed P0 endpoints, implemented status and hidden-data boundaries.
 - [Database design](docs/DATABASE_DESIGN.md) — schema, constraints and transactions.
 - [Quest rules](docs/QUEST_RULES.md) — lifecycle, deterministic XP and replan safety.
 - [AI design](docs/AI_DESIGN.md) — operation schemas, validation and benchmark plan.

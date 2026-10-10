@@ -20,7 +20,7 @@ These confirmations update the handoff's pending Windows/AI/offline status.
 They are user-reported evidence, separate from mocked tests and earlier Linux
 benchmarks. No exact hardware/driver/model-digest/latency values are inferred.
 
-## Current integration task
+## Frontend replanning status
 
 The user chose frontend replanning as the next priority. My Quests now exposes
 the existing backend replan operation through Adjust your pace. It changes
@@ -56,10 +56,25 @@ extend earlier live-model QA approval to the new replan controls.
 
 ## Next handoff step
 
-After replanning verification, Phase 6 is demo/submission preparation: reconcile
-README/startup/disclosure documents, capture synthetic screenshots, rehearse the
-live flow and fallback, and confirm official portal requirements. A Git checkpoint
-or submission has not been created by this follow-up.
+Project/demo documentation now includes the [Windows demo guide](DEMO_GUIDE.md),
+updated [README](../README.md), [AI disclosure](AI_DISCLOSURE.md) and
+[offline checklist](OFFLINE_TESTING.md). Reviewed
+[synthetic UI screenshots](screenshots/sibol-ui/README.md) are available in the
+repository. Their fictional mocked-Ollama content is separate from live QA.
+
+The existing UI/replan work and screenshot documentation are committed and pushed
+to `sub`. This project/demo documentation update remains local and uncommitted;
+no pull request or submission was created by this session.
+
+Remaining Phase 6 preparation:
+
+- [ ] Complete live-model frontend replanning QA: preserve completed history/XP,
+  inspect replacement usefulness, and verify refresh persistence.
+- [ ] Record demo-machine hardware, runtime versions, installed model digests,
+  actual latency and errors; do not infer them from the model tag.
+- [ ] Rehearse the live walkthrough and manual fallback on the intended laptop.
+- [ ] Verify licenses/source provenance and official submission/disclosure rules.
+- [ ] Confirm the final submitted artifact and portal receipt when authorized.
 
 Remaining limitations to disclose or resolve:
 
@@ -72,3 +87,9 @@ Remaining limitations to disclose or resolve:
 
 No user database, model weights, environment contents or private check-in text
 belongs in public evidence or source control. Keep demo/evaluation inputs fictional.
+
+Documentation-only verification: source consistency reviewed, 104 local links
+resolved, 11 PowerShell code blocks parsed without syntax errors, and
+`git diff --check` passed. Command examples were parsed, not executed. The earlier
+application tests were not rerun for these documentation edits; no new live-model,
+license or submission result is claimed.

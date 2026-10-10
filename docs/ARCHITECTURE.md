@@ -1,26 +1,22 @@
-# Local AI Quest Companion architecture
+# Sibol architecture
 
-Phase 0 blueprint, P0 only. Source: [final PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx),
-sections 1–19, and the locked implementation decisions in the task. Proposed
-product behavior below is not implemented yet. Phase 1A has retired the legacy
-PWA and aligned Vite's host with localhost; the generic status/prompt page and
-backend diagnostics remain. [DECISIONS](DECISIONS.md) records conflicts;
-[P0_IMPLEMENTATION_PLAN](P0_IMPLEMENTATION_PLAN.md) sets acceptance gates.
-Phase 1B adds internal strict initial proposals and a developer benchmark;
-[AI_BENCHMARK](AI_BENCHMARK.md) records partial semantic feasibility, not product readiness.
-Phase 2 adds persistent deterministic state and state-only APIs. Check-in/live
-generation/adaptive AI orchestration and frontend product screens remain future.
-The Phase 2 implementation sections in [DATABASE_DESIGN](DATABASE_DESIGN.md)
-and [API_CONTRACT](API_CONTRACT.md) take precedence over the original proposed
-file/schema descriptions below.
+Current implementation snapshot, October 10, 2026. Source:
+[final PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx),
+[DECISIONS](DECISIONS.md), [API_CONTRACT](API_CONTRACT.md) and
+[DATABASE_DESIGN](DATABASE_DESIGN.md). Sibol was previously named Local AI Quest
+Companion. Historical phase/benchmark records describe their own checkpoints.
 
-Phase 3 adds persistent check-ins, deterministic one-question clarification,
-local generation/replan orchestration, durable intent leases and the explicit
-v1 → v2 migration. All eight tables run locally; no frontend screens are added.
-AI feasibility remains PARTIAL. Current rollout/schema details are in the Phase 3
-sections of API_CONTRACT/DATABASE_DESIGN, superseding the historical Phase 2 inventory.
-The same Ollama client performs generation plus one compact structured review;
-known quality violations and uncertain reviews reject before mutation.
+React implements check-in, generation, a selected saved campaign, explicit
+completion, pause/resume, frontend replanning and a completed-stage Journey
+timeline. FastAPI owns deterministic progression and persistent check-ins/AI
+intents. SQLite schema v4 has eight application tables and explicit migrations.
+The legacy PWA is retired; generic AI diagnostics remain a utility.
+
+Production plan acceptance uses strict schemas and deterministic essential checks,
+with at most one correction and no model self-review call. Content usefulness is
+still model-dependent. Hint/shrink are unimplemented; advanced Progress is a
+foundation. [Demo readiness](DEMO_READINESS.md) distinguishes user-reported
+Windows/offline/QA results from automation and remaining live replan QA.
 
 ## System overview
 
@@ -53,22 +49,22 @@ worker, mobile packaging or game-world engine belongs to P0.
 
 | Existing file/area | Reuse | Gap or risk |
 | --- | --- | --- |
-| [frontend/package.json](../frontend/package.json) | React 19.3, TypeScript 7, Vite 8.3, Tailwind 4.3, Router 8.4; strict type/build scripts and lockfile | PWA plugin removed in Phase 1A; no product screens or automated UI runner. Exact locked versions remain authoritative. |
-| [frontend/src](../frontend/src/) | Pages/components/hooks/API helper locations; typed loading/errors; cancellation | Current page is generic prompt generation, not quests; no persisted selection/progress. |
+| [frontend/package.json](../frontend/package.json) | React/TypeScript/Vite/Tailwind/Router; strict type/build scripts and lockfile | Exact locked versions are authoritative. Native Node boundary tests and a Chromium/Opera harness live in `frontend/tests`; no extra test dependency or lint script. |
+| [frontend/src](../frontend/src/) | Typed pages/components/hooks/API client; cancellation, loading and recovery | Backend state is authoritative. Check-in/questline URL identifiers restore saved records; checklist marks are temporary. |
 | [vite.config.ts](../frontend/vite.config.ts) | Local asset build; localhost:5173 dev and localhost:4173 preview, strict ports | No generated manifest/worker. Browsers with a previous PWA installation require scoped cleanup. |
-| [main.py](../backend/app/main.py), [routes.py](../backend/app/routes.py), [quest_routes.py](../backend/app/quest_routes.py) | Lifecycle/bootstrap, explicit CORS/Idempotency-Key, diagnostics and state routes | Health checks storage; combined AI readiness and AI product routes remain future. |
-| [config.py](../backend/app/config.py) | Pydantic Settings and dotenv examples | URL type permits remote hosts; local-only is currently a rule, not enforced. Relative DB path depends on working directory. |
-| [database.py](../backend/app/database.py), [models.py](../backend/app/models.py), [schema.py](../backend/app/schema.py), [quests.py](../backend/app/services/quests.py) | Six state tables, FK/WAL/explicit transactions, guarded bootstrap, deterministic progression | No CheckIn/AI receipt leases or migration to future tables yet. |
-| [ollama.py](../backend/app/ollama.py), [schemas.py](../backend/app/schemas.py) | Tags/plain-text diagnostics plus internal strict initial proposals, bounded retry and capacity validation in Phase 1B | No production quest orchestration/persistence; semantic quality remains partial. |
-| [test_smoke.py](../backend/tests/test_smoke.py) | unittest/HTTPX mocking, lifecycle/schema/CORS checks | Not proof of real model performance, disk persistence, concurrent XP safety or product behavior. |
-| Existing governance/disclosure docs | Setup, style/review practices, license placeholders and QA discipline | Generic-product/PWA wording must be reconciled with this desktop product. |
+| [main.py](../backend/app/main.py), [routes.py](../backend/app/routes.py), [quest_routes.py](../backend/app/quest_routes.py) | Lifecycle/bootstrap, explicit CORS, diagnostics and product routes | Database health and AI status are separate. Product writes use typed errors and revision/idempotency guards. |
+| [config.py](../backend/app/config.py) | Pydantic Settings and dotenv examples | Ollama's adapter rejects non-loopback URLs before network access. Relative DB paths depend on the backend working directory. |
+| [database.py](../backend/app/database.py), [models.py](../backend/app/models.py), [schema.py](../backend/app/schema.py), [quests.py](../backend/app/services/quests.py) | Eight tables, FK/WAL/explicit transactions, verified bootstrap/migrations and deterministic progression | Unknown/inconsistent databases remain preserved and unavailable; never reset them to bypass an error. |
+| [check_in.py](../backend/app/services/check_in.py), [ollama.py](../backend/app/ollama.py), [schemas.py](../backend/app/schemas.py) | Persistent clarification, generation/replan intents, bounded inference and strict validation | No inference under a write lock. Essential checks do not guarantee useful content. |
+| [backend tests](../backend/tests/) and [frontend tests](../frontend/tests/) | State/persistence/contracts, frontend boundaries and browser regressions | Mocked Ollama and temporary SQLite are not evidence of real model quality or disconnected-internet operation. |
+| [AI disclosure](AI_DISCLOSURE.md) and [demo readiness](DEMO_READINESS.md) | Current model choice, evidence boundaries and submission gaps | Exact artifact/license and official event verification remain pending. |
 
 Diagnostic routes are `GET /api/health` (database readiness), `GET /api/ai/status`
 (tags/model availability), `POST /api/ai/generate` (`{prompt}` → `{model,response}`).
 Generic diagnostic errors use `detail`; state routes use a typed `error`
 envelope. `/docs`, `/redoc`, `/openapi.json` are framework utilities. Optional
 interactive docs reference external UI assets; core application use must not rely
-on them. No working source/configuration is changed in Phase 0.
+on them.
 
 Health now checks DB availability without contacting Ollama. State routes add saved list/detail/profile,
 complete and pause/resume. These use explicit filtered DTOs, sanitized error
@@ -76,19 +72,20 @@ envelopes and no-store responses. Generic AI routes retain their contracts.
 Internal create/replace operations never call AI; no hidden-plan/fixture endpoint.
 Services open their own short synchronous units in FastAPI worker threads.
 
-## Responsibilities and proposed file boundaries
+## Responsibilities and file boundaries
 
 Reuse current directories. Phase 2 added `backend/app/models.py`,
 `backend/app/services/quests.py`, `quest_routes.py` and bootstrap in `schema.py`.
-Phase 3's `services/check_in.py` remains proposed. Keep schemas in `schemas.py`,
+`services/check_in.py` implements persistent orchestration. Keep schemas in `schemas.py`,
 inference in `ollama.py` and diagnostics in `routes.py`. No repository layer, event bus,
 background queue, Docker or separate AI server abstraction is needed.
 
 - HTTP: strict inputs, recoverable errors, public projections and request IDs.
 - Quest service: revisions, transactions, profile/XP, pause/resume and gating.
-- AI adapter: five operation schemas, prompts, bounded retries and deadlines.
+- AI adapter: strict generation/replacement proposals, prompts, bounded correction
+  and deadlines; hint/shrink operation designs remain proposed.
 - SQLite now: profile, questlines, versions, quests, completion ledger and compact
-  pause/resume receipts. Check-ins and AI intent leases remain future.
+  pause/resume receipts, check-ins and durable AI generation/replan intents.
   See [DATABASE_DESIGN](DATABASE_DESIGN.md).
 - React: check-in, one selected line/current quest, saved summaries/history,
   explicit actions and recovery. See [FRONTEND_PLAN](FRONTEND_PLAN.md).
@@ -104,10 +101,12 @@ background queue, Docker or separate AI server abstraction is needed.
 3. Completion serializes a short SQLite write: check unique completion first,
    then state/revision; award XP once, complete and unlock next (or finish line),
    all before commit.
-4. Hint/shrink/replan capture revision, call AI outside the transaction, then
-   reacquire a write and reject stale results. Replan validates replacement content
+4. Replanning captures revision, calls AI outside the transaction, then
+   reacquires a write and rejects stale results. Replan validates replacement content
    before superseding unfinished quests. Completed IDs/XP stay unchanged; AI/DB
    failure leaves business state unchanged (operational receipts may record failure).
+   Completed plus replacement stages are capped at six; one remaining stage is
+   allowed after completed history. Hint/shrink have no implemented operation yet.
 5. Reload/restart retrieves profile/list/detail. React is a view, never authority;
    a lost-response retry may not duplicate rewards or plans.
 
@@ -121,14 +120,14 @@ Keep `VITE_API_BASE_URL`, `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, `DATABASE_URL`,
 and [backend/.env.example](../backend/.env.example); never publish actual private
 values. Intended UI: `http://localhost:5173`; backend/Ollama:
 `http://127.0.0.1:8000` / `http://127.0.0.1:11434`. Preview uses local port 4173.
-Retain 127.0.0.1 CORS origins while supporting localhost. Phase 1A retains the
-existing Content-Type-only CORS header policy, with no wildcard origins/credentials.
-Idempotency-Key and exposed Retry-After remain planned product-contract work.
+Retain 127.0.0.1 CORS origins while supporting localhost. CORS allows GET/POST and
+Content-Type/Idempotency-Key, exposes Retry-After, and does not allow credentials
+or wildcard origins. Frontend retries retain the original key/body for the same
+intent; stale responses reload canonical state.
 
-Phase 2 now permits Idempotency-Key for pause/resume. Retry-After/AI lease headers
-remain deferred because no pending-inference product operation is exposed.
-
-Primary `qwen3:1.7b`; manually select installed backup `qwen2.5:1.5b` and restart.
+User-selected demo primary `qwen3:4b`; manually select installed fallback
+`qwen3:1.7b` and restart. The Python settings default remains 1.7B, while the source
+environment example shows the chosen 4B primary.
 No automatic failover/pull. Settings load backend dotenv by absolute location;
 process environment overrides it. Restart after changes. Vite variables are
 public/build-time: restart or rebuild. Run backend from `backend/` for consistent
@@ -157,9 +156,10 @@ absent. The app does not unregister unrelated workers or delete caches at startu
 Fresh-profile Linux browser verification is separate from cleaning existing
 developer profiles and the actual Windows demo browser.
 
-Phase 1A leaves backend health liveness-oriented and all three scaffold endpoints
-unchanged. Structured schema-format validation, benchmarking and later readiness/
-product headers remain future work; no quest tables or features were added.
+At the historical Phase 1A checkpoint, backend health was liveness-oriented and
+the three scaffold endpoints were unchanged. Subsequent phases added the current
+database readiness, product endpoints, strict generation and persistence described
+above; that old checkpoint is not the current feature inventory.
 
 ## Failures and privacy
 
@@ -177,6 +177,8 @@ product headers remain future work; no quest tables or features were added.
 ## Scope and proof
 
 P0 includes the core/adaptive loop, saved lines, plain completed history/progress.
-P1 Quest Journey, P2 rewards and deferred features are excluded. Acceptance maps
-FR-01–FR-09 in the roadmap. Windows, speed, offline inference and restart safety
-require actual evidence; scaffold checks do not prove finished product behavior.
+The full P1 Quest Journey, P2 rewards and deferred features are excluded. The
+user-approved Journey timeline is read-only completed history. Acceptance maps
+FR-01–FR-09 in the roadmap; hint/shrink leave FR-04 incomplete. Consult demo
+readiness for current Windows/offline reports, mocked regression results and
+remaining live replan, performance, license and submission evidence.

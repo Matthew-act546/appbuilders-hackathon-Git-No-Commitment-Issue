@@ -1,8 +1,9 @@
 # AI use and verification register
 
-This describes Local AI Quest Companion and its pre-existing scaffold. The
+This describes Sibol (formerly Local AI Quest Companion) and its pre-existing scaffold. The
 [PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx) selects desktop web, not PWA.
-Current code retains generic prompt generation; Phase 1A retired PWA behavior. This is
+Current code implements the core quest workflow and retains generic prompt generation
+as a diagnostic utility; Phase 1A retired PWA behavior. This is
 not a claim that product workflows, model evaluation or license review are complete.
 Intended AI operation details are in [AI_DESIGN](AI_DESIGN.md).
 See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries and
@@ -12,31 +13,44 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for implementation boundaries and
 
 Ollama is the local inference runtime at the default
 `http://127.0.0.1:11434`. FastAPI sends the prompt through HTTPX to the configured
-installed model and returns generated text. React calls FastAPI, not Ollama
+installed model. Structured quest proposals are validated before persistence;
+the diagnostic endpoint returns generated text. React calls FastAPI, not Ollama
 directly. There is no required remote AI API in the application.
 
 | Role | Configured model tag | Selection |
 | --- | --- | --- |
-| Primary | `qwen3:1.7b` (Qwen3 1.7B) | Default `OLLAMA_MODEL`. |
-| Fallback | `qwen2.5:1.5b` (Qwen2.5 1.5B) | Manually set `OLLAMA_MODEL` and restart FastAPI. The model must already be installed. |
+| Demo primary | `qwen3:4b` (Qwen3 4B) | User-selected Windows configuration; also shown in `backend/.env.example`. |
+| Demo fallback | `qwen3:1.7b` (Qwen3 1.7B) | Manually set `OLLAMA_MODEL` and restart FastAPI. The model must already be installed. This remains the Python settings default. |
 
 Record the actual installed model digest, quantization/runtime metadata and
 Ollama version for submission. A tag/name alone is not an immutable artifact
 identifier. Fallback is not automatic and no model is downloaded by the API.
 
-The UI still displays general prompt-to-text generation. Phase 3 backend also
-supports persistent grounded quest generation/replanning, strict Pydantic,
-deterministic quality checks and one local structured review before saving.
-[Benchmarks](AI_BENCHMARK.md) show semantic recovery remains PARTIAL: a model can
-falsely approve its own plausible-looking plan. Checks do not prove correctness;
-unsupported or uncertain plans are rejected and context preserved. No independent
-human QA or real user-task success is claimed. Financial arithmetic, date calculations
-and validation must be implemented deterministically in Python.
+The UI supports check-in, generation, completion, saved history, pause/resume and
+replanning. Current production acceptance uses strict Pydantic schemas and
+deterministic essential checks, with one shared bounded correction (at most two
+generation calls). It makes no model self-review/approval call. Subjective quality
+warnings do not trigger rejection or more inference; schema and essential failures
+preserve context/the previous plan for retry. Earlier review-based policies in
+[benchmarks](AI_BENCHMARK.md) are historical experiments.
+
+The backend assigns IDs, sequence, status, revisions and XP; AI supplies content
+and difficulty only. Python validates dates/capacity and computes rewards/levels.
+Completion makes no inference call. Optional completion encouragement is requested
+with the plan and grounded in saved quest content. Loading quotes are authored
+frontend copy selected by reported energy; they do not make extra AI requests.
+
+The user reported that generated responses passed team QA and that offline startup
+and fresh generation worked. These are user reports, not a universal quality or
+performance guarantee. Frontend replanning still needs its own live-model/manual
+QA. See [demo readiness](DEMO_READINESS.md) for the evidence boundary.
 
 ## AI-assisted development
 
-Only Matthew uses Codex CLI for AI-assisted scaffold, architecture and documentation
-work. Developers remain responsible for reviewing generated changes, testing
+Codex assisted with scaffold/architecture, backend and frontend implementation,
+tests, documentation and debugging. Team tool ownership is recorded in
+[TEAM](TEAM.md); verify actual operators/session metadata for the submission.
+Developers remain responsible for reviewing generated changes, testing
 them and verifying claims. Codex is not a runtime dependency or inference service
 called by this application.
 
@@ -56,12 +70,13 @@ terms are the same as the licenses of application dependencies.
 | Generate via desktop UI | Configure/start local FastAPI/Ollama with an installed model. | Services stay accessible over loopback with internet disconnected. Mobile-native inference is out of scope. |
 | Use Codex for development | Separate development-tool access/setup and terms; not bundled in the app. | No offline availability claim has been verified. The deployed/local scaffold does not require Codex access. |
 
-Local-only inference depends on retaining a local `OLLAMA_BASE_URL`. The code
-accepts configurable HTTP URLs and does not enforce loopback; review demo
-configuration before making a local-only claim. Prompts/output currently remain
-in browser memory and local service traffic rather than application storage.
-Planned Phase 2–4 check-ins/quests/rewards persist in local plaintext SQLite, with
-no raw sensitive logs. No product persistence is implemented in Phase 0.
+The Ollama adapter rejects non-loopback URLs before network access and HTTPX
+disables environment proxy use. Keep the configured frontend/backend origins local
+too. Saved check-ins, context, quest content, completions and rewards persist in
+local plaintext SQLite. Unsaved form text and generic diagnostic prompts/responses
+remain in browser memory. Product content is not persisted in browser storage;
+detail/check-in URLs identify records to reload from the backend.
+Application logging must not include raw sensitive prompts or model output.
 Do not equate that with a verified privacy guarantee for browser, OS or runtime
 logs. Use synthetic evaluation/demo data.
 
@@ -77,8 +92,8 @@ the submission redistributes weights/binaries or only instructions and source.
 | Artifact | Version/identity evidence | License/terms evidence and obligations | Status |
 | --- | --- | --- | --- |
 | Ollama runtime | TODO: installed version and upstream release/source URL | TODO: exact license text, notices and distribution obligations | NOT VERIFIED |
-| `qwen3:1.7b` weights | TODO: installed digest, source/model card, quantization | TODO: exact model license and any usage/redistribution conditions | NOT VERIFIED |
-| `qwen2.5:1.5b` weights | TODO: installed digest, source/model card, quantization | TODO: exact model license and any usage/redistribution conditions | NOT VERIFIED |
+| `qwen3:4b` primary weights | TODO: installed digest, source/model card, quantization | TODO: exact model license and any usage/redistribution conditions | NOT VERIFIED |
+| `qwen3:1.7b` fallback weights | TODO: installed digest, source/model card, quantization | TODO: exact model license and any usage/redistribution conditions | NOT VERIFIED |
 | React/React DOM, React Router | [package.json](../frontend/package.json) and [package-lock.json](../frontend/package-lock.json); TODO: reviewed exact packages | TODO: LICENSE/NOTICE evidence and attribution obligations | NOT VERIFIED |
 | TypeScript, Vite, React Vite plugin, type packages | Same frontend manifests; TODO: reviewed exact packages | TODO: LICENSE/NOTICE evidence and obligations | NOT VERIFIED |
 | Tailwind and Vite integration | Same frontend manifests; TODO: reviewed exact packages | TODO: LICENSE/NOTICE evidence and obligations | NOT VERIFIED |
@@ -97,18 +112,19 @@ not add downloaded weights, private session logs or secrets to source control.
 
 - Model-installed status is not proof generation, accuracy or acceptable latency
   will succeed on every machine. Record real results and evaluation cases.
-- Synthetic task-specific evaluation is recorded in [AI_BENCHMARK](AI_BENCHMARK.md);
-  real user-task/hardware/offline acceptance is incomplete. Deterministic state/XP
-  is implemented; automatic model fallback is not.
-- SQLite application records and recovery are implemented/tested with temporary
-  Linux files. Browser prompt caching/synchronization is not implemented; the
-  generic frontend is not the product quest UI yet.
+- Synthetic task-specific evaluation is recorded in [AI_BENCHMARK](AI_BENCHMARK.md).
+  Later user-reported Windows/AI/offline results and Windows automated regressions
+  are separated in [DEMO_READINESS](DEMO_READINESS.md). No paired 4B/1.7B benchmark,
+  exact demo-machine latency or physical completion of user tasks is inferred.
+- SQLite recovery and the product UI are implemented. Browser tests use fictional
+  tasks and temporary storage; no browser prompt caching/synchronization is used.
+  Hint/shrink remain unimplemented and advanced Progress remains a foundation.
 - Product is desktop web, not an installed PWA. Mobile installation/native AI and
   cross-device service access are excluded; no such capability is claimed.
-- Windows demo readiness, operation during actual internet disconnection and
-  performance on target hardware require recorded runs of
-  [OFFLINE_TESTING.md](OFFLINE_TESTING.md). Mocked tests and viewport emulation are
-  not substitutes for those runs.
+- The user confirmed restarting all three services while internet was disconnected
+  and generating a fresh questline. Detailed hardware/model-digest/timing evidence,
+  manual fallback rehearsal and live-model replan QA remain to be recorded using
+  [OFFLINE_TESTING.md](OFFLINE_TESTING.md). Mocked tests do not establish those results.
 - FastAPI's optional `/docs` and `/redoc` use default external UI assets; those
   pages may not render fully offline. Core React/API/inference behavior does not
   require them; local `/openapi.json` remains available.
