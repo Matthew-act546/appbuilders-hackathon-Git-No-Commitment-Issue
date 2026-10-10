@@ -1,12 +1,13 @@
 # Desktop offline, restart and failure verification
 
-Local AI Quest Companion P0, PRD §7/§15–18. **This is a phase-gated manual checklist,
-not a completed test report.** Phase 0 does not execute product tests or create
-schema. Phase 3 now has SQLite state/check-in/generation/replan APIs; the frontend
-remains generic and hint/shrink are pending. Backend checks can run directly via
-the API or `python -m app.benchmark_pipeline` from backend/ using a new fictional
-results filename. UI sections still require Phase 4. Use synthetic
-data and record PASS/FAIL/BLOCKED/NOT RUN with evidence, never expected=actual.
+Sibol P0, PRD §7/§15–18. **This is a reusable manual checklist, not a blanket
+completed test report.** The product UI and state/check-in/generation/replan APIs
+are implemented; hint/shrink are pending. The user reported successful Windows
+startup and an offline restart of all three services followed by fresh generation.
+Those reports and developer automation are separated in
+[demo readiness](DEMO_READINESS.md). They do not mark every checklist item passed.
+Use the [demo guide](DEMO_GUIDE.md) for Windows startup. Use synthetic data and
+record actual PASS/FAIL/BLOCKED/NOT RUN with evidence, never expected=actual.
 
 ## 1. Demo machine preparation (Phase 1)
 
@@ -15,7 +16,7 @@ data and record PASS/FAIL/BLOCKED/NOT RUN with evidence, never expected=actual.
   dump. Complete initial downloads while connected; never auto-pull models.
 - [ ] Install prerequisites/dependencies using [README](../README.md) only in the
   authorized implementation phase. Confirm `ollama list` includes the configured
-  model (`qwen3:1.7b`, or manually chosen `qwen2.5:1.5b`). Missing model is BLOCKED.
+  model (primary `qwen3:4b`, manually chosen fallback `qwen3:1.7b`). Missing model is BLOCKED.
 - [ ] Matthew/James finish PWA retirement on both localhost and 127.0.0.1 origins,
   dev/preview ports: only this app's registrations/Workbox caches cleared. Verify
   no controller/manifest registration is required. Old cached builds are not proof
@@ -103,14 +104,15 @@ Omit reload for the repeatable demo; README development commands retain --reload
 For isolated QA only, set DATABASE_URL to a dedicated file before starting (Linux
 example `DATABASE_URL=sqlite:///./qa-demo.db` before the command; PowerShell
 `$env:DATABASE_URL='sqlite:///./qa-demo.db'`). Current startup initializes an empty
-schema v2 or atomically migrates a verified v1. Keep important data backed up with
+schema v4 or atomically upgrades a verified supported older schema. Keep important data backed up with
 services stopped; never delete an unknown schema to make a test appear successful.
 
 Phase 3 evidence in AI_BENCHMARK was collected while internet remained connected.
-After genuinely disconnecting internet while retaining loopback, the pipeline CLI
-can exercise local check-in/generation/SQLite without the unfinished product UI.
+After genuinely disconnecting internet while retaining loopback, the product UI
+or pipeline CLI can exercise local check-in/generation/SQLite.
 Its quality rejections are real failures to obtain a usable plan, not an offline
-connectivity failure. Record both separately; no offline pass is asserted here.
+connectivity failure. Record both separately. The historical Phase 3 runs are not
+offline proof; later user-reported offline success is recorded in demo readiness.
 
 Frontend terminal (both platforms), from repository root:
 
@@ -148,14 +150,15 @@ Invoke-RestMethod -Uri http://127.0.0.1:8000/api/ai/status -TimeoutSec 10
 Invoke-RestMethod -Uri http://127.0.0.1:11434/api/tags -TimeoutSec 10
 ```
 
-- [ ] Current health only reports liveness. Once readiness is implemented, expect
-  database.available and model/server flags; distinguish model installation from
-  successful real inference. Record response shape/version actually observed.
+- [ ] `GET /api/health` reports `components.database.available` and HTTP 200/503.
+  `GET /api/ai/status` separately reports `available`, `server_available` and
+  `model_available`. A database health response does not check AI; model
+  installation alone does not prove successful inference.
 - [ ] Inspect Network panel: application assets/API requests stay on local origins;
   no runtime CDN/cloud inference. Do not use optional CDN-backed /docs or /redoc
   for offline proof; local /openapi.json and direct requests are available.
 
-Generic inference smoke check (Phase 1A only, before quest endpoints exist):
+Optional generic inference smoke check (diagnostic utility, not product QA):
 
 ```bash
 curl --noproxy '*' --max-time 130 -fsS http://127.0.0.1:8000/api/ai/generate \
@@ -233,11 +236,15 @@ $b.profile
 $b.questline.progress
 ```
 
-Scripts are proposed contract tests; they cannot pass against the Phase 0 scaffold.
+These scripts target the implemented product contract and mutate only the selected
+synthetic quest. They are instructions, not a record that this manual check ran.
 Concurrent completion/rollback tests also belong in backend automated tests; manual
 sequential duplicates are not sufficient concurrency evidence.
 
 ## 4. Hint, shrink, pause and replan (Phase 4)
+
+Hint/shrink are not implemented: mark their cases BLOCKED, not passed by the
+pause/replan results. The remaining controls are available in My Quests.
 
 - [ ] Save current action/criteria/reward/XP/completed-history snapshot. Hint returns
   contextual help. Shrink returns smaller starting_action with original action/
@@ -245,8 +252,10 @@ sequential duplicates are not sufficient concurrency evidence.
 - [ ] Pause: pointer/current content remains, status paused, XP/version unchanged;
   completion/AI actions unavailable. Resume preserves same quest, no penalty. Repeat
   each intent/retry its key without toggling unrelated later state.
-- [ ] After at least one completion, replan with time 10, energy low and optional
-  past deadline. Capture before/after detail/profile. Completed IDs/content/rewards/
+- [ ] After at least one completion, use Adjust your pace → Replan remaining stages
+  with time 10, energy low and an optional explanation. The frontend preserves the
+  saved deadline/notes; optional deadline changes are API-only. Capture before/after
+  detail/profile. Completed IDs/content/rewards/
   timestamps and total XP remain identical; version increments once, total count
   may change; one replacement current. Superseded work is not public/current.
 - [ ] Retry the same replan key after a lost response: no second plan/version. If
@@ -267,8 +276,9 @@ servers. All services are on one laptop; no cross-device network is required.
   requests fail, record BLOCKED and fix the test setup; do not infer an internet
   inference dependency from blocked loopback.
 - [ ] Reload the built desktop app from the running local preview server and saved
-  line. Run new check-in/generation and hint/shrink/replan using synthetic data;
-  record model output validity, latency and request origins. No automatic downloads.
+  line. Run new check-in/generation and replan using synthetic data; record model
+  output validity, latency and request origins. Hint/shrink remain BLOCKED until
+  implemented. No automatic downloads.
 - [ ] Verify read/completion/XP/pause/resume work too. Show progress from SQLite,
   not a previous cached page or prewritten response. Record actual results per operation.
 - [ ] Restore internet after the demonstration/test; leave intended model/settings.
@@ -296,8 +306,9 @@ servers. All services are on one laptop; no cross-device network is required.
 - [ ] FastAPI down, frontend running: local UI renders on reload, shows connection
   error, no fake XP/progress; restart/refetch restores committed state.
 - [ ] Ollama down (stop only the test instance, or simulate with a confirmed unused
-  loopback OLLAMA_BASE_URL port and backend restart): DB remains healthy, health
-  degraded, AI errors 503; saved reads/completion/pause/resume still usable. Original
+  loopback OLLAMA_BASE_URL port and backend restart): DB remains healthy,
+  `/api/health` stays 200, AI status reports unavailable and generation returns 503;
+  saved reads/completion/pause/resume still usable. Original
   line/XP unchanged after failed replan. Restore config/runtime and explicitly retry.
 - [ ] Missing configured model (confirmed absent tag, no pull): status unavailable,
   recoverable MODEL_UNAVAILABLE, no auto switch. Restore original tag; optionally
@@ -348,25 +359,29 @@ checks above; do not treat temporary artifacts as a permanent UI test runner.
 
 James runs the actual Windows laptop through all gates; Gracianne records evidence,
 Matthew fixes state/AI issues, Lawrence supports UX/pitch. Confirm resource/latency
-budgets under unplugged internet, restart, manual model switch and live five-minute
-P0 rehearsal. Replace Journey demo with completed history; no PWA/mobile claims.
+budgets under unplugged internet, restart, manual model switch and a timed P0
+rehearsal (verify the event's pitch duration). Journey now presents completed
+history; do not describe a full P1 current/locked visualization or PWA/mobile support.
 
 Run existing frontend type/build and backend unittest/pip checks from README;
-add product tests during their phases. PowerShell commands above have not been
-executed by Phase 0 documentation authors. No Linux/mock success proves Windows.
+add product tests when behavior changes. The historical Phase 0 authors did not
+execute these checks. Later Windows automation and user reports are recorded in
+demo readiness; mocked tests do not prove real offline inference.
 
 | Case | Tester/date, OS/browser/revision/model | Actual evidence/timing/errors | Result |
 | --- | --- | --- | --- |
 | PWA retired, desktop local assets/origins | — | — | NOT RUN |
-| Actual structured local generation | — | — | NOT RUN |
+| Actual structured local generation | User report, Windows; exact run metadata not supplied | User confirmed working generation and team AI-response QA | PASS (USER-REPORTED) |
 | One-follow-up/current-only visibility | — | — | NOT RUN |
 | Duplicate/concurrent completion and levels | — | — | NOT RUN |
-| Hint/shrink/pause/replan invariants | — | — | NOT RUN |
-| Internet disconnected with loopback inference | — | — | NOT RUN |
-| Refresh/backend/all-process persistence | — | — | NOT RUN |
+| Hint/shrink | Current implementation | Operations/controls are unimplemented | BLOCKED |
+| Live pause/replan invariants | — | 40 mocked Opera cases cover recovery/invariants; new frontend replan still needs live manual QA | NOT RUN (LIVE REPLAN) |
+| Internet disconnected with loopback inference | User report, Windows; exact run metadata not supplied | Restarted Ollama, FastAPI and frontend while disconnected, then generated a fresh questline | PASS (USER-REPORTED) |
+| Saved-state equality after refresh/backend/all-process restart | — | Offline startup/fresh generation report does not supply a before/after history/XP snapshot | NOT RUN (DETAILED LIVE RECORD) |
 | Model/backend/storage errors and recovery | — | — | NOT RUN |
 | Actual Windows performance/rehearsal | — | — | NOT RUN |
 
-This is a reusable blank record. After execution replace placeholders with actual
-observations and PASS/FAIL/BLOCKED/NOT RUN, identify mocked vs real evidence, and
-explain skipped cases. Current scaffold product tests are BLOCKED until implemented.
+This is a partial record with user-reported results; remaining rows need their own
+observations. Replace placeholders only after execution, identify mocked vs real
+evidence and explain skipped cases. The historical Linux record above remains
+unchanged. Record live-model frontend replan QA separately from the earlier UI sign-off.

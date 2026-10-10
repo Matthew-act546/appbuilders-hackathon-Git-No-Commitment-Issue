@@ -77,7 +77,7 @@ Failure preserves check-in/old plan for explicit retry of the existing intent.
 Warning codes appear only in local developer diagnostics, not public DTOs, normal
 logs or browser state. CLI candidate capture is limited to fictional QA inputs.
 
-Current prompt is adaptive-stages-v2; gate is essential-constraints-v3d.1.
+Current prompt is adaptive-stages-encouragement-v1; gate is essential-constraints-v3d.1.
 This approved post-PRD enhancement changes count guidance, not quality policy:
 the same call chooses the smallest meaningful stage count for the complete goal.
 Simple single outcomes normally combine small actions into two stages; complex
@@ -153,7 +153,9 @@ The broader operation/benchmark plans below remain requirements, not completed t
 
 ## Runtime and structured validation
 
-Primary `qwen3:1.7b`, manually configured backup `qwen2.5:1.5b`; endpoint from
+User-selected demo primary `qwen3:4b`, manually configured backup `qwen3:1.7b`;
+Python settings still default to 1.7B. Earlier 1.7B/2.5 benchmarks are historical,
+not measurements of the current 4B demo choice. Endpoint from
 OLLAMA_BASE_URL, model from OLLAMA_MODEL. Never auto-failover or download. Core
 configuration must resolve to loopback on the demo laptop; HTTPX trust_env=False
 avoids proxy redirection. No remote AI fallback, telemetry or browser-to-model calls.
