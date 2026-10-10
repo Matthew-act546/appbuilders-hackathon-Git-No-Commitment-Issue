@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { Sprout } from '../components/Sprout'
+import { GenerationLoading } from '../components/GenerationLoading'
 import { Badge, Button, Card, ErrorNotice, Input, LoadingIndicator, Select, Textarea } from '../components/UI'
 import { useAppProfile } from '../components/AppShell'
 import { useMutation } from '../hooks/useMutation'
@@ -126,6 +127,7 @@ export default function Home() {
   const error = validation ?? readError?.message ?? mutation.error?.message
 
   return <div className="home-page">
+    {checkIn?.status === 'ready' && mutation.pending && <GenerationLoading key={checkIn.context.energy} energy={checkIn.context.energy} />}
     <section className="welcome-hero"><Badge>A little direction, at your pace</Badge><div className="hero-title"><h1>One small step<br />at a time.</h1><Sprout /></div><p>Bring a goal. Make room for a manageable start.<br className="desktop-break" /> Your quest companion is right here on this laptop.</p></section>
     <Card elevated className="check-in-card">
       <div className="section-heading"><h2>A place to begin</h2>{checkIn && <Badge tone="sage">{checkIn.status === 'needs_follow_up' ? 'One detail needed' : checkIn.status === 'ready' ? 'Ready to plan' : 'Saved questline'}</Badge>}</div>

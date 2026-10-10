@@ -1,8 +1,10 @@
 # P0 implementation roadmap and acceptance gates
 
 Source: complete [PRD v2.0](Local_AI_Quest_Companion_Final_PRD.docx), especially
-§5–8/§14–19. Current phase is **Phase 0, documentation only**. Unchecked tasks are
-planned, not completed features. Deadline: October 10, 2026, 10:00 AM Philippine
+§5–8/§14–19. The original Phase 0 roadmap is retained below; unchecked tasks are
+the original plan, not the current feature inventory. Current Windows/QA status
+and the later frontend replan integration are tracked in
+[demo readiness](DEMO_READINESS.md). Deadline: October 10, 2026, 10:00 AM Philippine
 time (UTC+08:00). Phase 2 backend state implementation now exists; original
 checkboxes below are the full roadmap, not the current implementation inventory.
 Proposed internal feature freeze 9:00 AM, submission target

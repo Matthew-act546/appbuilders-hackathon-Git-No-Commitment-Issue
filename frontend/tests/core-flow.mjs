@@ -16,6 +16,10 @@ const results = [], requests = [], exceptions = [], children = []
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms))
 let socket, nonJsonOnce = false, pendingOnce = false, loseGeneration = false, loseCompletion = false, corruptDetail = false, slowDetail = null
 let refreshAfterCompletion = false
+let savedListFixture = null
+let generationGate = null
+let listFailureOnce = false, historyFailureOnce = false, reverseHistory = false, historyTextFixture = null
+let replanGate = null, loseReplan = false, pendingReplanOnce = false
 const specific = 'Write three unit tests for my FastAPI login endpoint'
 function start(command, args, cwd, extra = {}) {
   const child = spawn(command, args, { cwd, env: { ...process.env, ...extra }, stdio: ['ignore', 'ignore', 'pipe'] })
@@ -49,9 +53,9 @@ try {
   })
   let backend = launchBackend()
   await until(async () => { try { return (await json('/api/health')).body.status === 'ok' } catch { return false } }, 'isolated backend')
-  start(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'preview', '--', '--port', '4184'], join(root, 'frontend'))
+  start(process.execPath, [join(root, 'frontend/node_modules/vite/bin/vite.js'), 'preview', '--port', '4184'], join(root, 'frontend'))
   await until(async () => { try { return (await fetch(origin)).ok } catch { return false } }, 'production preview')
-  start(process.env.CHROMIUM_BINARY || 'chromium', ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=9229', `--user-data-dir=${join(temp, 'browser')}`, 'about:blank'], root)
+  start(process.env.CHROMIUM_BINARY || 'chromium', ['--headless=new', '--window-size=1440,1000', '--no-sandbox', '--disable-dev-shm-usage', '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=9229', `--user-data-dir=${join(temp, 'browser')}`, 'about:blank'], root)
   let tabs
   await until(async () => { try { tabs = await (await fetch('http://127.0.0.1:9229/json')).json(); return tabs.some(t => t.type === 'page') } catch { return false } }, 'Chromium')
   socket = new WebSocket(tabs.find(t => t.type === 'page').webSocketDebuggerUrl)
@@ -67,6 +71,18 @@ try {
     const url = new URL(request.url)
     try {
       requests.push({ method: request.method, path: url.pathname, headers: request.headers, body: request.postData, key: request.headers['Idempotency-Key'] ?? request.headers['idempotency-key'] })
+      if (request.method === 'GET' && ((listFailureOnce && url.pathname === '/api/questlines') || (historyFailureOnce && /^\/api\/questlines\//.test(url.pathname)))) {
+        listFailureOnce = false; historyFailureOnce = false
+        await fulfill(requestId, 503, { error: { code: 'STORAGE_UNAVAILABLE', message: 'Fictional storage outage', retryable: true, request_id: randomUUID(), details: null } })
+        return
+      }
+      if (generationGate && request.method === 'POST' && url.pathname === '/api/questlines') await generationGate
+      if (replanGate && request.method === 'POST' && url.pathname.endsWith('/replan')) await replanGate
+      if (pendingReplanOnce && request.method === 'POST' && url.pathname.endsWith('/replan')) {
+        pendingReplanOnce = false
+        await fulfill(requestId, 409, { error: { code: 'REQUEST_IN_PROGRESS', message: 'Fictional pending replan', retryable: true, request_id: randomUUID(), details: null } }, { 'retry-after': '1' })
+        return
+      }
       if (nonJsonOnce && request.method === 'POST' && url.pathname === '/api/questlines') {
         nonJsonOnce = false
         await fulfill(requestId, 502, '<html>RAW_STACK_TRACE_WITH_PRIVATE_INPUT</html>', { 'content-type': 'text/html' })
@@ -80,6 +96,16 @@ try {
       if (slowDetail && request.method === 'GET' && url.pathname === `/api/questlines/${slowDetail}`) await pause(600)
       const response = await fetch(api + url.pathname + url.search, { method: request.method, headers: request.headers, ...(request.postData ? { body: request.postData } : {}) })
       let body = await response.text()
+      if (request.method === 'GET' && /^\/api\/questlines\//.test(url.pathname) && response.ok && (reverseHistory || historyTextFixture)) {
+        const detail = JSON.parse(body)
+        if (reverseHistory) detail.completed_quests.reverse()
+        if (historyTextFixture && detail.completed_quests[0]) detail.completed_quests[0].completion_encouragement = historyTextFixture
+        body = JSON.stringify(detail)
+      }
+      if (savedListFixture && request.method === 'GET' && url.pathname === '/api/questlines' && response.ok) {
+        const list = JSON.parse(body)
+        body = JSON.stringify({ ...list, items: savedListFixture.slice(list.offset, list.offset + list.limit), has_more: list.offset + list.limit < savedListFixture.length })
+      }
       if (refreshAfterCompletion && request.method === 'POST' && url.pathname.endsWith('/complete') && response.ok) {
         refreshAfterCompletion = false
         // The real DB has committed; reload before React receives confirmation.
@@ -88,6 +114,11 @@ try {
         return
       }
       if (corruptDetail && request.method === 'GET' && /^\/api\/questlines\//.test(url.pathname) && response.ok) body = JSON.stringify({ ...JSON.parse(body), locked_quests: [{ title: 'SECRET_FUTURE' }] })
+      if (loseReplan && request.method === 'POST' && url.pathname.endsWith('/replan') && response.ok) {
+        loseReplan = false
+        await send('Fetch.failRequest', { requestId, errorReason: 'Failed' })
+        return
+      }
       if ((loseGeneration && request.method === 'POST' && url.pathname === '/api/questlines') || (loseCompletion && request.method === 'POST' && url.pathname.endsWith('/complete'))) {
         loseGeneration = false; loseCompletion = false
         await send('Fetch.failRequest', { requestId, errorReason: 'Failed' })
@@ -105,15 +136,50 @@ try {
     if (m.method === 'Runtime.exceptionThrown') exceptions.push(m.params.exceptionDetails.text)
     if (m.method === 'Fetch.requestPaused') void forward(m.params)
   }
-  async function evaluate(expression) { const r = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.text); return r.result.value }
+  async function evaluate(expression) { const r = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description ?? r.exceptionDetails.text); return r.result.value }
+  async function sidebarAligned() {
+    return evaluate("(() => { const saved = document.querySelector('.saved-questlines').getBoundingClientRect(); const settings = document.querySelector('.campaign-settings').getBoundingClientRect(); const progress = document.querySelector('.campaign-progress').getBoundingClientRect(); const pace = document.querySelector('.quest-pace').getBoundingClientRect(); const stage = document.querySelector('.campaign-stage').getBoundingClientRect(); return Math.abs(saved.top - settings.top) <= 2 && Math.abs(saved.bottom - progress.bottom) <= 2 && Math.abs(pace.top - stage.top) <= 2 })()")
+  }
   async function open(path) { await send('Page.navigate', { url: origin + path }); await until(() => evaluate(`location.pathname === ${JSON.stringify(path.split('?')[0])} && !!document.querySelector('main h1') && document.readyState === 'complete'`), 'page ' + path) }
-  async function click(text) { await until(() => evaluate(`[...document.querySelectorAll('main button')].some(b => b.textContent === ${JSON.stringify(text)} && !b.disabled)`), 'enabled button ' + text); await evaluate(`[...document.querySelectorAll('main button')].find(b => b.textContent === ${JSON.stringify(text)}).click()`) }
+  async function click(text) {
+    const buttons = "(document.querySelector('dialog[open]') ?? document.querySelector('main')).querySelectorAll('button')"
+    await until(() => evaluate(`[...${buttons}].some(b => b.textContent === ${JSON.stringify(text)} && !b.disabled)`), 'enabled button ' + text)
+    await evaluate(`[...${buttons}].find(b => b.textContent === ${JSON.stringify(text)}).click()`)
+  }
+  async function completeWithScrollTracking(lastStage, keyboard) {
+    assert.equal(await evaluate("!!document.querySelector('dialog[open]')"), false, 'Dismiss the modal before completing another stage')
+    const position = await evaluate(`(() => {
+      const button = [...document.querySelectorAll('main button')].find(b => b.textContent === 'Complete stage');
+      button.scrollIntoView({ block: 'center' });
+      if (${lastStage}) window.scrollTo(0, document.documentElement.scrollHeight - innerHeight);
+      const rect = button.getBoundingClientRect();
+      window.completionScrollFrames = [];
+      window.trackCompletionScroll = true;
+      const sample = () => { window.completionScrollFrames.push({ y: scrollY, height: document.documentElement.scrollHeight, celebration: !!document.querySelector('[data-completion-celebration]') }); if (window.trackCompletionScroll) requestAnimationFrame(sample) };
+      requestAnimationFrame(sample);
+      return { scrollY, x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+    })()`)
+    assert.ok(position.y > 0 && position.y < 1000, 'Completion button is visible before the real mouse click')
+    if (keyboard) {
+      await evaluate("[...document.querySelectorAll('main button')].find(b => b.textContent === 'Complete stage').focus({ preventScroll: true })")
+      await send('Input.dispatchKeyEvent', { type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32 })
+      await send('Input.dispatchKeyEvent', { type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32 })
+    } else {
+      await send('Input.dispatchMouseEvent', { type: 'mousePressed', x: position.x, y: position.y, button: 'left', clickCount: 1 })
+      await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: position.x, y: position.y, button: 'left', clickCount: 1 })
+    }
+    return position.scrollY
+  }
   async function input(id, value) {
     await evaluate(`document.getElementById(${JSON.stringify(id)}).focus()`)
     await send('Input.insertText', { text: value })
     await until(() => evaluate(`document.getElementById(${JSON.stringify(id)}).value === ${JSON.stringify(value)}`), 'input ' + id)
   }
   async function energy(value = 'low') { await evaluate(`const e = document.getElementById('energy'); Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e, ${JSON.stringify(value)}); e.dispatchEvent(new Event('change',{bubbles:true}))`) }
+  async function replaceInput(id, value) {
+    await evaluate(`(() => { const field = document.getElementById(${JSON.stringify(id)}); const prototype = field instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; Object.getOwnPropertyDescriptor(prototype, 'value').set.call(field, ${JSON.stringify(value)}); field.dispatchEvent(new Event('input', { bubbles: true })); field.dispatchEvent(new Event('change', { bubbles: true })) })()`)
+  }
+  async function replanEnergy(value) { await evaluate(`(() => { const select = document.getElementById('replan-energy'); Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, ${JSON.stringify(value)}); select.dispatchEvent(new Event('change', { bubbles: true })) })()`) }
   async function startCheckIn(goal = specific, details = false, minutes = '20', energyValue = 'low') {
     await open('/')
     await until(() => evaluate("!!document.querySelector('#goal') && !document.querySelector('#goal').disabled"), 'check-in form')
@@ -126,10 +192,22 @@ try {
     await until(() => evaluate("location.search.includes('check_in=') && !document.querySelector('.loading')"), 'saved check-in')
     return await evaluate("new URLSearchParams(location.search).get('check_in')")
   }
-  async function screenshot(name) { const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true }); await writeFile(join(temp, name + '.png'), Buffer.from(r.data, 'base64')) }
+  async function screenshot(name, viewport = false) { const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: !viewport }); await writeFile(join(temp, name + '.png'), Buffer.from(r.data, 'base64')) }
   await send('Page.enable'); await send('Runtime.enable'); await send('Network.enable')
   await send('Fetch.enable', { patterns: [{ urlPattern: '*://*/api/*', requestStage: 'Request' }] })
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false })
+  // Opera GX also needs the real window to cover the emulated pointer coordinates.
+  const browserWindow = await send('Browser.getWindowForTarget')
+  await send('Browser.setWindowBounds', { windowId: browserWindow.windowId, bounds: { width: 1440, height: 1000 } })
+
+  listFailureOnce = true
+  await open('/journey')
+  await until(() => evaluate("document.querySelector('.journey-picker [role=alert]')?.textContent.includes('Local storage is unavailable')"), 'Journey list failure')
+  await click('Retry saved list')
+  await until(() => evaluate("document.querySelector('.journey-picker').textContent.includes('A fresh starting point') && !document.querySelector('.journey-picker .loading')"), 'empty Journey recovery')
+  assert.equal(await evaluate("document.querySelector('#journey-questline').disabled && !document.querySelector('[data-completed-stage]')"), true)
+  assert.equal(requests.some(request => request.method === 'POST'), false)
+  pass('Journey empty state and saved-list recovery', 'Empty local storage shows a check-in link and no invented stages; a sanitized storage error recovers through explicit retry; history browsing sends no writes')
 
   const checkId = await startCheckIn(specific, true)
   assert.equal((await json(`/api/check-in/${checkId}`)).body.status, 'ready')
@@ -143,9 +221,35 @@ try {
   await screenshot('ready-check-in')
   pass('Specific check-in and explicit readiness', 'Actual API stores context; no unnecessary question; generation requires its own button')
   await mode('slow')
+  let releaseGeneration
+  generationGate = new Promise(resolve => { releaseGeneration = resolve })
   await click('Generate My Quests')
   await evaluate("[...document.querySelectorAll('main button')].find(b => b.textContent.includes('Generating quests locally')).click()")
+  await until(() => evaluate("document.querySelector('[data-generation-loading]')?.matches(':modal')"), 'generation loading popup')
+  assert.equal(await evaluate("document.body.style.overflow === 'hidden' && document.activeElement.id === 'generation-heading' && document.querySelector('[data-generation-loading]').dataset.energy === 'low'"), true)
+  const loadingBounds = await evaluate("(() => { const popup = document.querySelector('[data-generation-loading]'); const bounds = popup.getBoundingClientRect(); return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2, width: innerWidth, height: innerHeight, blur: getComputedStyle(popup, '::backdrop').backdropFilter } })()")
+  assert.ok(Math.abs(loadingBounds.x - loadingBounds.width / 2) <= 10 && Math.abs(loadingBounds.y - loadingBounds.height / 2) <= 2 && loadingBounds.blur.includes('blur'))
+  const firstQuote = await evaluate("document.querySelector('[data-generation-quote]').textContent")
+  await click('Another encouragement')
+  const secondQuote = await evaluate("document.querySelector('[data-generation-quote]').textContent")
+  assert.notEqual(firstQuote, secondQuote)
+  await until(() => evaluate(`document.querySelector('[data-generation-quote]').textContent !== ${JSON.stringify(secondQuote)}`), 'automatic encouragement rotation', 15000)
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
+  assert.equal(await evaluate("document.querySelector('[data-generation-loading]').matches(':modal')"), true, 'Pending generation stays visible until the request finishes')
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
+  assert.equal(await evaluate("!!document.activeElement.closest('[data-generation-loading]')"), true)
+  await screenshot('generation-loading-desktop', true)
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 780, deviceScaleFactor: 1, mobile: false })
+  assert.equal(await evaluate("(() => { const bounds = document.querySelector('[data-generation-loading]').getBoundingClientRect(); return bounds.left >= 0 && bounds.right <= innerWidth && bounds.top >= 0 && bounds.bottom <= innerHeight && document.documentElement.scrollWidth <= innerWidth })()"), true)
+  await screenshot('generation-loading-narrow', true)
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false })
+  releaseGeneration()
+  generationGate = null
   await until(() => evaluate("location.pathname.startsWith('/questlines/') && document.querySelector('.quest-title')?.textContent === 'Inspect the endpoint'"), 'saved questline navigation')
+  assert.equal(await evaluate("!document.querySelector('[data-generation-loading]') && document.body.style.overflow !== 'hidden'"), true)
+  pass('Energy-aware generation loading popup', 'Centered blurred modal, low-energy encouragement, manual and timed quote changes without extra generation requests, keyboard containment, narrow layout and automatic success dismissal')
   const lineId = await evaluate("location.pathname.split('/').at(-1)")
   assert.equal(requests.filter(r => r.method === 'POST' && r.path === '/api/questlines').length, 1)
   let saved = (await json(`/api/questlines/${lineId}`)).body
@@ -168,6 +272,48 @@ try {
   await mode('valid'); await screenshot('first-quest')
   pass('Generate → save → dashboard, duplicate-click guard and visibility', 'Real questline transaction, safe current DTO, one generation POST; locked titles absent from response and DOM')
 
+  await open(`/journey/${lineId}`)
+  await until(() => evaluate("document.querySelector('.journey-empty')?.textContent.includes('Your journey starts with one small step')"), 'questline without completed stages')
+  assert.equal(await evaluate("document.querySelector('[data-journey-xp]').textContent === '0 XP' && !document.querySelector('[data-completed-stage]') && !document.querySelector('.journey-history').textContent.includes('Inspect the endpoint')"), true)
+  await evaluate(`document.querySelector('.journey-summary a[href="/questlines/${lineId}"]').click()`)
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Inspect the endpoint' && !document.querySelector('.saved-questlines .loading')"), 'return from empty timeline')
+  pass('Journey before the first completion', 'A saved but unfinished questline shows zero earned XP and a supportive empty state; current-stage details stay in My Quests; continue opens the correct questline')
+
+  const summary = (await json('/api/questlines')).body.items[0]
+  savedListFixture = [summary, ...Array.from({ length: 27 }, (_, index) => ({ ...summary, id: randomUUID(), goal: `Fictional saved goal ${index + 2}: review the existing local notes and record the useful next step for this campaign.` }))]
+  await click('Refresh list')
+  await until(() => evaluate("document.querySelectorAll('.questline-link').length === 20 && !document.querySelector('.saved-questlines .loading')"), 'long saved list')
+  await evaluate('window.scrollTo(0, 0)')
+  await until(sidebarAligned, 'saved-list borders align with settings/progress and pace aligns with Stage 1')
+  await pause(200)
+  const listBounds = await evaluate("(() => { const list = document.querySelector('.saved-questlines-scroll'); const rect = list.getBoundingClientRect(); return { scrollable: list.scrollHeight > list.clientHeight, y: scrollY, x: rect.left + rect.width / 2, top: rect.top + 30 } })()")
+  assert.equal(listBounds.scrollable, true)
+  assert.equal(await evaluate(`document.elementFromPoint(${listBounds.x}, ${listBounds.top})?.closest('.saved-questlines-scroll') !== null`), true, 'Wheel coordinates point inside the saved list')
+  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: listBounds.x, y: listBounds.top })
+  await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: listBounds.x, y: listBounds.top, deltaX: 0, deltaY: 400 })
+  await until(() => evaluate("document.querySelector('.saved-questlines-scroll').scrollTop > 0"), 'wheel scrolls saved list')
+  assert.equal(await evaluate('scrollY'), listBounds.y, 'Scrolling saved work keeps the campaign in place')
+  await evaluate("const list = document.querySelector('.saved-questlines-scroll'); list.scrollTop = 0; list.focus({ preventScroll: true })")
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'PageDown', code: 'PageDown', windowsVirtualKeyCode: 34 })
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'PageDown', code: 'PageDown', windowsVirtualKeyCode: 34 })
+  await until(() => evaluate("document.querySelector('.saved-questlines-scroll').scrollTop > 0"), 'keyboard scrolls saved list')
+  await screenshot('saved-questlines-scroll-desktop', true)
+  await click('Next')
+  await until(() => evaluate("document.querySelectorAll('.questline-link').length === 8"), 'saved-list next page')
+  await click('Previous')
+  await until(() => evaluate("document.querySelectorAll('.questline-link').length === 20"), 'saved-list previous page')
+  await send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 1000, deviceScaleFactor: 1, mobile: false })
+  await until(sidebarAligned, 'sidebar alignment follows the resized campaign')
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 1000, deviceScaleFactor: 1, mobile: false })
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= innerWidth && document.querySelector('.saved-questlines').getBoundingClientRect().height <= 512 && document.querySelector('.saved-questlines-scroll').scrollHeight > document.querySelector('.saved-questlines-scroll').clientHeight"), true)
+  await screenshot('saved-questlines-scroll-narrow')
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false })
+  savedListFixture = null
+  await click('Refresh list')
+  await until(() => evaluate("document.querySelectorAll('.questline-link').length === 1"), 'real saved list restored')
+  assert.equal(await evaluate("document.querySelector('.brand strong').textContent === 'Sibol' && document.title === 'My Quests · Sibol'"), true)
+  pass('Bounded saved questlines and Sibol branding', '28 fictional summaries: saved-list borders align with Settings and Progress, pace aligns with Stage 1, wheel/keyboard scrolling and pagination stay usable, resize/narrow layouts fit, and app branding reads Sibol')
+
   await send('Page.reload', { ignoreCache: true })
   await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Inspect the endpoint'"), 'refresh restoration')
   assert.equal(await evaluate("[...document.querySelectorAll('.stage-objectives input')].some(i => i.checked)"), false)
@@ -175,9 +321,11 @@ try {
   await until(() => evaluate("[...document.querySelectorAll('main button')].some(b => b.textContent === 'Resume questline')"), 'pause committed')
   assert.equal(await evaluate("[...document.querySelectorAll('main button')].find(b => b.textContent === 'Complete stage').disabled"), true)
   assert.equal((await json(`/api/questlines/${lineId}`)).body.current_quest.id, firstId)
+  await until(sidebarAligned, 'sidebar alignment after pausing')
   await click('Resume questline')
   await until(() => evaluate("[...document.querySelectorAll('main button')].some(b => b.textContent === 'Pause questline')"), 'resume committed')
   assert.equal((await json('/api/profile')).body.total_xp, 0)
+  await until(sidebarAligned, 'sidebar alignment after resuming')
   pass('Refresh, pause and resume persistence', 'Same current quest and 0 XP restored; completion disabled while paused')
 
   loseCompletion = true
@@ -193,8 +341,33 @@ try {
   assert.equal(await evaluate("document.querySelector('[data-completion-message]').textContent"), firstMessage)
   assert.equal(await evaluate("document.querySelector('[data-completion-celebration]').textContent.includes('0 additional XP')"), true)
   assert.equal((await json(`/api/questlines/${lineId}`)).body.current_quest.completion_encouragement, null)
+  const modal = await evaluate("(() => { const dialog = document.querySelector('.completion-dialog'); const rect = dialog.getBoundingClientRect(); return { modal: dialog.matches(':modal'), blur: getComputedStyle(dialog, '::backdrop').backdropFilter, centerX: rect.x + rect.width / 2, centerY: rect.y + rect.height / 2, width: innerWidth, height: innerHeight, scrollY, locked: document.body.style.overflow === 'hidden' } })()")
+  assert.equal(modal.modal, true)
+  assert.equal(modal.locked, true)
+  assert.ok(modal.blur.includes('blur'))
+  assert.ok(Math.abs(modal.centerX - modal.width / 2) <= 10 && Math.abs(modal.centerY - modal.height / 2) <= 2, 'Completion popup is centered in the viewport')
+  await evaluate("[...document.querySelectorAll('main button')].find(b => b.textContent === 'Complete stage').focus()")
+  assert.equal(await evaluate("document.activeElement.closest('.completion-dialog') !== null"), true, 'Background controls cannot take focus')
+  for (let index = 0; index < 3; index++) {
+    await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
+    await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
+    assert.equal(await evaluate("document.activeElement.closest('.completion-dialog') !== null"), true, 'Tab stays inside the completion popup')
+  }
+  await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 10, y: 10, deltaX: 0, deltaY: 350 })
+  await pause(100)
+  assert.equal(await evaluate('scrollY'), modal.scrollY, 'The background cannot scroll while the popup is open')
+  await screenshot('completion-popup-desktop', true)
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 780, deviceScaleFactor: 1, mobile: false })
+  const narrowModal = await evaluate("(() => { const rect = document.querySelector('.completion-dialog').getBoundingClientRect(); const close = document.querySelector('.completion-close').getBoundingClientRect(); return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, closeTop: close.top, closeRight: close.right, width: innerWidth, height: innerHeight, overflow: document.documentElement.scrollWidth > innerWidth } })()")
+  assert.equal(narrowModal.overflow, false)
+  assert.ok(narrowModal.left >= 0 && narrowModal.right <= narrowModal.width && narrowModal.top >= 0 && narrowModal.bottom <= narrowModal.height, 'Narrow popup fits within the viewport')
+  assert.ok(narrowModal.closeTop >= 0 && narrowModal.closeRight <= narrowModal.width, 'Narrow popup close button stays visible')
+  await screenshot('completion-popup-narrow', true)
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false })
   await click('Continue Journey')
   assert.equal(await evaluate("document.activeElement?.id"), `campaign-map-${lineId}`)
+  assert.equal(await evaluate("document.body.style.overflow"), '')
+  pass('Centered completion modal and background isolation', 'Native top-layer dialog, blurred backdrop, focus containment, background scroll lock and restored dashboard interaction')
   pass('Completion celebration, response-loss recovery and keyboard continuation', 'No celebration before confirmed response; replay shows the completed quest’s own message and zero additional XP; focus moves to the heading then Campaign Map; next-stage copy stays private')
   const completions = requests.filter(r => r.method === 'POST' && r.path.endsWith('/complete'))
   assert.equal(completions[0].path, completions[1].path)
@@ -220,6 +393,11 @@ try {
   assert.notEqual(secondMessage, firstMessage)
   assert.ok(secondMessage.includes('Write the tests'))
   assert.equal(await evaluate("document.querySelector('[data-completion-celebration]').textContent.includes('+20 XP awarded') && document.querySelector('[data-completion-celebration]').textContent.includes('Stage 3 unlocked.')"), true)
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
+  await until(() => evaluate("!document.querySelector('.completion-dialog') && document.body.style.overflow !== 'hidden'"), 'Escape closes the completion popup')
+  assert.equal(await evaluate('document.activeElement?.id'), `campaign-map-${lineId}`)
+  pass('Escape dismissal restores normal operations', 'Escape removes the backdrop and scroll lock, restores map focus, and allows the next stage to complete')
   await click('Complete stage')
   await until(() => evaluate("document.body.innerText.includes('Questline completed') && !document.querySelector('.quest-title')"), 'final completion')
   assert.equal((await json('/api/profile')).body.total_xp, 40)
@@ -231,6 +409,59 @@ try {
   assert.equal(await evaluate("!!document.querySelector('[data-completion-celebration]')"), false)
   pass('Distinct encouragement, missing-copy fallback and final refresh', 'Confirmed +20/+10 XP, next-stage number only, own-title messages, final campaign status; three completed-history messages persist without replaying celebration or rewards')
   pass('Stale revision recovery and final completion', 'Conflict reloads canonical revision without XP; explicit fresh completion unlocks final quest, then completes line; total 40 XP')
+
+  const finishedHistory = (await json(`/api/questlines/${lineId}`)).body
+  const historyWriteCount = requests.filter(request => request.method === 'POST').length
+  reverseHistory = true
+  await open(`/journey/${lineId}`)
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 3 && !!document.querySelector('[data-journey-finished]')"), 'completed-stage timeline')
+  const chronological = [...finishedHistory.completed_quests].sort((a, b) => Date.parse(a.completed_at) - Date.parse(b.completed_at) || a.order - b.order)
+  assert.deepEqual(await evaluate("[...document.querySelectorAll('[data-completed-stage]')].map(stage => stage.dataset.completedStage)"), chronological.map(quest => quest.id))
+  assert.deepEqual(await evaluate("[...document.querySelectorAll('.stage-memory time')].map(time => time.dateTime)"), chronological.map(quest => quest.completed_at))
+  assert.equal(await evaluate("document.querySelector('[data-journey-xp]').textContent"), '40 XP')
+  assert.equal(await evaluate("document.querySelectorAll('[data-journey-encouragement]').length === 3 && document.querySelectorAll('.stage-memory-details:not([open])').length === 3 && !document.querySelector('.stage-locked')"), true)
+  assert.equal(await evaluate("document.querySelector('[data-journey-finished]').textContent.includes('all 3 stages') && document.querySelector('[data-journey-finished]').textContent.includes('40 XP')"), true)
+  await evaluate("document.querySelector('.stage-memory-details summary').focus()")
+  assert.equal(await evaluate("document.activeElement === document.querySelector('.stage-memory-details summary')"), true)
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: ' ', code: 'Space', windowsVirtualKeyCode: 32 })
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: ' ', code: 'Space', windowsVirtualKeyCode: 32 })
+  await until(() => evaluate("document.querySelector('.stage-memory-details').open"), 'keyboard expands saved stage')
+  assert.equal(await evaluate(`document.querySelector('.stage-memory-details').textContent.includes(${JSON.stringify(chronological[0].action)}) && document.querySelector('.stage-memory-details').textContent.includes(${JSON.stringify(chronological[0].completion_criteria)})`), true)
+  await evaluate('window.scrollTo(0, 0)')
+  await screenshot('journey-timeline-desktop')
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 1000, deviceScaleFactor: 1, mobile: false })
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= innerWidth && [...document.querySelectorAll('.stage-memory, .journey-picker')].every(card => card.getBoundingClientRect().left >= 0 && card.getBoundingClientRect().right <= innerWidth)"), true)
+  await screenshot('journey-timeline-narrow')
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false })
+  await click('Refresh history')
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 3 && !document.querySelector('.loading')"), 'timeline explicit refresh')
+  await send('Page.reload', { ignoreCache: true })
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 3 && !!document.querySelector('[data-journey-finished]')"), 'timeline refresh persistence')
+  reverseHistory = false
+  assert.equal(requests.filter(request => request.method === 'POST').length, historyWriteCount)
+  assert.equal((await json('/api/profile')).body.total_xp, 40)
+  assert.deepEqual((await json(`/api/questlines/${lineId}`)).body, finishedHistory)
+  pass('Completed-stage timeline, keyboard details and refresh persistence', 'Actual completed SQLite records render chronologically despite reversed response order, with exact timestamps and 40 earned XP; native details expand by keyboard; completion summary and desktop/narrow layouts fit; viewing and refreshing award no XP')
+
+  historyFailureOnce = true
+  await click('Refresh history')
+  await until(() => evaluate("document.querySelector('[role=alert]')?.textContent.includes('Local storage is unavailable') && !document.querySelector('[data-completed-stage]')"), 'history read failure clears stale timeline')
+  await click('Retry history')
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 3"), 'history retry recovers')
+  corruptDetail = true
+  await click('Refresh history')
+  await until(() => evaluate("document.querySelector('[role=alert]')?.textContent.includes('invalid response')"), 'Journey rejects hidden fields')
+  assert.equal(await evaluate("document.body.innerText.includes('SECRET_FUTURE') || !!document.querySelector('[data-completed-stage]')"), false)
+  corruptDetail = false
+  historyTextFixture = '<img src=x onerror="window.journeyInjected=true">'
+  await click('Retry history')
+  await until(() => evaluate(`document.querySelector('[data-journey-encouragement]')?.textContent.includes(${JSON.stringify(historyTextFixture)})`), 'saved model text stays plain text')
+  assert.equal(await evaluate("!!document.querySelector('.stage-memory img') || window.journeyInjected === true"), false)
+  historyTextFixture = null
+  await open('/journey/10000000-0000-4000-8000-000000000099')
+  await until(() => evaluate("document.querySelector('[role=alert]')?.textContent.includes('no longer available')"), 'Journey missing questline')
+  assert.equal(await evaluate("!!document.querySelector('[data-completed-stage]') || document.querySelector('#journey-questline').disabled"), false)
+  pass('Journey history failures, safe model text and unknown questline', 'Failed reads clear the timeline and retry restores it; strict DTO validation rejects hidden future fields; HTML-like encouragement renders as text; a missing goal leaves the selector usable')
 
   const ambiguousId = await startCheckIn('Finish my assignment')
   const question = (await json(`/api/check-in/${ambiguousId}`)).body.question
@@ -258,6 +489,7 @@ try {
     assert.equal((await json(`/api/check-in/${ambiguousId}`)).body.status, 'ready')
     assert.equal((await json('/api/questlines')).body.items.length, 1)
     assert.equal(await evaluate("!!document.querySelector('.quest-title')"), false)
+    assert.equal(await evaluate("!document.querySelector('[data-generation-loading]') && document.body.style.overflow !== 'hidden'"), true, 'Generation errors dismiss the loading popup and restore the form')
   }
   const attempts = requests.filter(r => r.method === 'POST' && r.path === '/api/questlines').slice(1)
   assert.equal(new Set(attempts.map(r => r.key)).size, 1)
@@ -287,6 +519,47 @@ try {
   await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Write the tests'"), 'non-AI completion')
   assert.equal((await json('/api/profile')).body.total_xp, 50)
   pass('Saved quests remain usable with AI unavailable', 'Real SQLite list/detail/pause/resume/completion work while the mocked runtime cannot connect; 50 total XP confirmed')
+
+  const writesBeforeJourney = requests.filter(request => request.method === 'POST').length
+  await open(`/journey/${secondId}`)
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 1"), 'active campaign history')
+  assert.equal(await evaluate("document.querySelector('[data-journey-xp]').textContent === '10 XP' && !document.querySelector('[data-journey-finished]') && !document.querySelector('.journey-history').textContent.includes('Write the tests')"), true)
+  await evaluate(`document.querySelector('.journey-summary a[href="/questlines/${secondId}"]').click()`)
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Write the tests'"), 'continue correct saved questline')
+  await click('Pause questline')
+  await until(() => evaluate("document.querySelector('.quest-pace')?.textContent.includes('Resume questline')"), 'pause before revisiting history')
+  await open(`/journey/${secondId}`)
+  await until(() => evaluate("document.querySelector('.journey-summary .badge')?.textContent === 'paused' && document.querySelectorAll('[data-completed-stage]').length === 1"), 'paused completed-stage history')
+  assert.equal(await evaluate("document.querySelector('.journey-summary').textContent.includes('Return to paused questline') && document.querySelector('[data-journey-xp]').textContent === '10 XP'"), true)
+  await evaluate(`document.querySelector('.journey-summary a[href="/questlines/${secondId}"]').click()`)
+  await until(() => evaluate("document.querySelector('.quest-pace')?.textContent.includes('Resume questline')"), 'paused return keeps paused state')
+  await click('Resume questline')
+  await until(() => evaluate("document.querySelector('.quest-pace')?.textContent.includes('Pause questline')"), 'resume after history')
+  assert.equal(requests.filter(request => request.method === 'POST').length, writesBeforeJourney + 2, 'Only the explicit pause and resume actions write')
+  assert.equal((await json('/api/profile')).body.total_xp, 50)
+  pass('Active and paused Journey history without AI', 'Completed stages remain readable during mocked AI outage; current and future details stay absent; campaign XP is 10 while lifetime XP is 50; continue links return to the correct questline without resuming it implicitly')
+
+  const journeySummaries = (await json('/api/questlines')).body.items
+  const journeySummary = journeySummaries.find(item => item.id === lineId)
+  savedListFixture = [...Array.from({ length: 21 }, (_, index) => ({ ...journeySummary, id: randomUUID(), goal: `Fictional history goal ${index + 1}` })), journeySummary, journeySummaries.find(item => item.id === secondId)]
+  await open('/journey')
+  await until(() => evaluate("document.querySelector('#journey-questline')?.options.length === 21 && !document.querySelector('.loading')"), 'Journey first selector page')
+  await click('Next goals')
+  await until(() => evaluate("document.querySelector('#journey-questline')?.options.length === 4 && !document.querySelector('.loading')"), 'Journey second selector page')
+  await evaluate(`(() => { const select = document.getElementById('journey-questline'); Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, '${lineId}'); select.dispatchEvent(new Event('change', { bubbles: true })) })()`)
+  await until(() => evaluate(`location.pathname === '/journey/${lineId}' && document.querySelectorAll('[data-completed-stage]').length === 3 && !document.querySelector('.loading')`), 'select goal on a later page')
+  assert.equal(await evaluate(`document.querySelector('#journey-questline').value === '${lineId}' && document.querySelector('#journey-questline').selectedOptions[0].textContent.includes(${JSON.stringify(finishedHistory.goal)})`), true)
+  savedListFixture = null
+  await click('Refresh list')
+  await until(() => evaluate("document.querySelector('#journey-questline').options.length === 3 && !document.querySelector('.loading')"), 'real Journey selector restored')
+  slowDetail = lineId
+  await open(`/journey/${lineId}`)
+  await evaluate(`window.history.pushState({}, '', '/journey/${secondId}'); window.dispatchEvent(new PopStateEvent('popstate'))`)
+  await until(() => evaluate("document.querySelector('.journey-summary .goal-heading')?.textContent === 'Finish my assignment' && document.querySelectorAll('[data-completed-stage]').length === 1"), 'Journey selects another questline during a slow read')
+  await pause(800)
+  assert.equal(await evaluate("document.querySelector('.journey-summary .goal-heading').textContent"), 'Finish my assignment')
+  slowDetail = null
+  pass('Journey selector pagination and abandoned reads', 'A goal beyond the first 20 remains selectable and labeled after navigation; a slow previous goal cannot replace the newly selected timeline')
 
   corruptDetail = true
   await open(`/questlines/${secondId}`)
@@ -343,8 +616,21 @@ try {
     assert.equal(await evaluate("document.body.innerText.includes('Sized stage 2')"), false)
     assert.equal(JSON.stringify(sized).includes('Sized stage 2'), false)
     await screenshot(`sized-${count}-stage-first`)
+    const completionScroll = await evaluate("(() => { const button = [...document.querySelectorAll('main button')].find(b => b.textContent === 'Complete stage'); button.scrollIntoView({ block: 'center' }); button.focus({ preventScroll: true }); return window.scrollY })()")
+    assert.ok(completionScroll > 100, 'Complete the stage from a scrolled dashboard')
     await click('Complete stage')
     await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Sized stage 2'"), `unlock second of ${count}`)
+    await until(() => evaluate("document.activeElement?.id === 'completion-heading' && !document.querySelector('.loading')"), `completion focus without scrolling for ${count} stages`)
+    await pause(150)
+    const completedScroll = await evaluate('window.scrollY')
+    assert.ok(Math.abs(completedScroll - completionScroll) <= 2, `Completing a stage preserves scroll position in the ${count}-stage campaign (${completionScroll} → ${completedScroll})`)
+    const continueScroll = await evaluate('window.scrollY')
+    await click('Continue Journey')
+    await until(() => evaluate(`!document.querySelector('[data-completion-celebration]') && document.activeElement?.id === 'campaign-map-${id}'`), 'continue focus without scrolling')
+    await pause(150)
+    const continuedScroll = await evaluate('window.scrollY')
+    assert.ok(Math.abs(continuedScroll - continueScroll) <= 2, `Continuing after completion preserves scroll position in the ${count}-stage campaign (${continueScroll} → ${continuedScroll})`)
+    pass(`${count}-stage completion scroll position`, 'Completing a scrolled stage and continuing preserve the scroll offset while keeping keyboard focus on the result and Campaign Map')
     const duplicate = await json(`/api/quests/${first.id}/complete`, { expected_revision: 1 })
     assert.equal(duplicate.body.awarded_xp, 0)
     assert.equal((await json('/api/profile')).body.total_xp, before + 10)
@@ -352,8 +638,16 @@ try {
     await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Sized stage 2'"), `refresh ${count} stages`)
     assert.equal(await evaluate("document.querySelectorAll('.campaign-node').length"), count)
     for (let index = 1; index < count; index++) {
-      await click('Complete stage')
+      const expectedScroll = await completeWithScrollTracking(index + 1 === count, index % 2 === 0)
       await until(() => evaluate(index + 1 === count ? "document.body.innerText.includes('Campaign completed')" : `document.querySelector('.quest-title')?.textContent === 'Sized stage ${index + 2}'`), `complete sized stage ${index + 1}`)
+      await until(() => evaluate("document.activeElement?.id === 'completion-heading' && !document.querySelector('.loading')"), 'real-click completion settled')
+      if (index % 2 === 0) await evaluate("document.querySelector('[aria-label=\"Close completion popup\"]').click()")
+      else await click('Continue Journey')
+      await until(() => evaluate("!document.querySelector('.completion-dialog') && document.body.style.overflow !== 'hidden'"), 'completion popup dismissed without moving the page')
+      await pause(150)
+      const frames = await evaluate('(() => { window.trackCompletionScroll = false; return window.completionScrollFrames })()')
+      const changedFrames = frames.filter((frame, frameIndex) => frameIndex === 0 || frame.y !== frames[frameIndex - 1].y || frame.height !== frames[frameIndex - 1].height)
+      assert.ok(frames.every(frame => Math.abs(frame.y - expectedScroll) <= 2), `Real-click stage ${index + 1}/${count} stays scrolled throughout completion: ${JSON.stringify({ expectedScroll, changedFrames })}`)
     }
     sized = (await json(`/api/questlines/${id}`)).body
     assert.equal(sized.status, 'completed')
@@ -363,6 +657,190 @@ try {
     assert.equal(await evaluate("document.querySelector('[data-campaign-xp]').textContent"), `${count * 10} XP`)
     pass(`${count}-stage Campaign Map integration`, 'Mocked count selection, real API/SQLite: current-only content, anonymous locked stages, three temporary checkpoints, one-time XP, sequential unlocking and completed refresh persistence')
   }
+
+  const energyQuotes = new Set()
+  for (const energyValue of ['medium', 'high']) {
+    await mode('unavailable')
+    await startCheckIn(specific, false, '20', energyValue)
+    generationGate = new Promise(resolve => { releaseGeneration = resolve })
+    await click('Generate My Quests')
+    await until(() => evaluate(`document.querySelector('[data-generation-loading]')?.dataset.energy === '${energyValue}'`), energyValue + ' loading encouragement')
+    const quote = await evaluate("document.querySelector('[data-generation-quote]').textContent")
+    assert.ok(quote.length > 20 && !energyQuotes.has(quote))
+    energyQuotes.add(quote)
+    assert.equal(await evaluate(`document.querySelector('[data-generation-loading]').textContent.includes('${energyValue === 'medium' ? 'A steady pace' : 'Room to focus'}')`), true)
+    releaseGeneration()
+    generationGate = null
+    await until(() => evaluate("!!document.querySelector('[role=alert]') && !document.querySelector('[data-generation-loading]') && document.body.style.overflow !== 'hidden'"), energyValue + ' generation failure restores interaction')
+    assert.equal(await evaluate("[...document.querySelectorAll('main button')].some(button => button.textContent === 'Retry Generate My Quests' && !button.disabled)"), true)
+  }
+  pass('Energy-specific encouragement and error dismissal', 'Medium/high energy use distinct encouragement and tone; unavailable AI closes the popup and leaves the saved check-in ready for an explicit retry')
+
+  const beforeHistoryReplan = (await json(`/api/questlines/${secondId}`)).body
+  const xpBeforeHistoryReplan = (await json('/api/profile')).body
+  await open(`/journey/${secondId}`)
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 1"), 'history before replan')
+  const historyBeforeReplan = await evaluate("document.querySelector('[data-completed-stage]').textContent")
+  await mode('stages-2')
+  const replannedHistory = await json(`/api/questlines/${secondId}/replan`, { expected_revision: beforeHistoryReplan.revision, available_minutes: 10, energy: 'low', reason: 'Use a smaller session while keeping the completed stage.' }, randomUUID())
+  assert.equal(replannedHistory.status, 200)
+  assert.deepEqual(replannedHistory.body.completed_quests, beforeHistoryReplan.completed_quests)
+  await click('Refresh history')
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 1 && !document.querySelector('.loading')"), 'history after replan')
+  assert.equal(await evaluate("document.querySelector('[data-completed-stage]').textContent"), historyBeforeReplan)
+  assert.equal(await evaluate("document.querySelector('[data-journey-xp]').textContent === '10 XP' && !document.querySelector('.journey-history').textContent.includes('Sized stage') && !document.querySelector('.journey-history').textContent.includes('Write the tests')"), true)
+  assert.deepEqual((await json('/api/profile')).body, xpBeforeHistoryReplan)
+  pass('Journey preserves completed stages across replan', 'An actual API replan replaces unfinished work in temporary SQLite; refreshing Journey preserves the completed ID, date, details, encouragement and earned XP while keeping replacement and superseded details hidden')
+
+  await mode('valid')
+  const replanCheckIn = await startCheckIn(specific, true, '25', 'medium')
+  await click('Generate My Quests')
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Inspect the endpoint'"), 'replan source campaign')
+  const uiReplanId = await evaluate("location.pathname.split('/').at(-1)")
+  const replanRequests = () => requests.filter(request => request.method === 'POST' && request.path === `/api/questlines/${uiReplanId}/replan`)
+  await click('Complete stage')
+  await until(() => evaluate("!!document.querySelector('[data-completion-celebration]')"), 'complete before replan')
+  await click('Continue Journey')
+  await click('Pause questline')
+  await until(() => evaluate("document.querySelector('.replan-panel')?.textContent.includes('Resume this questline before replanning')"), 'paused replan disabled')
+  assert.equal(await evaluate("document.querySelector('.replan-panel button').disabled"), true)
+  await click('Resume questline')
+  await click('Replan remaining stages')
+  await until(() => evaluate("document.activeElement?.id === 'replan-minutes'"), 'replan form keyboard focus')
+  assert.equal(await evaluate("document.activeElement?.id === 'replan-minutes' && document.querySelector('#replan-minutes').value === '25' && document.querySelector('#replan-energy').value === 'medium'"), true)
+  await replaceInput('replan-minutes', '0')
+  await click('Generate revised stages')
+  await until(() => evaluate("document.querySelector('.replan-panel [role=alert]')?.textContent.includes('1–1440 whole minutes')"), 'replan field validation')
+  assert.equal(replanRequests().length, 0)
+  await replaceInput('replan-minutes', '10')
+  await replanEnergy('low')
+  await replaceInput('replan-reason', 'Use my existing files; I have a shorter session now.')
+  await evaluate("document.querySelector('.replan-panel').scrollIntoView({ block: 'center' })")
+  await screenshot('replan-form-desktop', true)
+  await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 1000, deviceScaleFactor: 1, mobile: false })
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= innerWidth && document.querySelector('.replan-panel form').getBoundingClientRect().right <= innerWidth"), true)
+  await screenshot('replan-form-narrow')
+  await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false })
+  const beforeUIReplan = (await json(`/api/questlines/${uiReplanId}`)).body
+  const profileBeforeUIReplan = (await json('/api/profile')).body
+  pass('Frontend replan form, validation and paused guard', 'Saved capacity prefills the accessible form; invalid minutes send no request; paused goals cannot replan; desktop/narrow layouts fit')
+
+  for (const [index, value, expected] of [[0, 'unavailable', 'Ollama is unavailable'], [1, 'timeout', 'timed out'], [2, 'invalid', 'invalid plan'], [3, 'rejected', 'quality checks']]) {
+    await mode(value)
+    await click(index === 0 ? 'Generate revised stages' : 'Retry replanning')
+    await until(() => evaluate(`document.querySelector('.replan-feedback [role=alert]')?.textContent.includes(${JSON.stringify(expected)}) && !document.querySelector('[data-generation-loading]')`), 'replan ' + value + ' recovery')
+    assert.deepEqual((await json(`/api/questlines/${uiReplanId}`)).body, beforeUIReplan)
+    assert.deepEqual((await json('/api/profile')).body, profileBeforeUIReplan)
+    assert.equal(await evaluate("document.querySelector('#replan-minutes').value === '10' && document.querySelector('#replan-energy').value === 'low' && document.querySelector('.replan-panel fieldset').disabled && document.activeElement.classList.contains('replan-feedback') && document.body.style.overflow !== 'hidden'"), true)
+  }
+  assert.equal(new Set(replanRequests().map(request => request.key)).size, 1)
+  assert.equal(new Set(replanRequests().map(request => request.body)).size, 1)
+  const replanBody = JSON.parse(replanRequests()[0].body)
+  assert.equal(replanBody.expected_revision, beforeUIReplan.revision)
+  assert.equal(replanBody.available_minutes, 10)
+  assert.equal(replanBody.energy, 'low')
+  assert.equal('deadline' in replanBody || 'contextual_notes' in replanBody, false)
+  pass('Frontend replan failure rollback and unchanged retries', 'Actual API failures for unavailable AI, timeout, malformed output and essential rejection preserve the old plan/history/profile; input is retained and explicit retries reuse one key and body; optional deadline/notes are omitted')
+
+  pendingReplanOnce = true
+  await click('Retry replanning')
+  await until(() => evaluate("document.querySelector('.replan-feedback')?.textContent.includes('Retry in')"), 'pending replan wait')
+  assert.equal(await evaluate("[...document.querySelectorAll('.replan-feedback button')].find(button => button.textContent === 'Retry replanning').disabled && !document.querySelector('.replan-feedback').textContent.includes('Edit replanning details')"), true)
+  await mode('replan-single')
+  let releaseReplan
+  replanGate = new Promise(resolve => { releaseReplan = resolve })
+  await click('Retry replanning')
+  await until(() => evaluate("document.querySelector('[data-generation-loading]')?.matches(':modal') && document.querySelector('[data-generation-loading]').dataset.energy === 'low'"), 'replan loading popup')
+  assert.equal(await evaluate("document.querySelector('[data-generation-loading]').textContent.includes('Making room for your new pace') && [...document.querySelectorAll('.quest-pace button, .quest-actions button')].every(button => button.disabled)"), true)
+  const pendingReplanCount = replanRequests().length
+  await evaluate("document.querySelector('.replan-panel form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))")
+  await pause(150)
+  assert.equal(replanRequests().length, pendingReplanCount)
+  await screenshot('replan-loading-popup', true)
+  releaseReplan(); replanGate = null
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Finish the remaining test work' && !document.querySelector('[data-generation-loading]')"), 'replan saved and revealed')
+  const replannedUI = (await json(`/api/questlines/${uiReplanId}`)).body
+  assert.equal(replannedUI.plan_version, beforeUIReplan.plan_version + 1)
+  assert.equal(replannedUI.progress.total_count, 2)
+  assert.equal(replannedUI.progress.remaining_count, 1)
+  assert.deepEqual(replannedUI.completed_quests, beforeUIReplan.completed_quests)
+  assert.deepEqual((await json('/api/profile')).body, profileBeforeUIReplan)
+  assert.equal(replannedUI.deadline, beforeUIReplan.deadline)
+  assert.equal(replannedUI.available_minutes, 10)
+  assert.equal(replannedUI.energy, 'low')
+  assert.equal(await evaluate("document.querySelectorAll('.campaign-node').length === 2 && document.querySelector('[data-campaign-xp]').textContent === '10 XP' && !document.querySelector('.quest-title').textContent.includes('Write the tests') && !document.querySelector('[data-completion-celebration]')"), true)
+  await until(() => evaluate(`document.activeElement.id === 'campaign-map-${uiReplanId}'`), 'replan returns focus to map')
+  await send('Page.reload', { ignoreCache: true })
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Finish the remaining test work'"), 'replan refresh persistence')
+  assert.equal((await json(`/api/check-in/${replanCheckIn}`)).body.context.contextual_notes, 'Fictional local test context. Use existing files.')
+  pass('Frontend replan save, pending guard and one remaining stage', 'Native loading modal blocks concurrent completion/pause and duplicate submissions; confirmed backend version changes the map from three to two total stages, preserves completed records/XP/deadline, applies new capacity and survives refresh')
+
+  await mode('stages-2')
+  await click('Replan remaining stages')
+  await replaceInput('replan-reason', 'Keep the same goal and make the next session clearer.')
+  loseReplan = true
+  await click('Generate revised stages')
+  await until(() => evaluate("document.querySelector('.replan-feedback')?.textContent.includes('may have committed') && document.querySelector('.quest-title')?.textContent === 'Sized stage 1' && !document.querySelector('[data-generation-loading]')"), 'lost replan response canonical recovery')
+  const afterLostReplan = (await json(`/api/questlines/${uiReplanId}`)).body
+  assert.equal(afterLostReplan.plan_version, replannedUI.plan_version + 1)
+  assert.equal(await evaluate("document.querySelector('.replan-feedback').textContent.includes('Edit replanning details')"), false)
+  await click('Retry replanning')
+  await until(() => evaluate("document.querySelector('.success-notice')?.textContent.includes('remaining stages have been replanned') && !document.querySelector('[data-generation-loading]')"), 'lost replan replay')
+  assert.deepEqual((await json(`/api/questlines/${uiReplanId}`)).body, afterLostReplan)
+  assert.deepEqual((await json('/api/profile')).body, profileBeforeUIReplan)
+  const lastReplans = replanRequests().slice(-2)
+  assert.equal(lastReplans[0].key, lastReplans[1].key)
+  assert.equal(lastReplans[0].body, lastReplans[1].body)
+  pass('Frontend replan lost-response replay', 'A real committed replacement with a dropped response reloads canonical state; retry uses the original revision/body/key and returns that same plan without a second version or XP change')
+
+  await click('Replan remaining stages')
+  await replaceInput('replan-reason', 'A stale form must not overwrite newer work.')
+  const concurrentPause = await json(`/api/questlines/${uiReplanId}/pause`, { expected_revision: afterLostReplan.revision }, randomUUID())
+  const concurrentResume = await json(`/api/questlines/${uiReplanId}/resume`, { expected_revision: concurrentPause.body.revision }, randomUUID())
+  await click('Generate revised stages')
+  await until(() => evaluate("document.querySelector('.replan-feedback')?.textContent.includes('This saved state changed') && document.querySelector('.replan-feedback').textContent.includes('Continue with refreshed state')"), 'stale replan reload')
+  assert.deepEqual((await json(`/api/questlines/${uiReplanId}`)).body, concurrentResume.body)
+  assert.equal(await evaluate("document.querySelector('.replan-feedback').textContent.includes('Retry replanning')"), false)
+  await click('Continue with refreshed state')
+  await click('Replan remaining stages')
+  await replaceInput('replan-reason', 'Use a new explanation after the failed request.')
+  await mode('invalid')
+  await click('Generate revised stages')
+  await until(() => evaluate("document.querySelector('.replan-feedback')?.textContent.includes('invalid plan')"), 'known failed replan before editing')
+  const knownFailure = replanRequests().at(-1)
+  await click('Edit replanning details')
+  await replaceInput('replan-minutes', '15')
+  await replanEnergy('high')
+  await replaceInput('replan-reason', 'I have more energy and fifteen minutes now.')
+  await mode('replan-single')
+  await click('Generate revised stages')
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Finish the remaining test work' && !document.querySelector('[data-generation-loading]')"), 'edited replan new intent')
+  assert.notEqual(replanRequests().at(-1).key, knownFailure.key)
+  assert.equal(JSON.parse(replanRequests().at(-1).body).expected_revision, concurrentResume.body.revision)
+  assert.equal((await json(`/api/questlines/${uiReplanId}`)).body.energy, 'high')
+  assert.deepEqual((await json('/api/profile')).body, profileBeforeUIReplan)
+  pass('Frontend stale replan and explicit input revision', 'Concurrent pause/resume makes the old form stale without changing its plan; canonical reload requires a fresh action; editing a definitively failed request uses the latest revision and a new key')
+
+  const beforeAbandonedReplan = (await json(`/api/questlines/${uiReplanId}`)).body
+  await click('Replan remaining stages')
+  await replaceInput('replan-reason', 'Finish this request safely if I leave the page.')
+  await mode('stages-2')
+  replanGate = new Promise(resolve => { releaseReplan = resolve })
+  await click('Generate revised stages')
+  await until(() => evaluate("document.querySelector('[data-generation-loading]')?.matches(':modal')"), 'pending replan before navigation')
+  // SPA navigation exercises React cleanup rather than resetting the document.
+  await evaluate(`window.history.pushState({}, '', '/journey/${uiReplanId}'); window.dispatchEvent(new PopStateEvent('popstate'))`)
+  await until(() => evaluate("document.querySelectorAll('[data-completed-stage]').length === 1 && document.body.style.overflow !== 'hidden' && !document.querySelector('[data-generation-loading]')"), 'abandoned replan cleans up modal')
+  releaseReplan(); replanGate = null
+  await until(async () => (await json(`/api/questlines/${uiReplanId}`)).body.plan_version === beforeAbandonedReplan.plan_version + 1, 'abandoned request may finish on server')
+  assert.equal(await evaluate("location.pathname.startsWith('/journey/') && document.querySelectorAll('[data-completed-stage]').length === 1"), true)
+  assert.deepEqual((await json('/api/profile')).body, profileBeforeUIReplan)
+  await open(`/questlines/${uiReplanId}`)
+  await until(() => evaluate("document.querySelector('.quest-title')?.textContent === 'Sized stage 1'"), 'abandoned replan restored on return')
+  await open(`/questlines/${lineId}`)
+  await until(() => evaluate("document.body.innerText.includes('Campaign completed')"), 'completed campaign has no replan control')
+  assert.equal(await evaluate("!!document.querySelector('.replan-panel')"), false)
+  pass('Frontend replan navigation cleanup and completed guard', 'Leaving a pending request removes its modal and scroll lock; a later server result cannot overwrite another route, and returning reads the saved replacement; completed campaigns offer no replan control')
 
   if (process.argv.includes('--phase5a')) {
     await mode('qa-household')
@@ -504,7 +982,7 @@ try {
     assert.equal(JSON.stringify(replacement.body).includes('"title":"Run a for loop"'), false)
     assert.equal(await evaluate("[...document.querySelectorAll('.campaign-stage-title,.quest-title')].some(h => h.textContent === 'Run a for loop')"), false)
     await screenshot('phase5a-api-replan')
-    pass('Phase 5A D — API-initiated replan with frontend restoration', { id: replanId, completedHistory: replacement.body.completed_quests, XP: xpBeforeReplan, totalStages: 6, planVersion: 2, overCapError: rejected.body.error.code, staleError: stale.body.error.code, sameKeyReplayPreserved: true, frontendReplanControlImplemented: false, model: 'mocked' })
+    pass('Phase 5A D — API-initiated replan with frontend restoration', { id: replanId, completedHistory: replacement.body.completed_quests, XP: xpBeforeReplan, totalStages: 6, planVersion: 2, overCapError: rejected.body.error.code, staleError: stale.body.error.code, sameKeyReplayPreserved: true, frontendReplanControlImplemented: true, model: 'mocked' })
 
     await mode('qa-presentation')
     const missingTopicGoal = 'I need to present a complex topic that I know nothing about.'

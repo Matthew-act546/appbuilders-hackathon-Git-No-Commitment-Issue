@@ -1,5 +1,5 @@
 import { parseCheckIn, parseCompletion, parseProfile, parseQuestline, parseQuestlineList } from './validate'
-import type { CheckInAnswer, CheckInStart, GenerateQuestlineRequest } from './questTypes'
+import type { CheckInAnswer, CheckInStart, GenerateQuestlineRequest, ReplanRequest } from './questTypes'
 export type { Profile } from './questTypes'
 
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '')
@@ -75,6 +75,7 @@ export const getProfile = (signal: AbortSignal) => request('/api/profile', { sig
 export const getCheckIn = (id: string, signal: AbortSignal) => request(`/api/check-in/${encodeURIComponent(id)}`, { signal }, 10_000, parseCheckIn)
 export const submitCheckIn = (body: CheckInStart | CheckInAnswer, key: string, signal: AbortSignal) => post('/api/check-in', body, signal, parseCheckIn, key)
 export const generateQuestline = (body: GenerateQuestlineRequest, key: string, signal: AbortSignal) => post('/api/questlines', body, signal, parseQuestline, key, 150_000)
+export const replanQuestline = (id: string, body: ReplanRequest, key: string, signal: AbortSignal) => post(`/api/questlines/${encodeURIComponent(id)}/replan`, body, signal, parseQuestline, key, 150_000)
 export const getQuestlines = (offset: number, signal: AbortSignal) => request(`/api/questlines?limit=20&offset=${offset}`, { signal }, 10_000, parseQuestlineList)
 export const getQuestline = (id: string, signal: AbortSignal) => request(`/api/questlines/${encodeURIComponent(id)}`, { signal }, 10_000, parseQuestline)
 export const completeQuest = (id: string, revision: number, signal: AbortSignal) => post(`/api/quests/${encodeURIComponent(id)}/complete`, { expected_revision: revision }, signal, parseCompletion)

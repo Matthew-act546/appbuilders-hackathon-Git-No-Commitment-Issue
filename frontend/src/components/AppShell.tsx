@@ -32,7 +32,7 @@ export function AppShell() {
 
   useEffect(() => {
     const page = navigation.find(item => item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to))
-    document.title = `${page?.label ?? 'Page not found'} · Local AI Quest Companion`
+    document.title = `${page?.label ?? 'Page not found'} · Sibol`
     if (previousPath.current !== location.pathname) {
       main.current?.focus({ preventScroll: true })
       window.scrollTo(0, 0)
@@ -49,7 +49,7 @@ export function AppShell() {
     <a className="skip-link" href="#main">Skip to content</a>
     <header className="app-header">
       <Container className="header-inner">
-        <Link to="/" className="brand" aria-label="Local AI Quest Companion — Home"><Sprout small /><span><strong>Local AI</strong><span>Quest Companion</span></span></Link>
+        <Link to="/" className="brand" aria-label="Sibol — Home"><Sprout small /><span><strong>Sibol</strong><span>Quest Companion</span></span></Link>
         <nav aria-label="Primary navigation" className="navigation">
           {navigation.map(item => <NavLink key={item.to} to={item.to} end={item.to === '/'} className={({ isActive }) => `nav-link ${isActive ? 'nav-active' : ''}`}><Icon name={item.icon} />{item.label}</NavLink>)}
         </nav>

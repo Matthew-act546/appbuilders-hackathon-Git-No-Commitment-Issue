@@ -9,10 +9,10 @@ current behavior from future product orchestration.
 
 | ID | Decision | Consequence |
 | --- | --- | --- |
-| D01 | Local AI Quest Companion; desktop web app on one laptop, not PWA | PRD §1/§5; retire PWA in Phase 1, retain local serving. |
+| D01 | Sibol (formerly Local AI Quest Companion); desktop web app on one laptop, not PWA | User-approved app rename; PRD §1/§5 platform, local serving. |
 | D02 | React/TS/Vite/Tailwind + Python 3.11+/FastAPI/Pydantic/SQLAlchemy/SQLite/HTTPX; reuse Router/Settings | Preserve working scaffold; Git/GitHub collaboration; no cloud/auth services. |
 | D03 | UI localhost:5173; backend/Ollama 127.0.0.1:8000 / :11434 | Same-host offline operation; keep existing loopback CORS compatibility. |
-| D04 | Primary qwen3:1.7b; backup qwen2.5:1.5b; manual switching | User locks tags; actual validity/latency measured before demo. No auto fallback/download. |
+| D04 | User-selected demo primary qwen3:4b; fallback qwen3:1.7b; manual switching | User confirmed the change on Windows; source default remains 1.7B. No auto fallback/download or invented paired benchmark. |
 | D05 | Canonical GET /api/health, no /health alias required | Preserves clients and /api convention; planned DB/Ollama readiness retains status field. |
 | D06 | Implicit local profile id=1, no accounts | XP across saved lines; level derived rather than independently stored. |
 | D07 | Easy=10, medium=20, hard=30; level=floor(total_xp/100)+1 | Backend arithmetic only; no penalties/streaks/multipliers. |
@@ -25,7 +25,7 @@ current behavior from future product orchestration.
 | D14 | Pause preserves pointer and changes current quest to paused; resume restores | Complete/hint/shrink/replan require active line; resume before replan; no XP/AI cost for pause. |
 | D15 | Unique completion ledger + partial unique current index + transactions/revisions | Backend/DB authority; generate replan outside lock and commit only against unchanged revision. |
 | D16 | Small durable idempotency receipts for AI mutations, no background jobs | Safe lost-response/double-submit handling and interrupted-request recovery. |
-| D17 | No P1 Quest Journey in P0 demo | PRD §5 priority overrides §13/demo-script suggestion; show plain history/progress. |
+| D17 | No full P1 Quest Journey in P0 demo | PRD §5 priority overrides §13/demo-script suggestion; the user-approved completed-stage timeline presents saved history only. |
 | D18 | Deadline October 10, 2026, 10:00 AM Philippine time (UTC+08:00) | Proposed internal freeze 9:00 AM, submission target 9:30 AM; verify official destination/rules. |
 
 ## Conflict register
@@ -41,7 +41,7 @@ current behavior from future product orchestration.
 | No tables/FK enforcement/bootstrap | Designed models and short serialized transactions; no reset of unknown databases | 2 |
 | Plain text diagnostic AI, no product generation | Internal strict initial proposal module/benchmark added; semantic quality remains partial; production orchestration later | 1B / 3 |
 | PRD model/XP/profile open decisions | User tags, deterministic 10/20/30 XP, 100 XP levels, single local profile | Locked now |
-| PRD Journey screen/demo despite P1 priority | Keep Journey excluded; plain completed history for P0 | Locked now |
+| PRD Journey screen/demo despite P1 priority | Full completed/current/locked visualization remains deferred; Journey tab now presents read-only completed history | User-approved history integration |
 | Optional FastAPI docs CDN assets | Direct API/JSON schema for offline proof; optional utility only | No required source change |
 | No explicit model-weight ignore patterns | Review ignore coverage during Phase 1; weights never belong in repo | 1 |
 
