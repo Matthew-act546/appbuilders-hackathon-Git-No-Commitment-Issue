@@ -1,5 +1,12 @@
 # Phase 5A — End-to-End QA and Integration Testing
 
+**Later Windows follow-up:** this report records the original Linux QA run.
+The user's subsequent Windows setup, AI-quality QA and offline service-restart
+confirmations are tracked in [demo readiness](DEMO_READINESS.md). Frontend
+replanning was later authorized and integrated; its current behavior is documented
+in [the frontend plan](FRONTEND_PLAN.md#user-facing-replanning). Historical FAIL/
+NOT TESTED entries below are preserved rather than retroactively marked passed.
+
 **Final status: PARTIAL.** State integrity and tested integration flows passed.
 The user-facing replan flow is missing, and real-model content still needs review.
 Successful persistence is not proof of semantic usefulness or release readiness.

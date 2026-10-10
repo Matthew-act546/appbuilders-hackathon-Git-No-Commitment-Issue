@@ -1,14 +1,27 @@
-import { Icon } from '../components/Icon'
-import { Badge, Card, EmptyState, PageHeading } from '../components/UI'
+import { Link, useParams } from 'react-router'
+import { CompletedStageTimeline } from '../components/CompletedStageTimeline'
+import { JourneyQuestlinePicker } from '../components/JourneyQuestlinePicker'
+import { Button, Card, EmptyState, ErrorNotice, LoadingIndicator, PageHeading } from '../components/UI'
+import { useQuestline } from '../hooks/useQuestline'
 
 export default function Journey() {
+  const { id } = useParams<{ id: string }>()
   return <>
-    <PageHeading eyebrow="One step leads to another" title="Your Journey">A quiet view of where you’ve been and the step you’re on.</PageHeading>
-    <Card className="journey-foundation">
-      <div className="section-heading"><h2>Your path</h2><Badge tone="neutral">Journey preview</Badge></div>
-      <EmptyState title="Your path will take shape here">Select a saved questline once connected. This preview does not display a generated plan or assume any progress.</EmptyState>
-      <div className="journey-key" aria-label="Journey symbol key, not user progress"><h3>Journey key</h3><ul><li><span className="journey-node node-completed"><Icon name="check" /></span>Completed</li><li><span className="journey-node node-current"><Icon name="sprout" /></span>Current step</li><li><span className="journey-node node-locked"><Icon name="lock" /></span>Locked milestone</li></ul></div>
-    </Card>
-    <p className="muted page-note">Only completed work and the current quest’s details will be shown. Locked milestones will remain anonymous.</p>
+    <PageHeading eyebrow="One step leads to another" title="Your Journey">Revisit the small steps you have taken and the goals you have brought to life.</PageHeading>
+    {id ? <JourneyHistory key={id} id={id} /> : <div className="journey-content stack">
+      <JourneyQuestlinePicker />
+      <Card tone="leaf"><EmptyState title="Every completed step has a place here">Choose a saved questline above to see its completed-stage timeline.</EmptyState></Card>
+    </div>}
   </>
+}
+
+function JourneyHistory({ id }: { id: string }) {
+  const { line, loading, error, reload } = useQuestline(id)
+  return <div className="journey-content stack">
+    <JourneyQuestlinePicker selectedId={id} selectedGoal={line?.goal} />
+    <div className="section-heading"><p className="muted helper">Your saved history, at your own pace.</p><Button variant="quiet" disabled={loading} onClick={() => void reload()}>Refresh history</Button></div>
+    {loading && <LoadingIndicator>Reading your completed stages…</LoadingIndicator>}
+    {error && <ErrorNotice action={error.retryable ? <Button variant="secondary" onClick={() => void reload()}>Retry history</Button> : <Link className="text-link" to="/journey">Choose another questline →</Link>}>{error.message}</ErrorNotice>}
+    {!loading && line && <CompletedStageTimeline line={line} />}
+  </div>
 }

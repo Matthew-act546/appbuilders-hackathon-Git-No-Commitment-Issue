@@ -61,6 +61,11 @@ async def response(request):
             # The explicit three-test goal is still satisfied within the chosen
             # count; these are labeled synthetic fixtures, not live AI evidence.
             plan["quests"][0]["action"] = "Write three unit tests for the local FastAPI login endpoint. Record test artifact 1."
+        if current == "replan-single":
+            plan["quests"] = [{"title": "Finish the remaining test work",
+                "action": "Write and run three unit tests for the existing FastAPI login endpoint, then record each result.",
+                "completion_criteria": "Three local unit tests have assertions and a recorded result.",
+                "estimated_minutes": 5, "difficulty": "easy"}]
         if current == "qa-household":
             plan["quests"] = [
                 {"title": "Clear the desk", "action": "Move items off the desk into the storage already beside it.", "completion_criteria": "The desk surface has no loose items.", "estimated_minutes": 5, "difficulty": "easy"},

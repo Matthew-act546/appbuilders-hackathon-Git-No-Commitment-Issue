@@ -24,6 +24,14 @@ export interface CheckIn {
 export interface CheckInStart extends CheckInContext { mode: 'start' }
 export interface CheckInAnswer { mode: 'answer'; check_in_id: string; expected_revision: number; answer: string }
 export interface GenerateQuestlineRequest { check_in_id: string; expected_check_in_revision: number }
+export interface ReplanRequest {
+  expected_revision: number
+  available_minutes: number
+  energy: Energy
+  deadline?: string | null
+  contextual_notes?: string | null
+  reason?: string | null
+}
 export interface QuestProgress { completed_count: number; remaining_count: number; total_count: number }
 export interface Quest {
   id: string

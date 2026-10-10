@@ -1,4 +1,7 @@
-# Local AI Quest Companion
+# Sibol
+
+Sibol is the app's current name; earlier documentation and the source PRD use
+Local AI Quest Companion.
 
 AppBuildersPH Hackathon 2026 P0: a privacy-first desktop web companion that turns
 deliverables and reported time/energy into manageable quests, one current quest
@@ -7,10 +10,16 @@ per questline, with deterministic XP and local persistence. The finalized
 
 **Current status: working core quest flow with Phase 4C campaign presentation.**
 The Phase 4A forest-themed shell is preserved. Home now submits check-ins, presents
-the server's clarification, and explicitly generates a saved questline. My Quests
+the server's clarification, and explicitly generates a saved questline. Generation
+shows a centered loading popup with encouragement matched to the saved energy level.
+My Quests
 loads saved work as a sequential Campaign Map with 2–3 source-derived checklist
 checkpoints, completes current stages with backend-confirmed XP, and supports
-pause/resume and refresh recovery. XP/level read the local backend profile; service
+pause/resume, frontend replanning and refresh recovery. Replan remaining stages
+under Adjust your pace updates time/energy and an optional explanation, with a
+loading popup and explicit retry recovery. Completed stages and XP are preserved;
+the saved goal, deadline and original notes remain unchanged.
+XP/level read the local backend profile; service
 status and the existing generic prompt test remain in the header settings dialog.
 Campaign progress distinguishes earned campaign XP from lifetime profile XP. Checklist
 marks are temporary; only whole-stage completion is saved. Initial plans remain
@@ -20,15 +29,20 @@ caps completed plus remaining stages at six and preserves all earned progress.
 This is an approved post-PRD enhancement; PRD v2.0 remains unchanged. SQLite v3
 startup preserves existing campaigns while updating the plan-count constraints;
 stop the old backend and back up important SQLite data before restarting.
-Journey and advanced Progress/history screens remain foundations. An internal structured
+Journey now displays a read-only completed-stage timeline for a selected saved
+questline, with local completion dates, earned XP, encouragement and expandable
+saved details. Its selector includes active, paused and finished goals; completed
+questlines end with a summary card. Advanced Progress screens remain foundations.
+An internal structured
 proposal module and developer benchmark exist; semantic quality needs improvement.
 SQLite state, completion/XP, saved reads and pause/resume APIs are implemented.
 Persistent check-ins, local generation and replanning APIs now join the existing
 state engine. Schema and essential-constraint failures are rejected with saved
 context available for retry; subjective quality findings are now warnings rather
 than mandatory approval gates. Real-model usefulness still varies. Phase 4B's single live primary-model
-integration attempt was semantically rejected, not saved. Adaptive UI and optional
-Journey/progress integration remain Phase 4C work.
+integration attempt was semantically rejected, not saved. Hint/shrink and advanced
+Progress integration remain unfinished. Later Windows/QA/offline confirmations
+are recorded separately in [demo readiness](docs/DEMO_READINESS.md).
 Target platform is desktop web, **not PWA**. The PWA
 plugin, registration, manifest and cache/update UI have been removed. Previously
 used browsers need the scoped cleanup procedure below.
@@ -124,9 +138,11 @@ ollama list
 ```
 
 This scaffold never installs or pulls models. If the primary is absent, deliberately
-run `ollama pull qwen3:1.7b` while connected. The fallback is `qwen2.5:1.5b`;
-install it yourself if needed (`ollama pull qwen2.5:1.5b`), set
-`OLLAMA_MODEL=qwen2.5:1.5b` in `backend/.env`, and restart FastAPI. There is no
+run `ollama pull qwen3:4b` while connected. The manually selected fallback is
+`qwen3:1.7b`; install it yourself if needed (`ollama pull qwen3:1.7b`), set
+`OLLAMA_MODEL=qwen3:1.7b` in `backend/.env`, and restart FastAPI. Set
+`OLLAMA_MODEL=qwen3:4b` for the chosen primary. The source default remains 1.7B,
+so explicitly configure the demo model. There is no
 automatic fallback. Do not run `ollama serve` twice if the OS application/service
 is already serving the endpoint.
 
@@ -248,7 +264,9 @@ separately from passing mocked scenarios and does not establish model quality.
 Phase 4B Linux results: frontend typecheck/build and diff checks passed, boundary
 tests passed 5/5, browser scenarios passed 14/14, and backend regressions passed
 90/90. One live `qwen3:1.7b` attempt returned semantic rejection with context retained
-and no questline saved. Windows and actual internet-disconnection tests remain pending.
+and no questline saved. Windows and actual internet-disconnection tests were
+pending at that historical checkpoint; later user confirmations are recorded in
+[demo readiness](docs/DEMO_READINESS.md).
 
 Development-only production-pipeline benchmark (fictional inputs and temporary
 SQLite storage), from `backend/`:
